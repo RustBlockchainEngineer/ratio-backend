@@ -1,9 +1,19 @@
 import express from 'express';
 
-const app = express();
-const port = 3000;
+let rates = require('./routes/rates');
+let whightlist = require('./routes/whightlist');
 
+
+const app = express();
+
+app.use('/rates', rates);
+app.use('/whitelist', whightlist);
+
+
+const port = 3000;
 app.listen(port, () => {
-    console.log(`Timezones by location application is running on port ${port}.`);
+    console.log(`rf-engine start on port ${port}.`);
 });
+
+
 
