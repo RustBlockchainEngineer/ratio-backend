@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from 'express';
 import { buildPriceChangeSpot } from './api/pyth';
 
@@ -28,7 +29,7 @@ app.use('/price', pyth);
 
 
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`rf-engine start on port ${port}.`);
 });

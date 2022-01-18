@@ -30,6 +30,7 @@
     "@pythnetwork/client": "^2.5.1",
     "@solana/spl-token-registry": "^0.2.1431",
     "@solana/web3.js": "^1.31.0",
+    "dotenv": "^14.2.0",
     "express": "^4.17.2",
     "mysql": "^2.18.1"
   }
