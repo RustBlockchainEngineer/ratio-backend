@@ -11,10 +11,12 @@ router.get('/spot', async function (req, res) {
     res.send(JSON.stringify(result));
 })
 
+
 router.get('/spot/:currency', async function (req, res) {
 
     let result = await getSpotPriceChangeC(req.params.currency);
     res.send(JSON.stringify(result));
 })
+
 
 module.exports = router

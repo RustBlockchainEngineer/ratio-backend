@@ -1,18 +1,31 @@
 import express from 'express';
 import { buildPriceChangeSpot } from './api/pyth';
 
-let rates = require('./routes/rates');
-let whightlist = require('./routes/whightlist');
-let pyth = require('./routes/pyth');
 
-buildPriceChangeSpot("mainnet-beta");
+let whitelist = require('./routes/whitelist');
+let pyth = require('./routes/pyth');
+let platforms = require('./routes/platforms');
+let lppairs = require('./routes/lppairs');
+let lpassets = require('./routes/lpassets');
+let lppairaprs = require('./routes/lppairaprs');
+let tokens = require('./routes/tokens');
+
+buildPriceChangeSpot("devnet");
 
 
 const app = express();
 
-app.use('/rates', rates);
-app.use('/whitelist', whightlist);
-app.use('/pyth', pyth);
+app.use(express.json());
+
+
+app.use('/platforms', platforms);
+app.use('/lppairs', lppairs);
+app.use('/lpassets', lpassets);
+app.use('/lppairaprs', lppairaprs);
+app.use('/whitelist', whitelist);
+app.use('/tokens', tokens);
+app.use('/price', pyth);
+
 
 
 const port = 3000;
