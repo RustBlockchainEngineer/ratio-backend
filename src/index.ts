@@ -26,11 +26,11 @@ const options: cors.CorsOptions = {
 };
 app.use(cors(options))
 
-const pathsToIgnore = ['/auth/', '/users/nonce/'];
+const pathsToIgnore = [/\/auth(\/.*)?/, new RegExp("\/users/[^\/]*") ];
 
-var applyMiddlewareByPathFilter = function(middleware, paths:string[]){
+var applyMiddlewareByPathFilter = function(middleware, paths:RegExp[]){
     return (req, res, next) => {
-        if(paths.some((path) => req._parsedUrl.pathname.startsWith(path))) {
+        if(paths.some((pathRegex) => (req._parsedUrl.pathname as string).match(pathRegex))) {
             next();
         } else {
             middleware(req, res, next);
