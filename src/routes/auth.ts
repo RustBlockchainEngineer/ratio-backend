@@ -24,7 +24,7 @@ router.post('/', async function (req, res) {
     const user: any = await getUserByPublicKey(publicAddress);
 
     if (!user) {
-      return res.status(400).send({
+      return res.status(404).send({
         error: `User with publicAddress ${publicAddress} is not found in database`
       })
     }

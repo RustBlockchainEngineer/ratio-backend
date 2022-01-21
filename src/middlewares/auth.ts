@@ -3,20 +3,20 @@ import jwt from 'jsonwebtoken'
 import { getUserByPublicKey } from '../api/users'
 import nacl from 'tweetnacl'
 import bs58 from 'bs58'
+import Roles from '../constants/Roles'
 
-const config = process.env;
+const { TOKEN_KEY } = process.env;
 
-export const verifyToken = (req, res, next) => {
+const verifyToken = (req, res, next) => {
   const token =
     req.body.token || req.query.token || req.headers["x-access-token"];
   if (!token) {
-    return res.status(403).send({
+    return res.status(401).send({
       error: "A token is required for authentication"
     });
   }
   try {
-    const decoded = jwt.verify(token, config.TOKEN_KEY);
-    console.log("decoded", decoded);
+    const decoded = jwt.verify(token, TOKEN_KEY);
     res.locals.jwt = decoded;
   } catch (err) {
     console.log("Invalid token. Error: ", err);
@@ -27,27 +27,22 @@ export const verifyToken = (req, res, next) => {
   return next();
 };
 
-export const validateUser = async (
+const validateUser = async (
   req: express.Request,
   res: express.Response,
   next: (err?: Error) => void
 ) => {
-  console.log("Access validateUser");
-  const jwtPayload = res.locals.jwt.data
-  console.log("jwtPayload", jwtPayload);
-  const publicAddress = jwtPayload.publicAddress
-  const challenge = jwtPayload.challenge
-  const signature = jwtPayload.signature
+  const { publicAddress, challenge, signature } = res.locals.jwt.data
 
   if (!publicAddress || !challenge || !signature) {
-    return res.status(400).send({
+    return res.status(401).send({
       error: `Some parameters of the payload are empty`
     })
   }
 
   const user: any = await getUserByPublicKey(publicAddress);
   if (!user) {
-    return res.status(400).send({
+    return res.status(401).send({
       error: `User with publicAddress ${publicAddress} is not found in database`
     })
   }
@@ -68,7 +63,7 @@ export const validateUser = async (
   return next()
 }
 
-function authorize(roles = []) {
+const authorize = (roles:Roles[] = []) => {
     // roles param can be a single role string (e.g. Role.User or 'User') 
     // or an array of roles (e.g. [Role.Admin, Role.User] or ['Admin', 'User'])
     if (typeof roles === 'string') {
@@ -80,7 +75,7 @@ function authorize(roles = []) {
         (req, res, next) => {
             if (roles.length && !roles.includes(res.locals.user.role)) {
                 // user's role is not authorized
-                return res.status(401).json({ message: 'Unauthorized' });
+                return res.status(403).json({ message: 'Unauthorized' });
             }
 
             // authentication and authorization successful

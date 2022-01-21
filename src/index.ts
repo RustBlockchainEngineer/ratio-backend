@@ -20,15 +20,15 @@ const app = express();
 
 app.use(express.json());
 
-const allowedOrigins = ['http://localhost:3000'];
+const allowedOrigins = process.env.API_CORS_ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'];
 const options: cors.CorsOptions = {
   origin: allowedOrigins
 };
 app.use(cors(options))
 
-const pathsToIgnore = [/\/auth(\/.*)?/, new RegExp("\/users/[^\/]*") ];
+const pathsToIgnore = [/\/auth(\/.*)?/, new RegExp("\/users\/[^\/]+") ];
 
-var applyMiddlewareByPathFilter = function(middleware, paths:RegExp[]){
+const applyMiddlewareByPathFilter = function(middleware, paths:RegExp[]){
     return (req, res, next) => {
         if(paths.some((pathRegex) => (req._parsedUrl.pathname as string).match(pathRegex))) {
             next();
