@@ -54,12 +54,12 @@ export async function getLPair(address_id: string, callback: (r: LPair | undefin
                     created_on,
                     updated_on,                    
                     tkn.symbol,
-                    tkn.icon
+                    tkn.icon,
                     lpa.token_address_id,
                     lpa.pool_size token_pool_size
                 FROM RFDATA.LPAIRS lp
                 JOIN RFDATA.LPASSETS lpa ON lp.address_id = lpa.lpair_address_id
-                JOIN RFDATA.TOKENS tkn ON lps.token_address_id = tkn.address_id
+                JOIN RFDATA.TOKENS tkn ON lpa.token_address_id = tkn.address_id
                 WHERE address_id = ?`, [address_id], function (err, result) {
         const rows = <RowDataPacket[]>result;
         let record: LPair | undefined = undefined;
