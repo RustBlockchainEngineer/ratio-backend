@@ -1,8 +1,8 @@
 
-import mysql from 'mysql';
+import { createConnection } from 'mysql2';
 
 
-export const dbcon = mysql.createConnection({
+export const dbcon = createConnection({
     host: "157.245.81.121",
     user: "serviceone",
     password: "Aa%%Bb34",
