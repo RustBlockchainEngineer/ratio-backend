@@ -1,32 +1,26 @@
 import express from 'express';
-import { buildPriceChangeSpot } from './api/pyth';
 
+import { cacheInit } from './api/cacheList'
 
-let whitelist = require('./routes/whitelist');
-let pyth = require('./routes/pyth');
+//let whitelist = require('./routes/whitelist');
 let platforms = require('./routes/platforms');
-let lppairs = require('./routes/lppairs');
-let lpassets = require('./routes/lpassets');
-let lppairaprs = require('./routes/lppairaprs');
+let lpairs = require('./routes/lpairs');
 let tokens = require('./routes/tokens');
-
-buildPriceChangeSpot("devnet");
-
+let ratioconfig = require('./routes/ratioconf');
+let transactions = require('./routes/transactions');
 
 const app = express();
 
 app.use(express.json());
 
-
 app.use('/platforms', platforms);
-app.use('/lppairs', lppairs);
-app.use('/lpassets', lpassets);
-app.use('/lppairaprs', lppairaprs);
-app.use('/whitelist', whitelist);
+app.use('/lpairs', lpairs);
 app.use('/tokens', tokens);
-app.use('/price', pyth);
+app.use('/ratioconfig', ratioconfig);
+app.use('/transaction', transactions);
 
-
+// Init the tokens and LPs cache list;
+cacheInit();
 
 const port = 3000;
 app.listen(port, () => {
