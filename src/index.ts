@@ -7,6 +7,7 @@ import cors from 'cors';
 import authMiddleware from './middlewares/auth';
 import { Request, Response, NextFunction } from 'express';
 
+import { cacheInit } from './api/cacheList'
 
 //let whitelist = require('./routes/whitelist');
 var url = require('url');
@@ -58,6 +59,8 @@ app.use('/users', users);
 // Init the tokens and LPs cache list;
 cacheInit();
 
+// Init the tokens and LPs cache list;
+cacheInit();
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
