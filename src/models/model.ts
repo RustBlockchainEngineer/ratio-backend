@@ -21,10 +21,18 @@ export enum RISK_RATING {
     'D'
 }
 
-export enum USERTYPE {
-    'user',
-    'User + Whitelist',
+export enum UserRole {
+    'User',
+    'User_Whitelist',
     'Admin',
+}
+
+export interface Auth {
+    name: string,
+    publicAddress: string,
+    challenge: string,
+    signature: string,
+    nonce: string
 }
 
 export interface Platform {
@@ -51,10 +59,10 @@ export interface LPair {
 export interface Users {
     wallet_address_id: string,
     name: string,
-    role: USERTYPE,
-    nonce: number,
-    created_on: number,
-    updated_on: number
+    role: UserRole,
+    nonce?: number,
+    created_on?: number,
+    updated_on?: number
 }
 
 export interface Token {
