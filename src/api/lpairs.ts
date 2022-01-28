@@ -6,7 +6,7 @@ import { cacheList } from '../api/cacheList'
 function map_row_lpair(row: RowDataPacket): LPair {
     return {
         "address_id": row.address_id,
-        "symbol": row.symbole,
+        "symbol": row.symbol,
         "page_url": row.page_url,
         "pool_size": row.pool_size,
         "platform_id": row.platform_id,
