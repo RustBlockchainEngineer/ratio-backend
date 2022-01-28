@@ -33,12 +33,12 @@ export async function getUser(wallet_address_id: string, callback: (r: Users | u
     });
 }
 
-export async function getUserNonce(publicKey: string, callback: (r: number | undefined) => void) {
+export async function getUserNonce(publicKey: string, callback: (r: Object | undefined) => void) {
     const user: Users | undefined = await getUserByPublicKey(publicKey);
     if (user)
-        callback(user.nonce);
+        callback({ "nonce": user.nonce });
     else
-        callback(-1);
+        callback({ "nonce": -1 });
 }
 
 export async function getUserByPublicKey(publicKey: string): Promise<Users | undefined> {

@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import nacl from 'tweetnacl'
 import bs58 from 'bs58'
 import { Auth } from '../models/model'
+
 const { TextEncoder } = require("util");
 
 let router = express.Router();
@@ -51,7 +52,7 @@ router.post('/', async function (req, res) {
     await updateUserNonce(publicAddress);
 
     // Step 4: Create JWT
-    const data = {
+    const data: Auth = {
       name: 'Auth',
       publicAddress,
       challenge: msgString,

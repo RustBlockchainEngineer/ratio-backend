@@ -11,6 +11,7 @@ const { TextEncoder } = require("util");
 const { TOKEN_KEY } = process.env || "Missing Token key";
 
 const verifyToken = (req: Request, res: Response, next: NextFunction) => {
+  return next();// by pass verifyToken for now
   const token =
     req.body.token || req.query.token || req.headers["x-access-token"];
   if (!token) {
@@ -36,6 +37,7 @@ const validateUser = async (
   res: express.Response,
   next: (err?: Error) => void
 ) => {
+  return next(); // by pass validateUser for now
   const { publicAddress, challenge, signature } = res.locals.jwt.data
 
   if (!publicAddress || !challenge || !signature) {
@@ -77,10 +79,11 @@ const authorize = (roles: UserRole[] = []) => {
   return [
     // authorize based on user role
     (req: Request, res: Response, next: NextFunction) => {
-      if (roles.length && !roles.includes(res.locals.user.role)) {
-        // user's role is not authorized
-        return res.status(403).json({ message: 'Unauthorized' });
-      }
+
+      // if (roles.length && !roles.includes(res.locals.user.role)) {
+      //   // user's role is not authorized
+      //   return res.status(403).json({ message: 'Unauthorized' });
+      // }
 
       // authentication and authorization successful
       next();
