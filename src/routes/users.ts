@@ -7,7 +7,7 @@ import { isNotSafe } from '../utils/utils';
 
 let router = express.Router();
 
-router.get('/', authMiddleware.authorize([UserRole.Admin]), async function (req: Request, res: Response) {
+router.get('/', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
 
     await getAllUsers(function (result) {
         res.send(JSON.stringify(result));
@@ -30,7 +30,7 @@ router.get('/nonce/:wallet_address_id', async function (req, res) {
     });
 })
 
-router.post('/', authMiddleware.authorize([UserRole.Admin]), async function (req: Request, res: Response) {
+router.post('/', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     const keylist: string[] = ['wallet_address_id', 'name', 'role'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
@@ -39,7 +39,7 @@ router.post('/', authMiddleware.authorize([UserRole.Admin]), async function (req
     res.send(JSON.stringify(result));
 })
 
-router.put('/:wallet_address_id', authMiddleware.authorize([UserRole.Admin]), async function (req: Request, res: Response) {
+router.put('/:wallet_address_id', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     const keylist: string[] = ['name', 'role'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
@@ -48,7 +48,7 @@ router.put('/:wallet_address_id', authMiddleware.authorize([UserRole.Admin]), as
     res.send(JSON.stringify(result));
 })
 
-router.delete('/:wallet_address_id', authMiddleware.authorize([UserRole.Admin]), async function (req: Request, res: Response) {
+router.delete('/:wallet_address_id', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
 
     let result = await deleteUser(req.params.wallet_address_id);
     res.send(JSON.stringify(result));

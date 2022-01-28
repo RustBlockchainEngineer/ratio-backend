@@ -31,6 +31,7 @@ const options: cors.CorsOptions = {
 };
 app.use(cors(options));
 
+
 const pathsToIgnore = [/\/auth(\/.*)?/, new RegExp("\/users\/[^\/]+")];
 
 const applyMiddlewareByPathFilter = function (middleware: (req: Request, res: Response, next: NextFunction) => void, paths: RegExp[]) {
