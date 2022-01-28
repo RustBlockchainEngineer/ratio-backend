@@ -9,6 +9,8 @@ function map_row_platform(row: RowDataPacket): Platform {
     return {
         "id": row.id,
         "name": row.name,
+        "site": row.site,
+        "icon": row.icon,
         "created_on": row.created_on,
         "updated_on": row.updated_on
     }
@@ -16,7 +18,7 @@ function map_row_platform(row: RowDataPacket): Platform {
 
 export async function getAllPlatforms(callback: (r: Platform[]) => void) {
     let records: Platform[] = [];
-    dbcon.query("SELECT id,name,updated_on,created_on FROM RFDATA.PLATFORMS", (err, result) => {
+    dbcon.query("SELECT id,name,site,icon,updated_on,created_on FROM RFDATA.PLATFORMS", (err, result) => {
         if (err)
             throw err;
 
@@ -29,7 +31,7 @@ export async function getAllPlatforms(callback: (r: Platform[]) => void) {
 }
 
 export async function getPlatform(id: string, callback: (p: Platform) => void) {
-    dbcon.query(`SELECT id,name FROM RFDATA.PLATFORMS WHERE id = ?`, [id], (err, result) => {
+    dbcon.query(`SELECT id,name,site,icon FROM RFDATA.PLATFORMS WHERE id = ?`, [id], (err, result) => {
         const rows = <RowDataPacket>result;
         let record: Platform = map_row_platform(rows);
         callback(record);
@@ -40,19 +42,19 @@ export async function addPlatform(data: Platform): Promise<Platform> {
     let ts = Date.now();
     let id = uuid();
     dbcon.query(
-        `INSERT INTO RFDATA.PLATFORMS(id,name,created_on,updated_on) VALUES (?,?,FROM_UNIXTIME(? * 0.001),FROM_UNIXTIME(? * 0.001))`,
-        [id, data["name"], ts, ts]
+        `INSERT INTO RFDATA.PLATFORMS(id,name,site,icon,created_on,updated_on) VALUES (?,?,?,?,FROM_UNIXTIME(? * 0.001),FROM_UNIXTIME(? * 0.001))`,
+        [id, data["name"], data["site"], data["icon"], ts, ts]
     );
-    return { "id": id, "name": data["name"], "created_on": ts, "updated_on": ts };
+    return { "id": id, "name": data["name"], "site": data["site"], "icon": data["icon"], "created_on": ts, "updated_on": ts };
 }
 
 export async function updatePlatform(id: string, data: Platform): Promise<Platform> {
     let now = Date.now();
     dbcon.query(
-        `UPDATE RFDATA.PLATFORMS SET name = ? ,updated_on = FROM_UNIXTIME(? * 0.001) WHERE id = ?`,
-        [data["name"], now, id]
+        `UPDATE RFDATA.PLATFORMS SET name = ? ,site = ?, icon = ?,updated_on = FROM_UNIXTIME(? * 0.001) WHERE id = ?`,
+        [data["name"], data["site"], data["icon"], now, id]
     );
-    return { "id": id, "name": data["name"], "updated_on": now }
+    return { "id": id, "name": data["name"], "site": data["site"], "icon": data["icon"], "updated_on": now };
 }
 
 export async function deletePlatform(id: string) {
