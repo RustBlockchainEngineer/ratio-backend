@@ -1,12 +1,16 @@
 
-import express, { Router } from 'express';
+import express from 'express';
 
 import { cacheInit } from './api/cacheList'
 import 'dotenv/config'
 import cors from 'cors';
 import authMiddleware from './middlewares/auth';
+import { Request, Response, NextFunction } from 'express';
+
 
 //let whitelist = require('./routes/whitelist');
+var url = require('url');
+
 let platforms = require('./routes/platforms');
 let lpairs = require('./routes/lpairs');
 let tokens = require('./routes/tokens');
@@ -17,10 +21,6 @@ let users = require('./routes/users');
 let authRouter = require('./routes/auth');
 
 
-
-
-
-
 const app = express();
 
 app.use(express.json());
@@ -29,13 +29,13 @@ const allowedOrigins = process.env.API_CORS_ALLOWED_ORIGINS?.split(',') || ['htt
 const options: cors.CorsOptions = {
     origin: allowedOrigins
 };
-app.use(cors(options))
+app.use(cors(options));
 
 const pathsToIgnore = [/\/auth(\/.*)?/, new RegExp("\/users\/[^\/]+")];
 
-const applyMiddlewareByPathFilter = function (middleware, paths: RegExp[]) {
-    return (req, res, next) => {
-        if (paths.some((pathRegex) => (req._parsedUrl.pathname as string).match(pathRegex))) {
+const applyMiddlewareByPathFilter = function (middleware: (req: Request, res: Response, next: NextFunction) => void, paths: RegExp[]) {
+    return (req: Request, res: Response, next: NextFunction) => {
+        if (paths.some((pathRegex) => (url.parse(req.url).pathname as string).match(pathRegex))) {
             next();
         } else {
             middleware(req, res, next);

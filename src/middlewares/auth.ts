@@ -1,13 +1,16 @@
-import express from 'express'
+import * as express from 'express'
 import jwt from 'jsonwebtoken'
 import { getUserByPublicKey } from '../api/users'
 import nacl from 'tweetnacl'
 import bs58 from 'bs58'
-import Roles from '../constants/Roles'
+import { UserRole } from '../models/model'
+import { Request, Response, NextFunction } from 'express';
 
-const { TOKEN_KEY } = process.env;
+const { TextEncoder } = require("util");
 
-const verifyToken = (req, res, next) => {
+const { TOKEN_KEY } = process.env || "Missing Token key";
+
+const verifyToken = (req: Request, res: Response, next: NextFunction) => {
   const token =
     req.body.token || req.query.token || req.headers["x-access-token"];
   if (!token) {
@@ -16,7 +19,8 @@ const verifyToken = (req, res, next) => {
     });
   }
   try {
-    const decoded = jwt.verify(token, TOKEN_KEY);
+
+    const decoded = jwt.verify(token, TOKEN_KEY as jwt.Secret);
     res.locals.jwt = decoded;
   } catch (err) {
     console.log("Invalid token. Error: ", err);
@@ -50,7 +54,7 @@ const validateUser = async (
 
   const publicKeyBytes = bs58.decode(publicAddress);
   const signatureBytes = bs58.decode(signature);
-  
+
   const result = nacl.sign.detached.verify(messageBytes, signatureBytes, publicKeyBytes);
 
   // The signature verification is successful if the address found with
@@ -63,25 +67,25 @@ const validateUser = async (
   return next()
 }
 
-const authorize = (roles:Roles[] = []) => {
-    // roles param can be a single role string (e.g. Role.User or 'User') 
-    // or an array of roles (e.g. [Role.Admin, Role.User] or ['Admin', 'User'])
-    if (typeof roles === 'string') {
-        roles = [roles];
+const authorize = (roles: UserRole[] = []) => {
+  // roles param can be a single role string (e.g. Role.User or 'User') 
+  // or an array of roles (e.g. [Role.Admin, Role.User] or ['Admin', 'User'])
+  if (typeof roles === 'string') {
+    roles = [roles];
+  }
+
+  return [
+    // authorize based on user role
+    (req: Request, res: Response, next: NextFunction) => {
+      if (roles.length && !roles.includes(res.locals.user.role)) {
+        // user's role is not authorized
+        return res.status(403).json({ message: 'Unauthorized' });
+      }
+
+      // authentication and authorization successful
+      next();
     }
-
-    return [
-        // authorize based on user role
-        (req, res, next) => {
-            if (roles.length && !roles.includes(res.locals.user.role)) {
-                // user's role is not authorized
-                return res.status(403).json({ message: 'Unauthorized' });
-            }
-
-            // authentication and authorization successful
-            next();
-        }
-    ];
+  ];
 }
 
-export default {validateUser, verifyToken, authorize};
+export default { validateUser, verifyToken, authorize };

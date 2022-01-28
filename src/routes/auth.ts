@@ -3,14 +3,16 @@ import { getUserByPublicKey, updateUserNonce } from '../api/users'
 import jwt from 'jsonwebtoken'
 import nacl from 'tweetnacl'
 import bs58 from 'bs58'
+import { Auth } from '../models/model'
+const { TextEncoder } = require("util");
 
 let router = express.Router();
 
-const config = process.env;
-const tokenSecret = config.TOKEN_KEY;
+const { TOKEN_KEY } = process.env || "Missing Token key";
 
-function generateToken(data){
-    return jwt.sign({data: data}, tokenSecret, {expiresIn: '24h'})
+
+function generateToken(data: Auth) {
+  return jwt.sign({ data: data }, TOKEN_KEY as string, { expiresIn: '24h' })
 }
 
 router.post('/', async function (req, res) {
@@ -35,8 +37,8 @@ router.post('/', async function (req, res) {
     const messageBytes = new TextEncoder().encode(msgString);
 
     const publicKeyBytes = bs58.decode(publicAddress);
-    const signatureBytes:Uint8Array = bs58.decode(signature);
-    
+    const signatureBytes: Uint8Array = bs58.decode(signature);
+
     const result = nacl.sign.detached.verify(messageBytes, signatureBytes, publicKeyBytes);
     if (!result) {
       console.log(`authentication failed`);
