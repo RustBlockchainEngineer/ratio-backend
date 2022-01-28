@@ -20,7 +20,7 @@ router.get('/:id', async function (req, res) {
 })
 
 router.post('/', async function (req, res) {
-    const keylist: string[] = ['name'];
+    const keylist: string[] = ['name', 'site', 'icon'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
     }
@@ -30,7 +30,7 @@ router.post('/', async function (req, res) {
 })
 
 router.put('/:id', async function (req, res) {
-    const keylist: string[] = ['name'];
+    const keylist: string[] = ['name', 'site', 'icon'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
     }

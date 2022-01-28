@@ -38,6 +38,8 @@ export interface Auth {
 export interface Platform {
     id?: string,
     name: string,
+    site?: string,
+    icon?: string,
     created_on?: number,
     updated_on?: number
 }
