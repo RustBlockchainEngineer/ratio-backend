@@ -31,6 +31,22 @@
 					"request": {
 						"method": "GET",
 						"header": [],
+						"url": {
+							"raw": "{{base_url}}/platforms/:platform_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"platforms",
+								":platform_id"
+							],
+							"variable": [
+								{
+									"key": "platform_id",
+									"value": null
+								}
+							]
+						},
 						"description": "Return a specific platform.\n\n``` json\n{\n        \"id\": string,\n        \"name\": string,\n        \"site\": string,\n        \"icon\": string,        \n        \"created_on\": timestamp,\n        \"updated_on\": timestamp\n}\n\n```"
 					},
 					"response": []
@@ -58,7 +74,7 @@
 								"platforms"
 							]
 						},
-						"description": "Add a new platform.\n\nthe request body should contains:\n\n``` json\n{\n\"name\": string,\n\"site\": string,\n\"icon\": string\n}\n\n```"
+						"description": "Add a new platform.\n\nthe request body should contains:\n\n``` json\n{\n\"address_id\": string,\n\"site\": string,\n\"icon\": string\n}\n\n```"
 					},
 					"response": []
 				},
@@ -67,6 +83,22 @@
 					"request": {
 						"method": "PUT",
 						"header": [],
+						"url": {
+							"raw": "{{base_url}}/platforms/:platform_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"platforms",
+								":platform_id"
+							],
+							"variable": [
+								{
+									"key": "platform_id",
+									"value": null
+								}
+							]
+						},
 						"description": "update a specific platform.\n\nthe body should contains:\n\n``` json\n{\n\"name\": string,\n\"site\": string,\n\"icon\": string\n}\n\n```"
 					},
 					"response": []
@@ -76,6 +108,22 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
+						"url": {
+							"raw": "{{base_url}}/platforms/:platform_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"platforms",
+								":platform_id"
+							],
+							"variable": [
+								{
+									"key": "platform_id",
+									"value": null
+								}
+							]
+						},
 						"description": "Delete a specific Platform"
 					},
 					"response": []
@@ -99,7 +147,7 @@
 								"lpairs"
 							]
 						},
-						"description": "return a list of all Liquid Pairs we have in the system.\n\nReturn:\n\n``` json\n[{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n},...]\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
+						"description": "return a list of all Liquid Pairs we have in the system.\n\nReturn:\n\n``` json\n[{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_name\": string,\n        \"platform_site\": string,\n        \"platform_icon\": string,        \n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n        \"lpasset\":[\n        {\n        \"token_address_id\":string,\n        \"token_symbole\":string,\n        \"token_pool_size\":string,\n        \"token_icon\":string\n        },...]\n}\n,...]\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
 					},
 					"response": []
 				},
@@ -124,7 +172,7 @@
 								}
 							]
 						},
-						"description": "return a specific Liquid Pair:\n\nReturn:\n\n``` json\n{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n}\n\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
+						"description": "return a specific Liquid Pair:\n\nReturn:\n\n``` json\n{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_name\": string,\n        \"platform_site\": string,\n        \"platform_icon\": string,        \n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n        \"lpasset\":[\n        {\n        \"token_address_id\":string,\n        \"token_symbole\":string,\n        \"token_pool_size\":string,\n        \"token_icon\":string\n        },...]\n}\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
 					},
 					"response": []
 				},
@@ -1128,7 +1176,7 @@
 										"max"
 									]
 								},
-								"description": "Return list of all value:\n\n``` json\n[\n{\"max_usd\":number,\"created_on\": timestamp},\n{\"max_usdr\":number,\"created_on\": timestamp}\n,...]\n\n```"
+								"description": "Return list of all value:\n\n``` json\n[\n{\"max_usd\":number,\"created_on\": timestamp},\n{\"max_usdr\":number,\"created_on\": timestamp},\n{\"max_deposit_cap\":number,\"created_on\": timestamp}\n,...]\n\n```"
 							},
 							"response": []
 						},
@@ -1148,7 +1196,7 @@
 										"list"
 									]
 								},
-								"description": "Return the list of:\n\n``` json\n['max_usd','max_usdr']\n\n```"
+								"description": "Return the list of:\n\n``` json\n['max_usd','max_usdr','max_deposit_cap']\n\n```"
 							},
 							"response": []
 						},
@@ -1168,7 +1216,7 @@
 										"last"
 									]
 								},
-								"description": "Return the last value of the max parameters:\n\n``` json\n[\n{\"max_usd\":number,\"created_on\": timestamp},\n{\"max_usdr\":number,\"created_on\": timestamp}\n]\n\n\n```"
+								"description": "Return the last value of the max parameters:\n\n``` json\n[\n{\"max_usd\":number,\"created_on\": timestamp},\n{\"max_usdr\":number,\"created_on\": timestamp},\n{\"max_deposit_cap\":number,\"created_on\": timestamp}\n]\n\n```"
 							},
 							"response": []
 						},
@@ -1196,7 +1244,7 @@
 										"max"
 									]
 								},
-								"description": "Add new max parameters values:\n\nBody:\n\n``` json\n{\n'max_usd':number,\n'max_usdr': number\n}\n\n```"
+								"description": "Add new max parameters values:\n\nBody:\n\n``` json\n{\n\"max_usd\":number,\n\"max_usdr\": number,\n\"max_deposit_cap\":number\n}\n\n```"
 							},
 							"response": []
 						},

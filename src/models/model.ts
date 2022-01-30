@@ -50,6 +50,9 @@ export interface LPair {
     page_url: string,
     pool_size: number,
     platform_id: string,
+    platform_name?: string,
+    platform_site?: string,
+    platform_icon?: string,
     collateralization_ratio: number,
     liquidation_ratio: number,
     risk_rating: RISK_RATING,
@@ -122,6 +125,6 @@ export interface PARAM {
 
 export const COLLATERALRATIO = ['cr_aaa_ratio', 'cr_aa_ratio', 'cr_a_ratio', 'cr_bbb_ratio', 'cr_bb_ratio', 'cr_b_ratio', 'cr_ccc_ratio', 'cr_cc_ratio', 'cr_c_ratio', 'cr_d_ratio'];
 export const MAXRISKRATING = ['max_usdr_aaa', 'max_usdr_aa', 'max_usdr_a', 'max_usdr_bbb', 'max_usdr_bb', 'max_usdr_b', 'max_usdr_ccc', 'max_usdr_cc', 'max_usdr_c', 'max_usdr_d'];
-export const MAXUSDR = ['max_usd', 'max_usdr'];
+export const MAXUSDR = ['max_usd', 'max_usdr', 'max_deposit_cap'];
 export const TRANSACTIONFEE = ['deposit_fee', 'withdraw_fee', 'borrow_fee', 'payback_fee', 'reward_fee', 'swap_fee', 'stake_fee'];
 

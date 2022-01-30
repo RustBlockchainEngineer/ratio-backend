@@ -30,10 +30,17 @@ export async function getAllPlatforms(callback: (r: Platform[]) => void) {
     });
 }
 
-export async function getPlatform(id: string, callback: (p: Platform) => void) {
-    dbcon.query(`SELECT id,name,site,icon FROM RFDATA.PLATFORMS WHERE id = ?`, [id], (err, result) => {
-        const rows = <RowDataPacket>result;
-        let record: Platform = map_row_platform(rows);
+export async function getPlatform(id: string, callback: (p: Platform | undefined) => void) {
+    dbcon.query(`SELECT id,name,site,icon FROM RFDATA.PLATFORMS WHERE id = "${id}"`, (err, result) => {
+        if (err)
+            throw err;
+        const rows = <RowDataPacket[]>result;
+        let record: Platform | undefined;
+        if (rows.length > 0)
+            record = map_row_platform(rows[0]);
+        else
+            record = undefined;
+
         callback(record);
     });
 }
@@ -51,15 +58,14 @@ export async function addPlatform(data: Platform): Promise<Platform> {
 export async function updatePlatform(id: string, data: Platform): Promise<Platform> {
     let now = Date.now();
     dbcon.query(
-        `UPDATE RFDATA.PLATFORMS SET name = ? ,site = ?, icon = ?,updated_on = FROM_UNIXTIME(? * 0.001) WHERE id = ?`,
-        [data["name"], data["site"], data["icon"], now, id]
+        `UPDATE RFDATA.PLATFORMS SET name = ? ,site = ?, icon = ?,updated_on = FROM_UNIXTIME(? * 0.001) WHERE id = "${id}"`,
+        [data["name"], data["site"], data["icon"], now]
     );
     return { "id": id, "name": data["name"], "site": data["site"], "icon": data["icon"], "updated_on": now };
 }
 
 export async function deletePlatform(id: string) {
     dbcon.query(
-        `DELETE FROM RFDATA.PLATFORMS WHERE id = ?`, [id]
-    );
+        `DELETE FROM RFDATA.PLATFORMS WHERE id = "${id}"`);
     return { "id": id }
 }

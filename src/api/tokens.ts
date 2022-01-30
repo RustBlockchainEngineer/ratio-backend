@@ -19,7 +19,7 @@ export async function getAllTokens(callback: (r: Token[]) => void) {
 }
 
 export async function getToken(address_id: string, callback: (r: Token | undefined) => void) {
-    dbcon.query(`SELECT address_id,symbol,icon FROM RFDATA.TOKENS WHERE address_id = ?`, [address_id], function (err, result) {
+    dbcon.query(`SELECT address_id,symbol,icon FROM RFDATA.TOKENS WHERE address_id = "${address_id}"`, function (err, result) {
         if (err)
             throw err;
         const rows = <RowDataPacket[]>result;
@@ -53,7 +53,7 @@ export async function addNewPriceToken(address_id: string, data: Price) {
 
 export async function getLatestTokenPrice(address_id: string, callback: (r: Price | undefined) => void) {
 
-    dbcon.query("SELECT price,confidence,created_on FROM RFDATA.PRICES WHERE address_id = ? ORDER BY created_on desc LIMIT 1", [address_id], function (err, result) {
+    dbcon.query(`SELECT price,confidence,created_on FROM RFDATA.PRICES WHERE address_id = "${address_id}" ORDER BY created_on desc LIMIT 1`, function (err, result) {
         if (err)
             throw err;
         const rows = <RowDataPacket[]>result;
@@ -76,7 +76,7 @@ export async function updateToken(address_id: string, data: Token) {
     let now = Date.now();
     cacheList[address_id] = data["symbol"];
     dbcon.query(
-        `UPDATE RFDATA.TOKENS SET symbol = ? , icon = ?,updated_on = FROM_UNIXTIME(? * 0.001) WHERE address_id = ?`,
+        `UPDATE RFDATA.TOKENS SET symbol = ? , icon = ?,updated_on = FROM_UNIXTIME(? * 0.001) WHERE address_id = "${address_id}"`,
         [data["symbol"], data["icon"], now, address_id]
     );
     return data;
@@ -85,7 +85,7 @@ export async function updateToken(address_id: string, data: Token) {
 export async function deleteToken(address_id: string) {
     delete cacheList[address_id];
     dbcon.query(
-        `DELETE FROM RFDATA.TOKENS WHERE address_id = ?`, [address_id]
+        `DELETE FROM RFDATA.TOKENS WHERE address_id = "${address_id}"`
     );
     return { "address_id": address_id }
 }

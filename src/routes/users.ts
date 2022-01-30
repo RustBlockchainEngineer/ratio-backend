@@ -14,7 +14,7 @@ router.get('/', authMiddleware.authorize([UserRole.ADMIN]), async function (req:
     });
 })
 
-router.get('/:wallet_address_id', async function (req, res) {
+router.get('/:wallet_address_id', async function (req: Request, res: Response) {
     const user = await getUserByPublicKey(req.params.wallet_address_id);
     if (!user) {
         return res.status(404).send({
@@ -24,7 +24,7 @@ router.get('/:wallet_address_id', async function (req, res) {
     res.send(JSON.stringify(user));
 })
 
-router.get('/nonce/:wallet_address_id', async function (req, res) {
+router.get('/nonce/:wallet_address_id', async function (req: Request, res: Response) {
     await getUserNonce(req.params.wallet_address_id, function (result) {
         res.send(JSON.stringify(result));
     });

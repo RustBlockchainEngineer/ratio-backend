@@ -5,74 +5,112 @@ import { cacheList } from '../api/cacheList'
 
 function map_row_lpair(row: RowDataPacket): LPair {
     return {
-        "address_id": row.address_id,
-        "symbol": row.symbol,
-        "page_url": row.page_url,
-        "pool_size": row.pool_size,
-        "platform_id": row.platform_id,
-        "collateralization_ratio": row.collateralization_ratio,
-        "liquidation_ratio": row.liquidation_ratio,
-        "risk_rating": row.risk_rating,
-        "created_on": row.created_on,
-        "updated_on": row.updated_on,
+        "address_id": row.lp_address_id,
+        "symbol": row.lp_symbol,
+        "page_url": row.lp_page_url,
+        "pool_size": row.lp_pool_size,
+        "platform_id": row.lp_platform_id,
+        "platform_name": row.lp_platform_name,
+        "platform_site": row.lp_platform_site,
+        "platform_icon": row.lp_platform_icon,
+        "collateralization_ratio": row.lp_collateralization_ratio,
+        "liquidation_ratio": row.lp_liquidation_ratio,
+        "risk_rating": row.lp_risk_rating,
+        "created_on": row.lp_created_on,
+        "updated_on": row.lp_updated_on,
     }
 }
 
-export async function getAllLPairs(callback: (r: LPair[]) => void) {
-    dbcon.query(`SELECT 
-                    address_id, 
-                    symbol,
-                    page_url,
-                    pool_size,
-                    platform_id,
-                    collateralization_ratio,
-                    liquidation_ratio,
-                    risk_rating,
-                    created_on,
-                    updated_on 
-                FROM RFDATA.LPAIRS`, function (err, result) {
-        if (err)
-            throw err;
-        const rows = <RowDataPacket[]>result;
-        let records: LPair[] = rows.map((row: RowDataPacket) => {
-            return map_row_lpair(row);
+export async function getAllLPairs(callback: (r: LPair[] | undefined) => void) {
+    dbcon.query(`SELECT
+                    lp.address_id lp_address_id,
+                    lp.symbol lp_symbol,
+                    lp.page_url lp_page_url,
+                    lp.pool_size lp_pool_size,
+                    lp.platform_id lp_platform_id,
+                    plt.name lp_platform_name,
+                    plt.site lp_platform_site,
+                    plt.icon lp_platform_icon,
+                    lp.collateralization_ratio lp_collateralization_ratio,
+                    lp.liquidation_ratio lp_liquidation_ratio,
+                    lp.risk_rating lp_risk_rating,
+                    lp.created_on lp_created_on,
+                    lp.updated_on lp_updated_on,
+                    tkn.symbol tkn_symbol,
+                    tkn.icon tkn_icon,
+                    lpa.token_address_id,
+                    lpa.pool_size token_pool_size
+                FROM RFDATA.LPAIRS lp
+                JOIN RFDATA.PLATFORMS plt ON plt.id = lp.platform_id
+                LEFT JOIN RFDATA.LPASSETS lpa ON lp.address_id = lpa.lpair_address_id
+                JOIN RFDATA.TOKENS tkn ON lpa.token_address_id = tkn.address_id`
+        , function (err, result) {
+            if (err)
+                throw err;
+            const rows = <RowDataPacket[]>result;
+            let result_obj: { [key: string]: LPair } = {};
+            if (rows.length > 0) {
+                for (let row of rows) {
+                    let record = result_obj[row.lp_address_id];
+                    if (record == undefined)
+                        record = map_row_lpair(row);
+
+                    let lpasset: LPAsset[] | undefined = record.lpasset;
+                    if (lpasset == undefined)
+                        lpasset = [];
+
+                    if (row.token_address_id)
+                        lpasset.push({
+                            "token_address_id": row.token_address_id,
+                            "token_symbole": row.tkn_symbol,
+                            "token_pool_size": row.token_pool_size,
+                            "token_icon": row.tkn_icon
+                        })
+                    record["lpasset"] = lpasset;
+                    result_obj[row.lp_address_id] = record;
+                }
+            }
+            callback(Object.values(result_obj));
         });
-        callback(records);
-    });
 }
 
 export async function getLPair(address_id: string, callback: (r: LPair | undefined) => void) {
     dbcon.query(`SELECT
-                    lp.address_id,                      
-                    lp.symbol,
-                    lp.page_url,
-                    lp.pool_size,
-                    lp.platform_id,
-                    lp.collateralization_ratio,
-                    lp.liquidation_ratio,
-                    lp.risk_rating,
-                    lp.created_on,
-                    lp.updated_on,                    
-                    tkn.symbol,
-                    tkn.icon,
+                    lp.address_id lp_address_id,
+                    lp.symbol lp_symbol,
+                    lp.page_url lp_page_url,
+                    lp.pool_size lp_pool_size,
+                    lp.platform_id lp_platform_id,
+                    plt.name lp_platform_name,
+                    plt.site lp_platform_site,
+                    plt.icon lp_platform_icon,
+                    lp.collateralization_ratio lp_collateralization_ratio,
+                    lp.liquidation_ratio lp_liquidation_ratio,
+                    lp.risk_rating lp_risk_rating,
+                    lp.created_on lp_created_on,
+                    lp.updated_on lp_updated_on,
+                    tkn.symbol tkn_symbol,
+                    tkn.icon tkn_icon,
                     lpa.token_address_id,
                     lpa.pool_size token_pool_size
-                FROM RFDATA.LPAIRS lp
-                JOIN RFDATA.LPASSETS lpa ON lp.address_id = lpa.lpair_address_id
+                FROM RFDATA.LPAIRS lp,
+                JOIN RFDATA.PLATFORMS plt ON plt.id = lp.platform_id
+                LEFT JOIN RFDATA.LPASSETS lpa ON lp.address_id = lpa.lpair_address_id
                 JOIN RFDATA.TOKENS tkn ON lpa.token_address_id = tkn.address_id
-                WHERE address_id = ?`, [address_id], function (err, result) {
+                WHERE lp.address_id = "${address_id}"`, function (err, result) {
         const rows = <RowDataPacket[]>result;
         let record: LPair | undefined = undefined;
-        if (rows) {
-            let record: LPair = map_row_lpair(rows[0]);
+        if (rows.length > 0) {
+            record = map_row_lpair(rows[0]);
             let lpasset: LPAsset[] = [];
             for (let row of rows) {
-                lpasset.push({
-                    "token_address_id": row.token_address_id,
-                    "token_symbole": row.symbol,
-                    "token_pool_size": row.token_pool_size,
-                    "token_icon": row.icon
-                })
+                if (row.token_address_id)
+                    lpasset.push({
+                        "token_address_id": row.token_address_id,
+                        "token_symbole": row.tkn_symbol,
+                        "token_pool_size": row.token_pool_size,
+                        "token_icon": row.tkn_icon
+                    })
             }
             record["lpasset"] = lpasset;
         }
@@ -84,10 +122,10 @@ export async function saveLPair(address_id: string, data: LPair): Promise<boolea
     let ts = Date.now();
     cacheList[address_id] = data["symbol"];
     dbcon.query(
-        `DELETE FROM RFDATA.LPAIRS WHERE address_id = ?`, [address_id]
+        `DELETE FROM RFDATA.LPAIRS WHERE address_id = "${address_id}"`
     );
     dbcon.query(
-        `DELETE FROM RFDATA.LPASSETS WHERE lpair_address_id = ?`, [address_id]
+        `DELETE FROM RFDATA.LPASSETS WHERE lpair_address_id = "${address_id}"`
     );
 
     dbcon.query(
@@ -126,16 +164,16 @@ export async function saveLPair(address_id: string, data: LPair): Promise<boolea
 export async function deleteLPair(id: string) {
     delete cacheList[id];
     dbcon.query(
-        `DELETE FROM RFDATA.LPAIRS WHERE address_id = ?`, [id]
+        `DELETE FROM RFDATA.LPAIRS WHERE address_id = "${id}"`
     );
     dbcon.query(
-        `DELETE FROM RFDATA.LPASSETS WHERE lpair_address_id = ?`, [id]
+        `DELETE FROM RFDATA.LPASSETS WHERE lpair_address_id = "${id}"`
     );
     dbcon.query(
-        `DELETE FROM RFDATA.LPAIRPARAMS WHERE lpair_address_id = ?`, [id]
+        `DELETE FROM RFDATA.LPAIRPARAMS WHERE lpair_address_id = "${id}"`
     );
     dbcon.query(
-        `DELETE FROM RFDATA.LPAIRAPRS WHERE lpair_address_id = ?`, [id]
+        `DELETE FROM RFDATA.LPAIRAPRS WHERE lpair_address_id = "${id}"`
     );
     return { "address_id": id }
 }

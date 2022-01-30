@@ -29,7 +29,7 @@ export async function getDetailTransactions(wallet_address_id: string, address_i
                     sawp_group,
                     conversion_rate,
                     base_address_id
-                FROM RFDATA.TRANSACTIONS WHERE wallet_address_id = ? AND address_id = ?`, [wallet_address_id, address_id], function (err, result) {
+                FROM RFDATA.TRANSACTIONS WHERE wallet_address_id = "${wallet_address_id}" AND address_id = "${address_id}"`, function (err, result) {
         if (err)
             throw err;
         const rows = <RowDataPacket[]>result;
@@ -45,7 +45,7 @@ export async function getVault(wallet_address_id: string, callback: (r: Object[]
     dbcon.query(`SELECT 
             address_id,
             sum(amount)
-        FROM RFDATA.TRANSACTIONS WHERE wallet_address_id = ? GROUP BY address_id`, [wallet_address_id], function (err, result) {
+        FROM RFDATA.TRANSACTIONS WHERE wallet_address_id = "${wallet_address_id}" GROUP BY address_id`, function (err, result) {
         if (err)
             throw err;
         const rows = <RowDataPacket[]>result;
