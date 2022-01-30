@@ -5,7 +5,7 @@ import { LPairParam } from '../models/model'
 
 export async function getAllLPairParam(lpair_address_id: string, callback: (r: LPairParam[]) => void) {
 
-    dbcon.query("SELECT max_deposit,max_borrow,created_on FROM RFDATA.LPAIRPARAMS WHERE lpair_address_id = ? ORDER BY created_on", [lpair_address_id], function (err, result) {
+    dbcon.query(`SELECT max_deposit,max_borrow,created_on FROM RFDATA.LPAIRPARAMS WHERE lpair_address_id = "${lpair_address_id}" ORDER BY created_on`, function (err, result) {
         if (err)
             throw err;
         const rows = <RowDataPacket[]>result;
@@ -18,7 +18,7 @@ export async function getAllLPairParam(lpair_address_id: string, callback: (r: L
 
 export async function getlatestLPairParam(lpair_address_id: string, callback: (r: LPairParam | undefined) => void) {
 
-    dbcon.query("SELECT max_deposit,max_borrow,created_on FROM RFDATA.LPAIRPARAMS WHERE lpair_address_id = ? ORDER BY created_on desc LIMIT 1", [lpair_address_id], function (err, result) {
+    dbcon.query(`SELECT max_deposit,max_borrow,created_on FROM RFDATA.LPAIRPARAMS WHERE lpair_address_id = "${lpair_address_id}" ORDER BY created_on desc LIMIT 1`, function (err, result) {
         if (err)
             throw err;
         const rows = <RowDataPacket[]>result;
@@ -40,7 +40,7 @@ export async function addLPairParam(lpair_address_id: string, data: LPairParam):
     let ts = Date.now();
 
     dbcon.query(
-        `INSERT INTO RFDATA.LPAIRPARAMS(lpair_id,max_deposit,max_borrow,created_on) VALUES (?,?,?,FROM_UNIXTIME(? * 0.001))`,
+        `INSERT INTO RFDATA.LPAIRPARAMS(lpair_address_id,max_deposit,max_borrow,created_on) VALUES (?,?,?,FROM_UNIXTIME(? * 0.001))`,
         [lpair_address_id, data["max_deposit"], data["max_deposit"], ts]
     );
     return {
@@ -52,8 +52,6 @@ export async function addLPairParam(lpair_address_id: string, data: LPairParam):
 }
 
 export async function deleteAllLPairParam(lpair_address_id: string) {
-    dbcon.query(
-        `DELETE FROM RFDATA.LPAIRPARAMS WHERE lpair_address_id = ?`, [lpair_address_id]
-    );
+    dbcon.query(`DELETE FROM RFDATA.LPAIRPARAMS WHERE lpair_address_id = ${lpair_address_id}`);
     return { "lpair_address_id": lpair_address_id }
 }
