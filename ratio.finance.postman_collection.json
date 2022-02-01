@@ -253,32 +253,6 @@
 					"response": []
 				},
 				{
-					"name": "List a Liquid Pair Params",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/lpairs/:lpair_id/param",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"lpairs",
-								":lpair_id",
-								"param"
-							],
-							"variable": [
-								{
-									"key": "lpair_id",
-									"value": null
-								}
-							]
-						},
-						"description": "return a liquid pair's Params as list:\n\n``` json\n[{ \n\"lpair_address_id\": string, \n\"max_deposit\": number, \n\"max_borrow\": number,\n\"created_on\": timestamp \n},...]\n\n```"
-					},
-					"response": []
-				},
-				{
 					"name": "Get latest APR value",
 					"request": {
 						"method": "GET",
@@ -302,6 +276,84 @@
 							]
 						},
 						"description": "return the latest value for APR for a specific liquid pair.\n\nReturn:\n\n``` json\n{\n  \"lpair_address_id\": string,\n  \"apr\": number,\n  \"created_on\": timestamp\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Add new APR",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lpairs/:lpair_id/apr",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lpairs",
+								":lpair_id",
+								"apr"
+							],
+							"variable": [
+								{
+									"key": "lpair_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Add new APR value for a specific liquid pair\n\nthe body:\n\n``` json\n{\n\"apr\": number\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete all the APRs",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lpairs/:lpair_id/aprs",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lpairs",
+								":lpair_id",
+								"aprs"
+							],
+							"variable": [
+								{
+									"key": "lpair_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Delete all the APRs value for a specific liquid pair."
+					},
+					"response": []
+				},
+				{
+					"name": "List a Liquid Pair Params",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lpairs/:lpair_id/param",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lpairs",
+								":lpair_id",
+								"param"
+							],
+							"variable": [
+								{
+									"key": "lpair_id",
+									"value": null
+								}
+							]
+						},
+						"description": "return a liquid pair's Params as list:\n\n``` json\n[{ \n\"lpair_address_id\": string, \n\"max_deposit\": number, \n\"max_borrow\": number,\n\"created_on\": timestamp \n},...]\n\n```"
 					},
 					"response": []
 				},
@@ -333,32 +385,6 @@
 					"response": []
 				},
 				{
-					"name": "Add new APR",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/lpairs/:lpair_id/apr",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"lpairs",
-								":lpair_id",
-								"apr"
-							],
-							"variable": [
-								{
-									"key": "lpair_id",
-									"value": null
-								}
-							]
-						},
-						"description": "Add new APR value for a specific liquid pair\n\nthe body:\n\n``` json\n{\n\"apr\": number\n}\n\n```"
-					},
-					"response": []
-				},
-				{
 					"name": "Add new Params",
 					"request": {
 						"method": "POST",
@@ -381,32 +407,6 @@
 							]
 						},
 						"description": "Add new Param value for a specific liquid pair\n\nthe body:\n\n``` json\n{\n\"max_deposit\": number,\n\"max_borrow\": number\n}\n\n```"
-					},
-					"response": []
-				},
-				{
-					"name": "Delete all the APRs",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/lpairs/:lpair_id/aprs",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"lpairs",
-								":lpair_id",
-								"aprs"
-							],
-							"variable": [
-								{
-									"key": "lpair_id",
-									"value": null
-								}
-							]
-						},
-						"description": "Delete all the APRs value for a specific liquid pair."
 					},
 					"response": []
 				},
@@ -1176,7 +1176,7 @@
 										"max"
 									]
 								},
-								"description": "Return list of all value:\n\n``` json\n[\n{\"max_usd\":number,\"created_on\": timestamp},\n{\"max_usdr\":number,\"created_on\": timestamp},\n{\"max_deposit_cap\":number,\"created_on\": timestamp}\n,...]\n\n```"
+								"description": "Return list of all value:\n\n``` json\n[\n{\"max_usd\":number,\"created_on\": timestamp},\n{\"max_usdr\":number,\"created_on\": timestamp},\n{\"max_deposit_cap\":number,\"created_on\": timestamp},\n{\"max_borrow\":number,\"created_on\": timestamp}\n,...]\n\n```"
 							},
 							"response": []
 						},
@@ -1196,7 +1196,7 @@
 										"list"
 									]
 								},
-								"description": "Return the list of:\n\n``` json\n['max_usd','max_usdr','max_deposit_cap']\n\n```"
+								"description": "Return the list of:\n\n``` json\n[\"max_usd\",\"max_usdr\",\"max_deposit_cap\",\"max_borrow\"]\n\n```"
 							},
 							"response": []
 						},
@@ -1216,7 +1216,7 @@
 										"last"
 									]
 								},
-								"description": "Return the last value of the max parameters:\n\n``` json\n[\n{\"max_usd\":number,\"created_on\": timestamp},\n{\"max_usdr\":number,\"created_on\": timestamp},\n{\"max_deposit_cap\":number,\"created_on\": timestamp}\n]\n\n```"
+								"description": "Return the last value of the max parameters:\n\n``` json\n[\n{\"max_usd\":number,\"created_on\": timestamp},\n{\"max_usdr\":number,\"created_on\": timestamp},\n{\"max_deposit_cap\":number,\"created_on\": timestamp},\n{\"max_borrow\":number,\"created_on\": timestamp}\n]\n\n```"
 							},
 							"response": []
 						},
@@ -1244,7 +1244,7 @@
 										"max"
 									]
 								},
-								"description": "Add new max parameters values:\n\nBody:\n\n``` json\n{\n\"max_usd\":number,\n\"max_usdr\": number,\n\"max_deposit_cap\":number\n}\n\n```"
+								"description": "Add new max parameters values:\n\nBody:\n\n``` json\n{\n\"max_usd\":number,\n\"max_usdr\": number,\n\"max_deposit_cap\":number,\n\"max_borrow\":number\n}\n\n```"
 							},
 							"response": []
 						},
@@ -1408,6 +1408,111 @@
 							]
 						},
 						"description": "delete a user."
+					},
+					"response": []
+				},
+				{
+					"name": "List All user's parameters values",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/:wallet_address_id/param",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								":wallet_address_id",
+								"param"
+							],
+							"variable": [
+								{
+									"key": "wallet_address_id",
+									"value": null
+								}
+							]
+						},
+						"description": "return a list of all the users's parameters values:\n\n``` json\n[{ \n\"wallet_address_id\": string, \n\"max_deposit\": number, \n\"max_borrow\": number,\n\"created_on\": timestamp \n},...]\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get latest Users's Params value",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/:wallet_address_id/param/last",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								":wallet_address_id",
+								"param",
+								"last"
+							],
+							"variable": [
+								{
+									"key": "wallet_address_id",
+									"value": null
+								}
+							]
+						},
+						"description": "return the latest users's parameters value.\n\nReturn:\n\n``` json\n{\n  \"wallet_address_id\": string,\n  \"max_deposit\": number,\n  \"max_borrow\": number,\n  \"created_on\": timestamp\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Add new Users's Param",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/:wallet_address_id/param",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								":wallet_address_id",
+								"param"
+							],
+							"variable": [
+								{
+									"key": "wallet_address_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Add new Users's Param value.\n\nthe body:\n\n``` json\n{\n\"max_deposit\": number,\n\"max_borrow\": number\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete all User's Param values",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/:wallet_address_id/params",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								":wallet_address_id",
+								"params"
+							],
+							"variable": [
+								{
+									"key": "wallet_address_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Delete all the User's Params values\n\n."
 					},
 					"response": []
 				}
