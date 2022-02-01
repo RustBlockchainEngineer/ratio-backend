@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import authMiddleware from '../middlewares/auth';
 import { UserRole } from '../models/model';
 import { getAllUsers, getUserByPublicKey, addUser, updateUser, deleteUser, getUserNonce } from '../api/users'
+import { getAllUserParam, getlatestUserParam, addUserParam, deleteAllUserParam } from '../api/userparam';
 import { isNotSafe } from '../utils/utils';
 
 let router = express.Router();
@@ -51,6 +52,32 @@ router.put('/:wallet_address_id', authMiddleware.authorize([UserRole.ADMIN]), as
 router.delete('/:wallet_address_id', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
 
     let result = await deleteUser(req.params.wallet_address_id);
+    res.send(JSON.stringify(result));
+})
+
+router.get('/:wallet_address_id/param', async function (req, res) {
+    let result = await getAllUserParam(req.params.wallet_address_id, function (result) {
+        res.send(JSON.stringify(result));
+    });
+})
+
+router.get('/:wallet_address_id/param/last', async function (req, res) {
+    let result = await getlatestUserParam(req.params.wallet_address_id, function (result) {
+        res.send(JSON.stringify(result));
+    });
+})
+
+router.post('/:wallet_address_id/param/', async function (req, res) {
+    const keylist: string[] = ['max_deposit', 'max_borrow'];
+    if (isNotSafe(keylist, req.body)) {
+        return res.status(400).send({ error: 'Request body missing some parameters' });
+    }
+    let result = await addUserParam(req.params.wallet_address_id, req.body);
+    res.send(JSON.stringify(result));
+})
+
+router.delete('/:wallet_address_id/params', async function (req, res) {
+    let result = await deleteAllUserParam(req.params.wallet_address_id);
     res.send(JSON.stringify(result));
 })
 
