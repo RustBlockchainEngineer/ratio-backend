@@ -32,6 +32,20 @@ export async function getlatestParamValue(param_list: string[], callback: (r: Ob
     });
 }
 
+export async function getParamValue(param_name: string, callback: (r: Object[]) => void) {
+
+    dbcon.query(`SELECT param_type,param_value,created_on
+                FROM RFDATA.RATIOCONFIG WHERE param_type = ${param_name} order by created_on desc LIMIT 1`, function (err, result) {
+        if (err)
+            throw err;
+        const rows = <RowDataPacket[]>result;
+        let records = rows.map((row: RowDataPacket) => {
+            return { [row.param_type]: row.param_value, "created_on": row.created_on * 1000 };
+        });
+        callback(records);
+    });
+}
+
 export async function getlatestGrrLastDate(callback: (r: number) => void) {
     dbcon.query(`SELECT MAX(created_on) FROM RFDATA.RATIOCONFIG WHERE param_type LIKE 'GRR:%'`, function (err, result) {
         if (err)
@@ -81,6 +95,16 @@ export async function getGrrParamList(callback: (r: string[]) => void) {
             callback(records);
         });
     })
+}
+
+export async function addParamValue(param_name: string, data: { [key: string]: number }) {
+    let ts = Date.now();
+    dbcon.query(
+        `INSERT INTO RFDATA.RATIOCONFIG(param_type,param_value,created_on) VALUES (?,?,FROM_UNIXTIME(? * 0.001))`,
+        [param_name, data["param_value"], ts]
+    );
+    data["created_on"] = ts;
+    return data;
 }
 
 export async function addParamsValue(data: { [key: string]: number }) {
