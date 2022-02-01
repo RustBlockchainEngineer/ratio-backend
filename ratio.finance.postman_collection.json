@@ -1159,69 +1159,95 @@
 					]
 				},
 				{
-					"name": "Max",
+					"name": "General",
 					"item": [
 						{
-							"name": "Get All Max parameter",
+							"name": "Get All General parameter",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/ratioconfig/max",
+									"raw": "{{base_url}}/ratioconfig/general",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"ratioconfig",
-										"max"
+										"general"
 									]
 								},
-								"description": "Return list of all value:\n\n``` json\n[\n{\"max_usd\":number,\"created_on\": timestamp},\n{\"max_usdr\":number,\"created_on\": timestamp},\n{\"max_deposit_cap\":number,\"created_on\": timestamp},\n{\"max_borrow\":number,\"created_on\": timestamp}\n,...]\n\n```"
+								"description": "Return list of all value:\n\n``` json\n[\n{\"max_usd\":number,\"created_on\": timestamp},\n{\"max_usdr\":number,\"created_on\": timestamp},\n{\"max_deposit_cap\":number,\"created_on\": timestamp},\n{\"max_borrow\":number,\"created_on\": timestamp},\n{\"price_interval\":number,\"created_on\": timestamp}\n,...]\n\n```"
 							},
 							"response": []
 						},
 						{
-							"name": "Get list if Max parameters",
+							"name": "Get list of General parameters",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/ratioconfig/max/list",
+									"raw": "{{base_url}}/ratioconfig/general/list",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"ratioconfig",
-										"max",
+										"general",
 										"list"
 									]
 								},
-								"description": "Return the list of:\n\n``` json\n[\"max_usd\",\"max_usdr\",\"max_deposit_cap\",\"max_borrow\"]\n\n```"
+								"description": "Return the list of:\n\n``` json\n[\"max_usd\",\"max_usdr\",\"max_deposit_cap\",\"max_borrow\",\"price_interval\"]\n\n```"
 							},
 							"response": []
 						},
 						{
-							"name": "Get last Max parameter values",
+							"name": "Get last general parameter value",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/ratioconfig/max/last",
+									"raw": "{{base_url}}/ratioconfig/general/:param_name",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"ratioconfig",
-										"max",
-										"last"
+										"general",
+										":param_name"
+									],
+									"variable": [
+										{
+											"key": "param_name",
+											"value": null
+										}
 									]
 								},
-								"description": "Return the last value of the max parameters:\n\n``` json\n[\n{\"max_usd\":number,\"created_on\": timestamp},\n{\"max_usdr\":number,\"created_on\": timestamp},\n{\"max_deposit_cap\":number,\"created_on\": timestamp},\n{\"max_borrow\":number,\"created_on\": timestamp}\n]\n\n```"
+								"description": "Return the last value of a specific general parameter:\n\n``` json\n[{\n\"param_name\":\"param_value\",\n\"created_on\": timestamp}\n]\n\n```\n\nWhere param_name is what you use in the path variable, and param_value is the last value we have for that param_name."
 							},
 							"response": []
 						},
 						{
-							"name": "Add New Max parameter values",
+							"name": "Get last general parameter values Copy",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/general/last",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"general",
+										"last"
+									]
+								},
+								"description": "Return the last value of the general parameters:\n\n``` json\n[\n{\"max_usd\":number,\"created_on\": timestamp},\n{\"max_usdr\":number,\"created_on\": timestamp},\n{\"max_deposit_cap\":number,\"created_on\": timestamp},\n{\"max_borrow\":number,\"created_on\": timestamp},\n{\"price_interval\":number,\"created_on\": timestamp}\n]\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Add New General parameters values",
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -1235,35 +1261,70 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/ratioconfig/max",
+									"raw": "{{base_url}}/ratioconfig/general",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"ratioconfig",
-										"max"
+										"general"
 									]
 								},
-								"description": "Add new max parameters values:\n\nBody:\n\n``` json\n{\n\"max_usd\":number,\n\"max_usdr\": number,\n\"max_deposit_cap\":number,\n\"max_borrow\":number\n}\n\n```"
+								"description": "Add new general parameters values:\n\nBody:\n\n``` json\n{\n\"max_usd\":number,\n\"max_usdr\": number,\n\"max_deposit_cap\":number,\n\"max_borrow\":number,\n\"price_interval\":number\n}\n\n```"
 							},
 							"response": []
 						},
 						{
-							"name": "Delete all Max parameters data",
+							"name": "Add New General parameter value",
 							"request": {
-								"method": "DELETE",
+								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
-									"raw": "{{base_url}}/ratioconfig/max",
+									"raw": "{{base_url}}/ratioconfig/general/:param_name",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"ratioconfig",
-										"max"
+										"general",
+										":param_name"
+									],
+									"variable": [
+										{
+											"key": "param_name",
+											"value": null
+										}
 									]
 								},
-								"description": "Delete all the max parameters data."
+								"description": "Add new general parameter value:\n\nBody:\n\n``` json\n{\n\"param_value\":number\n}\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete all General parameters data",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/general",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"general"
+									]
+								},
+								"description": "Delete all the general parameters data."
 							},
 							"response": []
 						}

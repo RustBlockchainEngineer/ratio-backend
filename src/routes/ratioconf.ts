@@ -1,6 +1,6 @@
 import express from 'express';
-import { getAllParamValue, getlatestParamValue, addParamsValue, resetParams, addGrrParamValue, resetGrrParams, getlatestGrrParamValue, getGrrParamList } from '../api/ratioconfig'
-import { COLLATERALRATIO, MAXRISKRATING, MAXUSDR, TRANSACTIONFEE } from '../models/model'
+import { getAllParamValue, getlatestParamValue, addParamsValue, getParamValue, addParamValue, resetParams, addGrrParamValue, resetGrrParams, getlatestGrrParamValue, getGrrParamList } from '../api/ratioconfig'
+import { COLLATERALRATIO, MAXRISKRATING, GLABALPARAMS, TRANSACTIONFEE } from '../models/model'
 import { isNotSafe } from '../utils/utils';
 let router = express.Router();
 
@@ -69,36 +69,54 @@ router.delete('/grr', async function (req, res) {
     res.send(JSON.stringify(result));
 })
 
+router.get('/general', async function (req, res) {
 
-router.get('/max', async function (req, res) {
-
-    await getAllParamValue(MAXUSDR, function (result) {
+    await getAllParamValue(GLABALPARAMS, function (result) {
         res.send(JSON.stringify(result));
     });
 })
 
-router.post('/max', async function (req, res) {
-    if (isNotSafe(MAXUSDR, req.body)) {
+router.get('/general/:param_name', async function (req, res) {
+
+    await getParamValue(req.params.param_name, function (result) {
+        res.send(JSON.stringify(result));
+    });
+})
+
+router.post('/general', async function (req, res) {
+    if (isNotSafe(GLABALPARAMS, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
     }
     let result = await addParamsValue(req.body);
     res.send(JSON.stringify(result));
 })
 
-router.get('/max/list', async function (req, res) {
-    res.send(JSON.stringify(MAXUSDR));
+router.post('/general/:param_name', async function (req, res) {
+    if (!GLABALPARAMS.includes(req.params.param_name)) {
+        return res.status(400).send({ error: 'Unrecognized parameter name' });
+    }
+    if (!('param_value' in req.body)) {
+        return res.status(400).send({ error: 'Request body missing some parameters' });
+    }
+    let result = await addParamValue(req.params.param_name, req.body);
+    res.send(JSON.stringify(result));
 })
 
-router.get('/max/last', async function (req, res) {
 
-    await getlatestParamValue(MAXUSDR, function (result) {
+router.get('/general/list', async function (req, res) {
+    res.send(JSON.stringify(GLABALPARAMS));
+})
+
+router.get('/general/last', async function (req, res) {
+
+    await getlatestParamValue(GLABALPARAMS, function (result) {
         res.send(JSON.stringify(result));
     });
 })
 
-router.delete('/max', async function (req, res) {
+router.delete('/general', async function (req, res) {
 
-    let result = await resetParams(MAXUSDR);
+    let result = await resetParams(GLABALPARAMS);
     res.send(JSON.stringify(result));
 })
 
