@@ -76,6 +76,8 @@ const authorize = (roles: UserRole[] = []) => {
   }
 
   return [
+    verifyToken,
+    validateUser,
     // authorize based on user role
     (req: Request, res: Response, next: NextFunction) => {
 

@@ -1,7 +1,8 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { getAllParamValue, getlatestParamValue, addParamsValue, getParamValue, addParamValue, resetParams, addGrrParamValue, resetGrrParams, getlatestGrrParamValue, getGrrParamList } from '../api/ratioconfig'
-import { COLLATERALRATIO, MAXRISKRATING, GLABALPARAMS, TRANSACTIONFEE } from '../models/model'
+import { COLLATERALRATIO, MAXRISKRATING, GLABALPARAMS, TRANSACTIONFEE, UserRole } from '../models/model'
 import { isNotSafe } from '../utils/utils';
+import authMiddleware from '../middlewares/auth';
 let router = express.Router();
 
 router.get('/collateralratio', async function (req, res) {
@@ -11,7 +12,7 @@ router.get('/collateralratio', async function (req, res) {
     });
 })
 
-router.post('/collateralratio', async function (req, res) {
+router.post('/collateralratio', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
 
     if (isNotSafe(COLLATERALRATIO, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
@@ -32,7 +33,7 @@ router.get('/collateralratio/last', async function (req, res) {
     });
 })
 
-router.delete('/collateralratio', async function (req, res) {
+router.delete('/collateralratio', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
 
     let result = await resetParams(COLLATERALRATIO);
     res.send(JSON.stringify(result));
@@ -45,7 +46,7 @@ router.get('/grr', async function (req, res) {
     });
 })
 
-router.post('/grr', async function (req, res) {
+router.post('/grr', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     let result = await addGrrParamValue(req.body);
     res.send(JSON.stringify(result));
 })
@@ -63,7 +64,7 @@ router.get('/grr/last', async function (req, res) {
     });
 })
 
-router.delete('/grr', async function (req, res) {
+router.delete('/grr', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
 
     let result = await resetGrrParams();
     res.send(JSON.stringify(result));
@@ -83,7 +84,7 @@ router.get('/general/:param_name', async function (req, res) {
     });
 })
 
-router.post('/general', async function (req, res) {
+router.post('/general', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     if (isNotSafe(GLABALPARAMS, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
     }
@@ -91,7 +92,7 @@ router.post('/general', async function (req, res) {
     res.send(JSON.stringify(result));
 })
 
-router.post('/general/:param_name', async function (req, res) {
+router.post('/general/:param_name', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     if (!GLABALPARAMS.includes(req.params.param_name)) {
         return res.status(400).send({ error: 'Unrecognized parameter name' });
     }
@@ -114,7 +115,7 @@ router.get('/general/last', async function (req, res) {
     });
 })
 
-router.delete('/general', async function (req, res) {
+router.delete('/general', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
 
     let result = await resetParams(GLABALPARAMS);
     res.send(JSON.stringify(result));
@@ -126,7 +127,7 @@ router.get('/transfees', async function (req, res) {
         res.send(JSON.stringify(result));
     });
 })
-router.post('/transfees', async function (req, res) {
+router.post('/transfees', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     if (isNotSafe(TRANSACTIONFEE, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
     }
@@ -144,7 +145,7 @@ router.get('/transfees/last', async function (req, res) {
     });
 })
 
-router.delete('/transfees', async function (req, res) {
+router.delete('/transfees', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
 
     let result = await resetParams(TRANSACTIONFEE);
     res.send(JSON.stringify(result));

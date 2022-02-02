@@ -4,8 +4,6 @@ import express from 'express';
 import { cacheInit } from './api/cacheList'
 import 'dotenv/config'
 import cors from 'cors';
-import authMiddleware from './middlewares/auth';
-import { Request, Response, NextFunction } from 'express';
 
 import { cacheInit } from './api/cacheList'
 
@@ -31,22 +29,6 @@ const options: cors.CorsOptions = {
     origin: allowedOrigins
 };
 app.use(cors(options));
-
-
-const pathsToIgnore = [/\/auth(\/.*)?/, new RegExp("\/users\/[^\/]+")];
-
-const applyMiddlewareByPathFilter = function (middleware: (req: Request, res: Response, next: NextFunction) => void, paths: RegExp[]) {
-    return (req: Request, res: Response, next: NextFunction) => {
-        if (paths.some((pathRegex) => (url.parse(req.url).pathname as string).match(pathRegex))) {
-            next();
-        } else {
-            middleware(req, res, next);
-        }
-    };
-};
-
-app.use(applyMiddlewareByPathFilter(authMiddleware.verifyToken, pathsToIgnore));
-app.use(applyMiddlewareByPathFilter(authMiddleware.validateUser, pathsToIgnore));
 
 app.use('/platforms', platforms);
 app.use('/lpairs', lpairs);
