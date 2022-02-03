@@ -4,7 +4,7 @@ import { getAllLPairAPRS, getlatestLPairAPRS, addLPairAPR, deleteAllLPairAPR } f
 import { getAllLPairParam, getlatestLPairParam, addLPairParam, deleteAllLPairParam } from '../api/lpairparam';
 import { isNotSafe } from '../utils/utils';
 import { UserRole } from '../models/model';
-import authMiddleware from '../middlewares/auth';
+import { authorize } from '../middlewares/auth';
 let router = express.Router();
 
 router.get('/', async function (req, res) {
@@ -19,7 +19,7 @@ router.get('/:id', async function (req, res) {
     });
 })
 
-router.post('/:id', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
+router.post('/:id', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     const keylist: string[] = ['address_id', 'symbol', 'page_url', 'pool_size', 'platform_id', 'collateralization_ratio', 'liquidation_ratio', 'risk_rating'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
@@ -29,7 +29,7 @@ router.post('/:id', authMiddleware.authorize([UserRole.ADMIN]), async function (
     res.send(JSON.stringify(result));
 })
 
-router.delete('/:id', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
+router.delete('/:id', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
 
     let result = await deleteLPair(req.params.id);
     res.send(JSON.stringify(result));
@@ -48,7 +48,7 @@ router.get('/:id/apr/last', async function (req, res) {
     });
 })
 
-router.post('/:id/apr/', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
+router.post('/:id/apr/', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     const keylist: string[] = ['apr'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
@@ -57,7 +57,7 @@ router.post('/:id/apr/', authMiddleware.authorize([UserRole.ADMIN]), async funct
     res.send(JSON.stringify(result));
 })
 
-router.delete('/:id/aprs', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
+router.delete('/:id/aprs', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     let result = await deleteAllLPairAPR(req.params.id);
     res.send(JSON.stringify(result));
 })
@@ -74,7 +74,7 @@ router.get('/:id/param/last', async function (req, res) {
     });
 })
 
-router.post('/:id/param/', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
+router.post('/:id/param/', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     const keylist: string[] = ['max_deposit', 'max_borrow'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
@@ -83,7 +83,7 @@ router.post('/:id/param/', authMiddleware.authorize([UserRole.ADMIN]), async fun
     res.send(JSON.stringify(result));
 })
 
-router.delete('/:id/params', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
+router.delete('/:id/params', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     let result = await deleteAllLPairParam(req.params.id);
     res.send(JSON.stringify(result));
 })

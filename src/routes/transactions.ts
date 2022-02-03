@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { getDetailTransactions, getVault, addDeposit, addWithdraw, addBorrow, addPayback, addStake, addSwap, addReward } from '../api/transactions'
 import { UserRole } from '../models/model';
 import { isNotSafe } from '../utils/utils';
-import authMiddleware from '../middlewares/auth';
+import { authorize } from '../middlewares/auth';
 
 let router = express.Router();
 
@@ -20,7 +20,7 @@ router.get('/:wallet_id/vault', async function (req, res) {
     });
 })
 
-router.post('/:wallet_id/deposit', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
+router.post('/:wallet_id/deposit', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     const keylist: string[] = ['transaction_id', 'address_id', 'amount'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
@@ -29,7 +29,7 @@ router.post('/:wallet_id/deposit', authMiddleware.authorize([UserRole.ADMIN]), a
     res.send(JSON.stringify(result));
 })
 
-router.post('/:wallet_id/withdraw', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
+router.post('/:wallet_id/withdraw', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     const keylist: string[] = ['transaction_id', 'address_id', 'amount'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
@@ -38,7 +38,7 @@ router.post('/:wallet_id/withdraw', authMiddleware.authorize([UserRole.ADMIN]), 
     res.send(JSON.stringify(result));
 })
 
-router.post('/:wallet_id/borrow', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
+router.post('/:wallet_id/borrow', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     const keylist: string[] = ['transaction_id', 'address_id', 'amount'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
@@ -47,7 +47,7 @@ router.post('/:wallet_id/borrow', authMiddleware.authorize([UserRole.ADMIN]), as
     res.send(JSON.stringify(result));
 })
 
-router.post('/:wallet_id/payback', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
+router.post('/:wallet_id/payback', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     const keylist: string[] = ['transaction_id', 'address_id', 'amount'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
@@ -56,7 +56,7 @@ router.post('/:wallet_id/payback', authMiddleware.authorize([UserRole.ADMIN]), a
     res.send(JSON.stringify(result));
 })
 
-router.post('/:wallet_id/stake', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
+router.post('/:wallet_id/stake', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     const keylist: string[] = ['transaction_id', 'address_id', 'amount'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
@@ -65,7 +65,7 @@ router.post('/:wallet_id/stake', authMiddleware.authorize([UserRole.ADMIN]), asy
     res.send(JSON.stringify(result));
 })
 
-router.post('/:wallet_id/swap', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
+router.post('/:wallet_id/swap', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     const swaplist: {}[] = req.body;
     if (swaplist.length != 2)
         return res.status(400).send({ error: 'Request body must be a list with two transaction' });
@@ -81,7 +81,7 @@ router.post('/:wallet_id/swap', authMiddleware.authorize([UserRole.ADMIN]), asyn
     res.send(JSON.stringify(result));
 })
 
-router.post('/:wallet_id/reward', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
+router.post('/:wallet_id/reward', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     const keylist: string[] = ['transaction_id', 'address_id', 'amount', 'base_address_id'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
