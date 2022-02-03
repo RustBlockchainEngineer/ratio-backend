@@ -24,6 +24,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     const decoded = jwt.verify(token, TOKEN_KEY as jwt.Secret);
     res.locals.jwt = decoded;
   } catch (err) {
+    console.log("err",err);
     return res.status(401).send({
       error: "Invalid Token"
     });
@@ -68,7 +69,7 @@ const validateUser = async (
   return next()
 }
 
-const authorize = (roles: UserRole[] = []) => {
+export const authorize = (roles: UserRole[] = []) => {
   // roles param can be a single role string (e.g. Role.User or 'User') 
   // or an array of roles (e.g. [Role.Admin, Role.User] or ['Admin', 'User'])
   if (typeof roles === 'string') {
@@ -80,7 +81,6 @@ const authorize = (roles: UserRole[] = []) => {
     validateUser,
     // authorize based on user role
     (req: Request, res: Response, next: NextFunction) => {
-
       if (roles.length && !roles.includes(res.locals.user.role)) {
         // user's role is not authorized
         return res.status(403).json({ message: 'Unauthorized' });
@@ -90,6 +90,6 @@ const authorize = (roles: UserRole[] = []) => {
       next();
     }
   ];
-}
+};
 
 export default { validateUser, verifyToken, authorize };
