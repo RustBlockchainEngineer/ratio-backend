@@ -67,7 +67,7 @@ router.get('/:wallet_address_id/param/last', async function (req, res) {
     });
 })
 
-router.post('/:wallet_address_id/param/', async function (req, res) {
+router.post('/:wallet_address_id/param/', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     const keylist: string[] = ['max_deposit', 'max_borrow'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
@@ -76,7 +76,7 @@ router.post('/:wallet_address_id/param/', async function (req, res) {
     res.send(JSON.stringify(result));
 })
 
-router.delete('/:wallet_address_id/params', async function (req, res) {
+router.delete('/:wallet_address_id/params', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     let result = await deleteAllUserParam(req.params.wallet_address_id);
     res.send(JSON.stringify(result));
 })

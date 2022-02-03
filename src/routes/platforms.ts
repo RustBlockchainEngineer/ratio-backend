@@ -1,6 +1,8 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { getAllPlatforms, getPlatform, addPlatform, updatePlatform, deletePlatform } from '../api/platforms'
+import { UserRole } from '../models/model';
 import { isNotSafe } from '../utils/utils';
+import authMiddleware from '../middlewares/auth';
 
 let router = express.Router();
 
@@ -19,7 +21,7 @@ router.get('/:id', async function (req, res) {
     });
 })
 
-router.post('/', async function (req, res) {
+router.post('/', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     const keylist: string[] = ['name', 'site', 'icon'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
@@ -29,7 +31,7 @@ router.post('/', async function (req, res) {
     res.send(JSON.stringify(result));
 })
 
-router.put('/:id', async function (req, res) {
+router.put('/:id', authMiddleware.authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     const keylist: string[] = ['name', 'site', 'icon'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
