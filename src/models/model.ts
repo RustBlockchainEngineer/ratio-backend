@@ -22,9 +22,9 @@ export enum RISK_RATING {
 }
 
 export enum UserRole {
-    'USER',
-    'USER_WHITELIST',
-    'ADMIN',
+    'USER'='USER',
+    'USER_WHITELIST'='USER_WHITELIST',
+    'ADMIN'='ADMIN',
 }
 
 export interface Auth {
