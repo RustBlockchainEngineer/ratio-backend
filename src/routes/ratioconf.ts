@@ -1,13 +1,13 @@
 import express, { Request, Response } from 'express';
-import { getAllParamValue, getlatestParamValue, addParamsValue, getParamValue, addParamValue, resetParams, addGrrParamValue, resetGrrParams, getlatestGrrParamValue, getGrrParamList } from '../api/ratioconfig'
+import { getParamValues, getlatestParamValue, addParamsValue, getParamValue, addParamValue, resetParams, addGrrParamValue, resetGrrParams, getlatestGrrParamValue, getGrrParamList } from '../api/ratioconfig'
 import { COLLATERALRATIO, MAXRISKRATING, GLABALPARAMS, TRANSACTIONFEE, UserRole } from '../models/model'
 import { isNotSafe } from '../utils/utils';
 import { authorize } from '../middlewares/auth';
 let router = express.Router();
 
-router.get('/collateralratio', async function (req, res) {
+router.get('/collateralratio/:param_name', async function (req, res) {
 
-    await getAllParamValue(COLLATERALRATIO, function (result) {
+    await getParamValues(req.params.param_name, function (result) {
         res.send(JSON.stringify(result));
     });
 })
@@ -38,6 +38,42 @@ router.delete('/collateralratio', authorize([UserRole.ADMIN]), async function (r
     let result = await resetParams(COLLATERALRATIO);
     res.send(JSON.stringify(result));
 })
+
+
+router.get('/maxriskrating/:param_name', async function (req, res) {
+
+    await getParamValues(req.params.param_name, function (result) {
+        res.send(JSON.stringify(result));
+    });
+})
+
+router.post('/maxriskrating', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
+
+    if (isNotSafe(MAXRISKRATING, req.body)) {
+        return res.status(400).send({ error: 'Request body missing some parameters' });
+    }
+
+    let result = await addParamsValue(req.body);
+    res.send(JSON.stringify(result));
+})
+
+router.get('/maxriskrating/list', async function (req, res) {
+    res.send(JSON.stringify(MAXRISKRATING));
+})
+
+router.get('/maxriskrating/last', async function (req, res) {
+
+    await getlatestParamValue(MAXRISKRATING, function (result) {
+        res.send(JSON.stringify(result));
+    });
+})
+
+router.delete('/maxriskrating', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
+
+    let result = await resetParams(MAXRISKRATING);
+    res.send(JSON.stringify(result));
+})
+
 
 router.get('/grr', async function (req, res) {
 
@@ -70,16 +106,9 @@ router.delete('/grr', authorize([UserRole.ADMIN]), async function (req: Request,
     res.send(JSON.stringify(result));
 })
 
-router.get('/general', async function (req, res) {
-
-    await getAllParamValue(GLABALPARAMS, function (result) {
-        res.send(JSON.stringify(result));
-    });
-})
-
 router.get('/general/:param_name', async function (req, res) {
 
-    await getParamValue(req.params.param_name, function (result) {
+    await getParamValues(req.params.param_name, function (result) {
         res.send(JSON.stringify(result));
     });
 })
@@ -115,18 +144,25 @@ router.get('/general/last', async function (req, res) {
     });
 })
 
-router.delete('/general', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
+router.get('/general/:param_name/last', async function (req, res) {
 
+    await getParamValue(req.params.param_name, function (result) {
+        res.send(JSON.stringify(result));
+    });
+})
+
+router.delete('/general', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     let result = await resetParams(GLABALPARAMS);
     res.send(JSON.stringify(result));
 })
 
-router.get('/transfees', async function (req, res) {
+router.get('/transfees/:param_name', async function (req, res) {
 
-    await getAllParamValue(TRANSACTIONFEE, function (result) {
+    await getParamValues(req.params.param_name, function (result) {
         res.send(JSON.stringify(result));
     });
 })
+
 router.post('/transfees', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     if (isNotSafe(TRANSACTIONFEE, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
@@ -134,6 +170,7 @@ router.post('/transfees', authorize([UserRole.ADMIN]), async function (req: Requ
     let result = await addParamsValue(req.body);
     res.send(JSON.stringify(result));
 })
+
 router.get('/transfees/list', async function (req, res) {
     res.send(JSON.stringify(TRANSACTIONFEE));
 })

@@ -857,21 +857,28 @@
 					"name": "Transactions Fees",
 					"item": [
 						{
-							"name": "Get All Transactions Fees",
+							"name": "Get One Transaction Fee's Values",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/ratioconfig/transfees",
+									"raw": "{{base_url}}/ratioconfig/transfees/:param_name",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"ratioconfig",
-										"transfees"
+										"transfees",
+										":param_name"
+									],
+									"variable": [
+										{
+											"key": "param_name",
+											"value": null
+										}
 									]
 								},
-								"description": "Return all the transaction fees:\n\nReturn:\n\n``` json\n[\n{\"deposit_fee\": number,\"created_on\": timestamp},\n{\"withdraw_fee\": number,\"created_on\": timestamp},\n{\"borrow_fee\": number,\"created_on\": timestamp},\n{\"payback_fee\": number,\"created_on\": timestamp},\n{\"reward_fee\": number,\"created_on\": timestamp},\n{\"swap_fee\": number,\"created_on\": timestamp},\n{\"stake_fee\": number,\"created_on\": timestamp}\n]\n\n```"
+								"description": "Return get one transaction Fee's values:\n\nReturn:\n\n``` json\n[\n{\"param_name\": number,\"created_on\": timestamp},...\n]\n```\n\nWhere param_name is one of:\n\n\\['deposit_fee', 'withdraw_fee', 'borrow_fee', 'payback_fee', 'reward_fee', 'swap_fee', 'stake_fee'\\]"
 							},
 							"response": []
 						},
@@ -896,7 +903,7 @@
 							"response": []
 						},
 						{
-							"name": "Get Last Transactions Fees",
+							"name": "Get Last Transactions Fees values",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -968,21 +975,28 @@
 					"name": "Collateralization Ratios",
 					"item": [
 						{
-							"name": "Get All Collateralization Ratios Data",
+							"name": "Get One Collateralization Ratio Values",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/ratioconfig/collateralratio",
+									"raw": "{{base_url}}/ratioconfig/collateralratio/:param_name",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"ratioconfig",
-										"collateralratio"
+										"collateralratio",
+										":param_name"
+									],
+									"variable": [
+										{
+											"key": "param_name",
+											"value": null
+										}
 									]
 								},
-								"description": "Return all collateralization ratios data:\n\nReturn:\n\n``` json\n[\n{\"cr_a_ratio\":number,\"created_on\":timestamp},{\"cr_aa_ratio\":number,\"created_on\":timestamp},{\"cr_aaa_ratio\":number,\"created_on\":timestamp},{\"cr_b_ratio\":number,\"created_on\":timestamp},{\"cr_bb_ratio\":number,\"created_on\":timestamp},{\"cr_bbb_ratio\":number,\"created_on\":timestamp},{\"cr_c_ratio\":number,\"created_on\":timestamp},{\"cr_cc_ratio\":number,\"created_on\":timestamp},{\"cr_ccc_ratio\":number,\"created_on\":timestamp},{\"cr_d_ratio\":number,\"created_on\":timestamp}\n]\n\n```"
+								"description": "Return one collateralization ratio values:\n\nReturn:\n\n``` json\n[\n{\"param_name\":number,\"created_on\":timestamp},...\n]\n\n```\n\nwhere param_name is one of:\n\n\\['cr_aaa_ratio', 'cr_aa_ratio', 'cr_a_ratio', 'cr_bbb_ratio', 'cr_bb_ratio', 'cr_b_ratio', 'cr_ccc_ratio', 'cr_cc_ratio', 'cr_c_ratio', 'cr_d_ratio'\\]"
 							},
 							"response": []
 						},
@@ -1007,7 +1021,7 @@
 							"response": []
 						},
 						{
-							"name": "Get Last Collateralization Ratios",
+							"name": "Get Last Collateralization Ratios values",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -1162,46 +1176,7 @@
 					"name": "General",
 					"item": [
 						{
-							"name": "Get All General parameter",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/ratioconfig/general",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"ratioconfig",
-										"general"
-									]
-								},
-								"description": "Return list of all value:\n\n``` json\n[\n{\"max_usd\":number,\"created_on\": timestamp},\n{\"max_usdr\":number,\"created_on\": timestamp},\n{\"max_deposit_cap\":number,\"created_on\": timestamp},\n{\"max_borrow\":number,\"created_on\": timestamp},\n{\"price_interval\":number,\"created_on\": timestamp}\n,...]\n\n```"
-							},
-							"response": []
-						},
-						{
-							"name": "Get list of General parameters",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{base_url}}/ratioconfig/general/list",
-									"host": [
-										"{{base_url}}"
-									],
-									"path": [
-										"ratioconfig",
-										"general",
-										"list"
-									]
-								},
-								"description": "Return the list of:\n\n``` json\n[\"max_usd\",\"max_usdr\",\"max_deposit_cap\",\"max_borrow\",\"price_interval\"]\n\n```"
-							},
-							"response": []
-						},
-						{
-							"name": "Get last general parameter value",
+							"name": "Get One General parameter values",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -1222,12 +1197,59 @@
 										}
 									]
 								},
-								"description": "Return the last value of a specific general parameter:\n\n``` json\n[{\n\"param_name\":\"param_value\",\n\"created_on\": timestamp}\n]\n\n```\n\nWhere param_name is what you use in the path variable, and param_value is the last value we have for that param_name."
+								"description": "Return one general parameter values:\n\n``` json\n[\n{\"max_usd\":number,\"created_on\": timestamp},...\n]\n\n```\n\nwhere param_name is one of:\n\n\\['global_max_usdr', 'user_max_usdr', 'global_max_deposit', 'price_interval'\\]"
 							},
 							"response": []
 						},
 						{
-							"name": "Get last general parameter values Copy",
+							"name": "Get list of General parameters",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/general/list",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"general",
+										"list"
+									]
+								},
+								"description": "Return the list of:\n\n``` json\n['global_max_usdr', 'user_max_usdr', 'global_max_deposit', 'price_interval']\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Get last general parameter value",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/general/:param_name/last",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"general",
+										":param_name",
+										"last"
+									],
+									"variable": [
+										{
+											"key": "param_name",
+											"value": null
+										}
+									]
+								},
+								"description": "Return the last value of a specific general parameter:\n\n``` json\n[{\n\"param_name\":\"param_value\",\n\"created_on\": timestamp}\n]\n\n```\n\nWhere param_name is one of:\n\n\\['global_max_usdr', 'user_max_usdr', 'global_max_deposit', 'price_interval'\\]"
+							},
+							"response": []
+						},
+						{
+							"name": "Get last general parameter values",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -1242,7 +1264,7 @@
 										"last"
 									]
 								},
-								"description": "Return the last value of the general parameters:\n\n``` json\n[\n{\"max_usd\":number,\"created_on\": timestamp},\n{\"max_usdr\":number,\"created_on\": timestamp},\n{\"max_deposit_cap\":number,\"created_on\": timestamp},\n{\"max_borrow\":number,\"created_on\": timestamp},\n{\"price_interval\":number,\"created_on\": timestamp}\n]\n\n```"
+								"description": "Return the last value of the general parameters:\n\n``` json\n[\n{\"global_max_usdr\":number,\"created_on\": timestamp},\n{\"user_max_usdr\":number,\"created_on\": timestamp},\n{\"global_max_deposit\":number,\"created_on\": timestamp},\n{\"price_interval\":number,\"created_on\": timestamp},\n]\n\n```"
 							},
 							"response": []
 						},
@@ -1270,7 +1292,7 @@
 										"general"
 									]
 								},
-								"description": "Add new general parameters values:\n\nBody:\n\n``` json\n{\n\"max_usd\":number,\n\"max_usdr\": number,\n\"max_deposit_cap\":number,\n\"max_borrow\":number,\n\"price_interval\":number\n}\n\n```"
+								"description": "Add new general parameters values:\n\nBody:\n\n``` json\n{\n\"global_max_usdr\":number,\n\"user_max_usdr\": number,\n\"global_max_deposit\":number,\n\"price_interval\":number\n}\n\n```"
 							},
 							"response": []
 						},
@@ -1325,6 +1347,124 @@
 									]
 								},
 								"description": "Delete all the general parameters data."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Max Risk Rating",
+					"item": [
+						{
+							"name": "Get One Max Risk Rate values",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/maxriskrating/:param_name",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"maxriskrating",
+										":param_name"
+									],
+									"variable": [
+										{
+											"key": "param_name",
+											"value": null
+										}
+									]
+								},
+								"description": "Return one max risk rating values:\n\nReturn:\n\n``` json\n[\n{\"param_name\":number,\"created_on\":timestamp},...\n]\n\n```\n\nWhere param_name is one of:\n\n\\['max_usdr_aaa', 'max_usdr_aa', 'max_usdr_a', 'max_usdr_bbb', 'max_usdr_bb', 'max_usdr_b', 'max_usdr_ccc', 'max_usdr_cc', 'max_usdr_c', 'max_usdr_d'\\]"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Max Risk Rating parameters name",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/maxriskrating/list",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"maxriskrating",
+										"list"
+									]
+								},
+								"description": "Return the collateralization ratios list:\n\nReturn:\n\n``` json\n['max_usdr_aaa', 'max_usdr_aa', 'max_usdr_a', 'max_usdr_bbb', 'max_usdr_bb', 'max_usdr_b', 'max_usdr_ccc', 'max_usdr_cc', 'max_usdr_c', 'max_usdr_d']\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Last Max Risk Rating value",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/maxriskrating/last",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"maxriskrating",
+										"last"
+									]
+								},
+								"description": "Return a list of the last max risk rating values:\n\nReturn:\n\n``` json\n[\n{\"max_usdr_aaa\":number,\"created_on\":timestamp},\n{\"max_usdr_aa\":number,\"created_on\":timestamp},\n{\"max_usdr_a\":number,\"created_on\":timestamp},\n{\"max_usdr_bbb\":number,\"created_on\":timestamp},\n{\"max_usdr_bb\":number,\"created_on\":timestamp},\n{\"max_usdr_b\":number,\"created_on\":timestamp},\n{\"max_usdr_ccc\":number,\"created_on\":timestamp},\n{\"max_usdr_cc\":number,\"created_on\":timestamp},\n{\"max_usdr_c\":number,\"created_on\":timestamp},\n{\"max_usdr_d\":number,\"created_on\":timestamp}\n]\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Add New Max Risk Rating Values",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/maxriskrating",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"maxriskrating"
+									]
+								},
+								"description": "Add new max risk rating values:\n\nbody:\n\n``` json\n{\n'max_usdr_aaa': number,\n'max_usdr_aa': number,\n'max_usdr_a': number,\n'max_usdr_bbb': number,\n'max_usdr_bb': number,\n'max_usdr_b': number,\n'max_usdr_ccc': number,\n'max_usdr_cc': number,\n'max_usdr_c': number,\n'max_usdr_d': number\n}\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete All Max Risk Rating values",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/maxriskrating",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"maxriskrating"
+									]
+								},
+								"description": "Delete all the max risk rating values."
 							},
 							"response": []
 						}

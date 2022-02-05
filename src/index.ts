@@ -7,8 +7,9 @@ import cors from 'cors';
 
 import { cacheInit } from './api/cacheList'
 
-//let whitelist = require('./routes/whitelist');
 var url = require('url');
+const https = require('https');
+const fs = require('fs');
 
 let platforms = require('./routes/platforms');
 let lpairs = require('./routes/lpairs');
@@ -46,6 +47,10 @@ cacheInit();
 cacheInit();
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`rf-engine start on port ${port}.`);
+
+https.createServer({
+    key: fs.readFileSync('/etc/letsencrypt/live/backend.ratio.finance/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/backend.ratio.finance/fullchain.pem'),
+}, app).listen(port, () => {
+    console.log(`HTTPS Server running on port ${port}`);
 });
