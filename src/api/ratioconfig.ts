@@ -2,15 +2,13 @@ import { RowDataPacket } from 'mysql2'
 import { dbcon } from "../models/db";
 
 
-export async function getAllParamValue(param_list: string[], callback: (r: Object[]) => void) {
-    let pl = param_list.map(function (a) { return "'" + a.replace("'", "''") + "'"; }).join();
-    dbcon.query(`SELECT param_type,param_value,created_on FROM RFDATA.RATIOCONFIG WHERE param_type IN (${pl}) ORDER BY param_type,created_on`, function (err, result) {
+export async function getParamValues(param_name: string, callback: (r: Object[]) => void) {
+    dbcon.query(`SELECT param_value,created_on FROM RFDATA.RATIOCONFIG WHERE param_type = "${param_name}" ORDER BY created_on`, function (err, result) {
         if (err)
             throw err;
         const rows = <RowDataPacket[]>result;
-
         let records = rows.map((row: RowDataPacket) => {
-            return { [row.param_type]: row.param_value, "created_on": row.created_on * 1000 };
+            return { [param_name]: row.param_value, "created_on": row.created_on * 1000 };
         });
         callback(records);
     });
@@ -18,10 +16,12 @@ export async function getAllParamValue(param_list: string[], callback: (r: Objec
 
 export async function getlatestParamValue(param_list: string[], callback: (r: Object[]) => void) {
     let pl = param_list.map(function (a) { return "'" + a.replace("'", "''") + "'"; }).join();
-    dbcon.query(`SELECT DISTINCT param_type,
-                    LAST_VALUE(param_value) OVER (PARTITION BY param_type ORDER BY created_on) AS param_value,
-                    LAST_VALUE(created_on) OVER (PARTITION BY param_type ORDER BY created_on) AS created_on
-                FROM RFDATA.RATIOCONFIG WHERE param_type IN (${pl})`, function (err, result) {
+    const sql_str = `SELECT DISTINCT param_type,
+    LAST_VALUE(param_value) OVER (PARTITION BY param_type ORDER BY created_on) AS param_value,
+    LAST_VALUE(created_on) OVER (PARTITION BY param_type ORDER BY created_on) AS created_on
+FROM RFDATA.RATIOCONFIG WHERE param_type IN (${pl})`;
+    console.log(sql_str);
+    dbcon.query(sql_str, function (err, result) {
         if (err)
             throw err;
         const rows = <RowDataPacket[]>result;
@@ -35,7 +35,7 @@ export async function getlatestParamValue(param_list: string[], callback: (r: Ob
 export async function getParamValue(param_name: string, callback: (r: Object[]) => void) {
 
     dbcon.query(`SELECT param_type,param_value,created_on
-                FROM RFDATA.RATIOCONFIG WHERE param_type = ${param_name} order by created_on desc LIMIT 1`, function (err, result) {
+                FROM RFDATA.RATIOCONFIG WHERE param_type = "${param_name}" order by created_on desc LIMIT 1`, function (err, result) {
         if (err)
             throw err;
         const rows = <RowDataPacket[]>result;

@@ -240,5 +240,5 @@ export async function addReward(wallet_address_id: string, data: TRANSACTION) {
         data["base_address_id"],
         data["transaction_dt"]]
     );
-    return data;
+    return data;   
 }
