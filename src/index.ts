@@ -25,7 +25,7 @@ const app = express();
 
 app.use(express.json());
 
-const allowedOrigins = process.env.API_CORS_ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'];
+const allowedOrigins = process.env.API_CORS_ALLOWED_ORIGINS?.split(',') || ['https://dev.ratio.finance', 'http://localhost:3000'];
 const options: cors.CorsOptions = {
     origin: allowedOrigins
 };

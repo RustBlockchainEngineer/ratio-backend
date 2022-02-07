@@ -7,13 +7,13 @@ import { UserRole } from '../models/model';
 import { authorize } from '../middlewares/auth';
 let router = express.Router();
 
-router.get('/', async function (req, res) {
+router.get('/', async function (req: Request, res: Response) {
     let result = await getAllLPairs(function (result) {
         res.send(JSON.stringify(result));
     });
 })
 
-router.get('/:id', async function (req, res) {
+router.get('/:id', async function (req: Request, res: Response) {
     let result = await getLPair(req.params.id, function (result) {
         res.send(JSON.stringify(result));
     });
@@ -35,14 +35,14 @@ router.delete('/:id', authorize([UserRole.ADMIN]), async function (req: Request,
     res.send(JSON.stringify(result));
 })
 
-router.get('/:id/apr', async function (req, res) {
+router.get('/:id/apr', async function (req: Request, res: Response) {
 
     let result = await getAllLPairAPRS(req.params.id, function (result) {
         res.send(JSON.stringify(result));
     });
 })
 
-router.get('/:id/apr/last', async function (req, res) {
+router.get('/:id/apr/last', async function (req: Request, res: Response) {
     let result = await getlatestLPairAPRS(req.params.id, function (result) {
         res.send(JSON.stringify(result));
     });
@@ -62,13 +62,13 @@ router.delete('/:id/aprs', authorize([UserRole.ADMIN]), async function (req: Req
     res.send(JSON.stringify(result));
 })
 
-router.get('/:id/param', async function (req, res) {
+router.get('/:id/param', async function (req: Request, res: Response) {
     let result = await getAllLPairParam(req.params.id, function (result) {
         res.send(JSON.stringify(result));
     });
 })
 
-router.get('/:id/param/last', async function (req, res) {
+router.get('/:id/param/last', async function (req: Request, res: Response) {
     let result = await getlatestLPairParam(req.params.id, function (result) {
         res.send(JSON.stringify(result));
     });
