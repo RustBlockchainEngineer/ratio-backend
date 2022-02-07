@@ -1,4 +1,5 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
+
 import { getUserByPublicKey, updateUserNonce } from '../api/users'
 import jwt from 'jsonwebtoken'
 import nacl from 'tweetnacl'
@@ -16,7 +17,7 @@ function generateToken(data: Auth) {
   return jwt.sign({ data: data }, TOKEN_KEY as string, { expiresIn: '24h' })
 }
 
-router.post('/', async function (req, res) {
+router.post('/', async function (req: Request, res: Response) {
   try {
     const { signature, publicAddress } = req.body;
     if (!signature || !publicAddress) {

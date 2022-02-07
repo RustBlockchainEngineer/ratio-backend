@@ -6,19 +6,19 @@ import { UserRole } from '../models/model';
 
 let router = express.Router();
 
-router.get('/', async function (req, res) {
+router.get('/', async function (req: Request, res: Response) {
 
     await getAllTokens(function (result) {
         res.send(JSON.stringify(result));
     });
 })
 
-router.get('/:id', async function (req, res) {
+router.get('/:id', async function (req: Request, res: Response) {
     await getToken(req.params.id, function (result) {
         res.send(JSON.stringify(result));
     });
 })
-router.get('/:id/price', async function (req, res) {
+router.get('/:id/price', async function (req: Request, res: Response) {
     await getLatestTokenPrice(req.params.id, function (result) {
         res.send(JSON.stringify(result));
     });

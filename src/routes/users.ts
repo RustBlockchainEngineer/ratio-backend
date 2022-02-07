@@ -1,6 +1,6 @@
 import * as express from 'express';
 import { Request, Response, NextFunction } from 'express';
-import { authorize }  from '../middlewares/auth';
+import { authorize } from '../middlewares/auth';
 import { UserRole } from '../models/model';
 import { getAllUsers, getUserByPublicKey, addUser, updateUser, deleteUser, getUserNonce } from '../api/users'
 import { getAllUserParam, getlatestUserParam, addUserParam, deleteAllUserParam } from '../api/userparam';
@@ -55,13 +55,13 @@ router.delete('/:wallet_address_id', authorize([UserRole.ADMIN]), async function
     res.send(JSON.stringify(result));
 })
 
-router.get('/:wallet_address_id/param', async function (req, res) {
+router.get('/:wallet_address_id/param', async function (req: Request, res: Response) {
     let result = await getAllUserParam(req.params.wallet_address_id, function (result) {
         res.send(JSON.stringify(result));
     });
 })
 
-router.get('/:wallet_address_id/param/last', async function (req, res) {
+router.get('/:wallet_address_id/param/last', async function (req: Request, res: Response) {
     let result = await getlatestUserParam(req.params.wallet_address_id, function (result) {
         res.send(JSON.stringify(result));
     });

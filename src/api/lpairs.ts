@@ -93,7 +93,7 @@ export async function getLPair(address_id: string, callback: (r: LPair | undefin
                     tkn.icon tkn_icon,
                     lpa.token_address_id,
                     lpa.pool_size token_pool_size
-                FROM RFDATA.LPAIRS lp,
+                FROM RFDATA.LPAIRS lp
                 JOIN RFDATA.PLATFORMS plt ON plt.id = lp.platform_id
                 LEFT JOIN RFDATA.LPASSETS lpa ON lp.address_id = lpa.lpair_address_id
                 JOIN RFDATA.TOKENS tkn ON lpa.token_address_id = tkn.address_id

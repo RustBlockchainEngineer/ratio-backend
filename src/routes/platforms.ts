@@ -6,14 +6,14 @@ import { authorize } from '../middlewares/auth';
 
 let router = express.Router();
 
-router.get('/', async function (req, res) {
+router.get('/', async function (req: Request, res: Response) {
 
     let result = await getAllPlatforms(function (result) {
         res.send(JSON.stringify(result));
     });
 })
 
-router.get('/:id', async function (req, res) {
+router.get('/:id', async function (req: Request, res: Response) {
 
     let result = await getPlatform(req.params.id, function (result) {
 
@@ -41,7 +41,7 @@ router.put('/:id', authorize([UserRole.ADMIN]), async function (req: Request, re
     res.send(JSON.stringify(result));
 })
 
-router.delete('/:id', async function (req, res) {
+router.delete('/:id', async function (req: Request, res: Response) {
 
     let result = await deletePlatform(req.params.id);
     res.send(JSON.stringify(result));

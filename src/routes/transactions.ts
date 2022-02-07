@@ -6,14 +6,14 @@ import { authorize } from '../middlewares/auth';
 
 let router = express.Router();
 
-router.get('/:wallet_id/detail/:address_id', async function (req, res) {
+router.get('/:wallet_id/detail/:address_id', async function (req: Request, res: Response) {
 
     await getDetailTransactions(req.params.wallet_id, req.params.address_id, function (result) {
         res.send(JSON.stringify(result));
     });
 })
 
-router.get('/:wallet_id/vault', async function (req, res) {
+router.get('/:wallet_id/vault', async function (req: Request, res: Response) {
 
     await getVault(req.params.wallet_id, function (result) {
         res.send(JSON.stringify(result));
