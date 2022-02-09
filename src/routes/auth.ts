@@ -63,8 +63,8 @@ router.post('/', async function (req: Request, res: Response) {
     const token = generateToken(data);
     console.log("User authenticated");
     return res.status(200).json({ token })
-  } catch (err) {
-    return res.status(400).send({ err })
+  } catch (err:any) {
+    return res.status(400).send({"message":"An error ocurred", "ExceptionMessage": err?.message})
   }
 });
 
