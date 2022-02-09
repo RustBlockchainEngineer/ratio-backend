@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { getDetailTransactions, getVault, addDeposit, addWithdraw, addBorrow, addPayback, addStake, addSwap, addReward } from '../api/transactions'
+import { getDetailTransactions, getVault, parseTx, addDeposit, addWithdraw, addBorrow, addPayback, addStake, addSwap, addReward } from '../api/transactions'
 import { UserRole } from '../models/model';
 import { isNotSafe } from '../utils/utils';
 import { authorize } from '../middlewares/auth';
@@ -18,6 +18,12 @@ router.get('/:wallet_id/vault', async function (req: Request, res: Response) {
     await getVault(req.params.wallet_id, function (result) {
         res.send(JSON.stringify(result));
     });
+})
+
+router.get('/:wallet_id/:signature', async function (req: Request, res: Response) {
+
+    let result = await parseTx(req.params.wallet_id, req.params.signature);
+    res.send(JSON.stringify(result));
 })
 
 router.post('/:wallet_id/deposit', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {

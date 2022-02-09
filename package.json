@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc && node ./target/index.js",
+    "dev": "tsc && NODE_ENV=production node ./target/index.js",
     "prod": "tsc && pm2 start ./target/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
