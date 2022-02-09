@@ -15,11 +15,13 @@ let ratioconfig = require('./routes/ratioconf');
 let transactions = require('./routes/transactions');
 let users = require('./routes/users');
 let authRouter = require('./routes/auth');
-
+var bodyParser = require('body-parser')
 const app = express();
 
 const allowedOrigins: Array<string | RegExp> = process.env.API_CORS_ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'];
 allowedOrigins.push(/\.netlify.app$/);
+
+app.use(bodyParser.json());
 
 const options: cors.CorsOptions = {
     origin: allowedOrigins
