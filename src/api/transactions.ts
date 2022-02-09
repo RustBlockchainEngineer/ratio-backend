@@ -60,6 +60,10 @@ export async function getVault(wallet_address_id: string, callback: (r: Object[]
     });
 }
 
+export async function parseTx(wallet_address_id: string, signature: string) {
+
+}
+
 export async function addDeposit(wallet_address_id: string, data: TRANSACTION): Promise<TRANSACTION> {
     let ts = Date.now();
     data["wallet_address_id"] = wallet_address_id;
@@ -240,5 +244,5 @@ export async function addReward(wallet_address_id: string, data: TRANSACTION) {
         data["base_address_id"],
         data["transaction_dt"]]
     );
-    return data;   
+    return data;
 }
