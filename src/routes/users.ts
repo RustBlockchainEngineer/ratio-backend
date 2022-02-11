@@ -15,10 +15,18 @@ router.get('/', authorize([UserRole.ADMIN]), async function (req: Request, res: 
     });
 })
 
+router.get('/auth/:wallet_address_id', async function (req: Request, res: Response) {
+    const user = await getUserByPublicKey(req.params.wallet_address_id);
+    if (!user)
+        res.send(false)
+    else
+        res.send(true);
+})
+
 router.get('/:wallet_address_id', async function (req: Request, res: Response) {
     const user = await getUserByPublicKey(req.params.wallet_address_id);
     if (!user) {
-        return res.status(404).send({
+        return res.send(404).send({
             error: `User with publicAddress ${req.params.wallet_address_id} is not found in database`
         })
     }
