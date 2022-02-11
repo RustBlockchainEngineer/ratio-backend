@@ -23,6 +23,4 @@ export async function cacheInit() {
             cacheList[row.address_id] = row.symbol;
         });
     });
-
-
 }

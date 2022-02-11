@@ -61,7 +61,7 @@ export async function getVault(wallet_address_id: string, callback: (r: Object[]
 }
 
 export async function parseTx(wallet_address_id: string, signature: string) {
-
+    return {}
 }
 
 export async function addDeposit(wallet_address_id: string, data: TRANSACTION): Promise<TRANSACTION> {

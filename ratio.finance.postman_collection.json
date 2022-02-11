@@ -147,7 +147,7 @@
 								"lpairs"
 							]
 						},
-						"description": "return a list of all Liquid Pairs we have in the system.\n\nReturn:\n\n``` json\n[{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_name\": string,\n        \"platform_site\": string,\n        \"platform_icon\": string,        \n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n        \"lpasset\":[\n        {\n        \"token_address_id\":string,\n        \"token_symbole\":string,\n        \"token_pool_size\":string,\n        \"token_icon\":string\n        },...]\n}\n,...]\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
+						"description": "return a list of all Liquid Pairs we have in the system.\n\nReturn:\n\n``` json\n[{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"platform_name\": string,\n        \"platform_site\": string,\n        \"platform_icon\": string,        \n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n        \"lpasset\":[\n        {\n        \"token_address_id\":string,\n        \"token_symbole\":string,\n        \"token_pool_size\":string,\n        \"token_icon\":string\n        },...]\n}\n,...]\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
 					},
 					"response": []
 				},
@@ -172,7 +172,7 @@
 								}
 							]
 						},
-						"description": "return a specific Liquid Pair:\n\nReturn:\n\n``` json\n{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_name\": string,\n        \"platform_site\": string,\n        \"platform_icon\": string,        \n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n        \"lpasset\":[\n        {\n        \"token_address_id\":string,\n        \"token_symbole\":string,\n        \"token_pool_size\":string,\n        \"token_icon\":string\n        },...]\n}\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
+						"description": "return a specific Liquid Pair:\n\nReturn:\n\n``` json\n{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"platform_name\": string,\n        \"platform_site\": string,\n        \"platform_icon\": string,        \n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n        \"lpasset\":[\n        {\n        \"token_address_id\":string,\n        \"token_symbole\":string,\n        \"token_pool_size\":string,\n        \"token_icon\":string\n        },...]\n}\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
 					},
 					"response": []
 				},
@@ -197,7 +197,7 @@
 								}
 							]
 						},
-						"description": "add and update liquid pair:\n\nThe body should be as:\n\n``` json\n{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"lpasset\": [{\n            \"token_address_id\": string,\n            \"token_pool_size\"\n          },...]\n}\n\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
+						"description": "add and update liquid pair:\n\nThe body should be as:\n\n``` json\n{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"lpasset\": [{\n            \"token_address_id\": string,\n            \"token_pool_size\"\n          },...]\n}\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
 					},
 					"response": []
 				},
@@ -1515,6 +1515,32 @@
 							]
 						},
 						"description": "return a user.\n\nReturn:\n\n``` json\n{\n\"wallet_address_id\":string,\n\"name\":string,\n\"role\":USER_ROLE\n}\n\n```\n\nUSER_ROLE can be one of these value:\n\n\\['USER', 'USER_WHITELIST', 'ADMIN'\\]"
+					},
+					"response": []
+				},
+				{
+					"name": "Check if a User is exited",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/auth/:wallet_address_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								":wallet_address_id"
+							],
+							"variable": [
+								{
+									"key": "wallet_address_id",
+									"value": null
+								}
+							]
+						},
+						"description": "return a true if the wallet_address_id is exiting in the system."
 					},
 					"response": []
 				},

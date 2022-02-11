@@ -24,7 +24,6 @@ export enum RISK_RATING {
 <<<<<<< HEAD
 export enum UserRole {
     'USER' = 'USER',
-    'USER_WHITELIST' = 'USER_WHITELIST',
     'ADMIN' = 'ADMIN',
 }
 
@@ -59,6 +58,7 @@ export interface LPair {
     page_url: string,
     pool_size: number,
     platform_id: string,
+    platform_symbol: string,
     platform_name?: string,
     platform_site?: string,
     platform_icon?: string,
