@@ -3,6 +3,20 @@ import { dbcon } from "../models/db";
 import { v4 as uuid } from 'uuid';
 import { TRANSACTION } from '../models/model'
 import { cacheList } from '../api/cacheList'
+import {
+    Cluster,
+    clusterApiUrl,
+    Connection,
+    Message,
+    PublicKey,
+    sendAndConfirmTransaction,
+    SystemProgram,
+    Transaction,
+
+} from '@solana/web3.js';
+
+//import BigNumber from 'bignumber.js';
+//import { Console } from 'console';
 
 function map_row_vault(row: RowDataPacket): TRANSACTION {
 
@@ -60,9 +74,66 @@ export async function getVault(wallet_address_id: string, callback: (r: Object[]
     });
 }
 
-export async function parseTx(wallet_address_id: string, signature: string) {
-    return {}
+
+export async function parseTx(wallet_address_id: string, signature: string, callback: (r: Object) => void) {
+
+    const connection = new Connection(clusterApiUrl('devnet'));
+    //const user = new PublicKey(wallet_address_id);
+    //const data = await connection.getConfirmedSignaturesForAddress2(user);
+    // console.log('USER DATA TX');
+    // console.log(data);
+    // const tx = data.filter((ele) => { ele.signature === signature })
+    // console.log('filter USER DATA TX');
+    // console.log(tx);
+
+    const txInfo = await connection.getTransaction(signature);
+    // console.log('TX INFO');
+    // console.log(txInfo);
+
+    const meta: Object | undefined | null = txInfo?.meta;
+    let status: Object | undefined = undefined;
+    if (meta)
+        if ("status" in meta) {
+            status = meta["status"]
+        }
+
+    let validTx = undefined;
+    if (txInfo?.transaction?.message?.accountKeys)
+        for (let acc of txInfo?.transaction?.message?.accountKeys)
+            validTx = cacheList[acc.toString()];
+
+    if (validTx)
+        callback({
+            "timestamp": txInfo?.slot,
+            "status": status,
+            "signature": signature
+        });
+    else
+        callback({});
+
+    // console.log('--------- MESSAGE HEADER -------');
+    // console.log(txInfo?.transaction?.message?.header);
+    // console.log('--------- MESSAGE ACCOUNT KEYS -----');
+
+    //console.log(txInfo?.transaction?.message?.accountKeys);
+
+    // console.log('--------- MESSAGE INSTRUCTIONS ------');
+    // console.log(txInfo?.transaction?.message?.instructions);
+
+    // const tData = await connection.getParsedTransaction(data[data?.length - 3]?.signature);
+    // console.log('--------- TDATA ----------');
+    // console.log(tData);
+
+    // console.log('-------------------------- MAPPED DATA --------------------------');
+    // const txMapsx = data.map(async (tx) => {
+    //     console.log('------- TX DATA ------------');
+    //     const data = await connection.getParsedTransaction(tx?.signature);
+    //     console.log(data);
+    // });
+
+    //callback(data);
 }
+
 
 export async function addDeposit(wallet_address_id: string, data: TRANSACTION): Promise<TRANSACTION> {
     let ts = Date.now();
