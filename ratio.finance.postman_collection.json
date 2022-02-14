@@ -671,6 +671,32 @@
 					"response": []
 				},
 				{
+					"name": "Get Transactions Signatures",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/transaction/:wallet_id/signatures",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transaction",
+								":wallet_id",
+								"signatures"
+							],
+							"variable": [
+								{
+									"key": "wallet_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Return a list of all transactions signatures as list of strings."
+					},
+					"response": []
+				},
+				{
 					"name": "Get The Vault",
 					"request": {
 						"method": "GET",
