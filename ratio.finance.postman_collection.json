@@ -641,6 +641,36 @@
 					"response": []
 				},
 				{
+					"name": "Get Transaction status and slot",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/transaction/:wallet_id/:signature",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transaction",
+								":wallet_id",
+								":signature"
+							],
+							"variable": [
+								{
+									"key": "wallet_id",
+									"value": null
+								},
+								{
+									"key": "signature",
+									"value": null
+								}
+							]
+						},
+						"description": "Return:\n\n``` json\n{\n\"timestamp\":number,\n\"status\": object,\n\"signature\": string\n}\n\n```"
+					},
+					"response": []
+				},
+				{
 					"name": "Get The Vault",
 					"request": {
 						"method": "GET",

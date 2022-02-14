@@ -20,11 +20,12 @@ router.get('/:wallet_id/vault', async function (req: Request, res: Response) {
     });
 })
 
-// router.get('/:wallet_id/:signature', async function (req: Request, res: Response) {
+router.get('/:wallet_id/:signature', async function (req: Request, res: Response) {
 
-//     let result = await parseTx(req.params.wallet_id, req.params.signature);
-//     res.send(JSON.stringify(result));
-// })
+    let result = await parseTx(req.params.wallet_id, req.params.signature, function (result) {
+        res.send(JSON.stringify(result));
+    });
+})
 
 router.post('/:wallet_id/deposit', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     const keylist: string[] = ['transaction_id', 'address_id', 'amount'];
