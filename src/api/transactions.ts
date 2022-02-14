@@ -134,6 +134,24 @@ export async function parseTx(wallet_address_id: string, signature: string, call
     //callback(data);
 }
 
+export async function parseTxsignatures(wallet_address_id: string, callback: (r: string[]) => void) {
+
+    const connection = new Connection(clusterApiUrl('devnet'));
+    const user = new PublicKey(wallet_address_id);
+    const data = await connection.getConfirmedSignaturesForAddress2(user);
+
+    const txs = data.filter(async (tx) => {
+        const txInfo = await connection.getTransaction(tx.signature)
+        let validTx = undefined;
+        if (txInfo?.transaction?.message?.accountKeys)
+            for (let acc of txInfo?.transaction?.message?.accountKeys)
+                validTx = cacheList[acc.toString()];
+        return validTx != undefined
+    });
+    const signatures = txs.map((ele) => { return ele.signature });
+    callback(signatures);
+}
+
 
 export async function addDeposit(wallet_address_id: string, data: TRANSACTION): Promise<TRANSACTION> {
     let ts = Date.now();
