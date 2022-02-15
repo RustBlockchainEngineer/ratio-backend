@@ -154,7 +154,8 @@ export async function getTxsignatures(wallet_address_id: string, callback: (r: s
 }
 
 
-export async function addTransaction(wallet_address_id: string, data: TRANSACTION): Promise<TRANSACTION> {
+export async function addTransaction(wallet_address_id: string, data: TRANSACTION): Promise<Object> {
+    /*
     data["wallet_address_id"] = wallet_address_id;
     if (data["amount"] < 0)
         data["amount"] *= -1; // amount should be positive
@@ -176,6 +177,8 @@ export async function addTransaction(wallet_address_id: string, data: TRANSACTIO
         data["slot"]]
     );
     return data;
+    */
+    return { "Status": "inprgress" }
 }
 
 // export async function addWithdraw(wallet_address_id: string, data: TRANSACTION) {
