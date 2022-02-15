@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { getDetailTransactions, getVault, getTxStatus, getTxsignatures, addTransaction, addWithdraw, addBorrow, addPayback, addStake, addSwap, addReward } from '../api/transactions'
+import { getDetailTransactions, getVault, getTxStatus, getTxsignatures, addTransaction } from '../api/transactions'
 import { UserRole } from '../models/model';
 import { isNotSafe } from '../utils/utils';
 import { authorize } from '../middlewares/auth';
