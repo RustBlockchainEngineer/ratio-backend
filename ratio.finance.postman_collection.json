@@ -147,7 +147,7 @@
 								"lpairs"
 							]
 						},
-						"description": "return a list of all Liquid Pairs we have in the system.\n\nReturn:\n\n``` json\n[{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"platform_name\": string,\n        \"platform_site\": string,\n        \"platform_icon\": string,        \n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n        \"lpasset\":[\n        {\n        \"token_address_id\":string,\n        \"token_symbole\":string,\n        \"token_pool_size\":string,\n        \"token_icon\":string\n        },...]\n}\n,...]\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
+						"description": "return a list of all Liquid Pairs we have in the system.\n\nReturn:\n\n``` json\n[{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"platform_name\": string,\n        \"platform_site\": string,\n        \"platform_icon\": string,        \n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n        \"icon\": stirng,\n        \"lpasset\":[\n        {\n        \"token_address_id\":string,\n        \"token_symbole\":string,\n        \"token_pool_size\":string,\n        \"token_icon\":string\n        },...]\n}\n,...]\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
 					},
 					"response": []
 				},
@@ -172,7 +172,7 @@
 								}
 							]
 						},
-						"description": "return a specific Liquid Pair:\n\nReturn:\n\n``` json\n{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"platform_name\": string,\n        \"platform_site\": string,\n        \"platform_icon\": string,        \n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n        \"lpasset\":[\n        {\n        \"token_address_id\":string,\n        \"token_symbole\":string,\n        \"token_pool_size\":string,\n        \"token_icon\":string\n        },...]\n}\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
+						"description": "return a specific Liquid Pair:\n\nReturn:\n\n``` json\n{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"platform_name\": string,\n        \"platform_site\": string,\n        \"platform_icon\": string,        \n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n        \"icon\": stirng,\n        \"lpasset\":[\n        {\n        \"token_address_id\":string,\n        \"token_symbole\":string,\n        \"token_pool_size\":string,\n        \"token_icon\":string\n        },...]\n}\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
 					},
 					"response": []
 				},
@@ -197,7 +197,7 @@
 								}
 							]
 						},
-						"description": "add and update liquid pair:\n\nThe body should be as:\n\n``` json\n{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"lpasset\": [{\n            \"token_address_id\": string,\n            \"token_pool_size\"\n          },...]\n}\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
+						"description": "add and update liquid pair:\n\nThe body should be as:\n\n``` json\n{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"icon\": stirng,\n        \"lpasset\": [{\n            \"token_address_id\": string,\n            \"token_pool_size\"\n          },...]\n}\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
 					},
 					"response": []
 				},
@@ -723,7 +723,7 @@
 					"response": []
 				},
 				{
-					"name": "Add Deposit Transaction",
+					"name": "Add Transaction",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -744,163 +744,7 @@
 								}
 							]
 						},
-						"description": "Add deposit Transaction.\n\nBody:\n\n``` json\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'deposit',\n\"status\": string,\n\"slot\":number\n}\n\n```"
-					},
-					"response": []
-				},
-				{
-					"name": "Add Withdraw Transaction",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/transaction/:wallet_id/withdraw",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"transaction",
-								":wallet_id",
-								"withdraw"
-							],
-							"variable": [
-								{
-									"key": "wallet_id",
-									"value": null
-								}
-							]
-						},
-						"description": "Add withdraw Transaction.\n\nBody:\n\n``` json\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'withdraw',\n\"status\": string,\n\"slot\":number\n}\n\n```"
-					},
-					"response": []
-				},
-				{
-					"name": "Add Borrow Transaction",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/transaction/:wallet_id/borrow",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"transaction",
-								":wallet_id",
-								"borrow"
-							],
-							"variable": [
-								{
-									"key": "wallet_id",
-									"value": null
-								}
-							]
-						},
-						"description": "Add borrow Transaction.\n\nBody:\n\n``` json\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'borrow',\n\"status\": string,\n\"slot\":number\n}\n\n```"
-					},
-					"response": []
-				},
-				{
-					"name": "Add Payback Transaction",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/transaction/:wallet_id/payback",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"transaction",
-								":wallet_id",
-								"payback"
-							],
-							"variable": [
-								{
-									"key": "wallet_id",
-									"value": null
-								}
-							]
-						},
-						"description": "Add payback Transaction.\n\nBody:\n\n``` json\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'payback',\n\"status\": string,\n\"slot\":number\n}\n\n```"
-					},
-					"response": []
-				},
-				{
-					"name": "Add Stake Transaction",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/transaction/:wallet_id/stake",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"transaction",
-								":wallet_id",
-								"stake"
-							],
-							"variable": [
-								{
-									"key": "wallet_id",
-									"value": null
-								}
-							]
-						},
-						"description": "Add stake Transaction.\n\nBody:\n\n``` json\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'stake',\n\"status\": string,\n\"slot\":number\n}\n\n```"
-					},
-					"response": []
-				},
-				{
-					"name": "Add Reward Transaction",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/transaction/:wallet_id/stake",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"transaction",
-								":wallet_id",
-								"stake"
-							],
-							"variable": [
-								{
-									"key": "wallet_id",
-									"value": null
-								}
-							]
-						},
-						"description": "Add reward Transaction.\n\nBody:\n\n``` json\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'reward',\n\"base_address_id\": string,\n\"status\": string,\n\"slot\":number\n}\n\n```"
-					},
-					"response": []
-				},
-				{
-					"name": "Add Swap Transaction",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/transaction/:wallet_id/swap",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"transaction",
-								":wallet_id",
-								"swap"
-							],
-							"variable": [
-								{
-									"key": "wallet_id",
-									"value": null
-								}
-							]
-						},
-						"description": "Add swap Transaction.\n\nBody:\n\n``` json\n[{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'swap',\n\"conversion_rate\":number,\n\"status\": string,\n\"slot\":number\n},\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'swap',\n\"conversion_rate\":number,\n\"status\": string,\n\"slot\":number\n}]\n\n```"
+						"description": "Add new Transaction.\n\nBody:\n\n``` json\n{\n\"tx_type\": string,\n\"signature\": string\n}\n```"
 					},
 					"response": []
 				}

@@ -58,6 +58,7 @@ export interface LPair {
     risk_rating: RISK_RATING,
     created_on?: number,
     updated_on: number,
+    icon: string,
     lpasset?: LPAsset[]
 }
 
