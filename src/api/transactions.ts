@@ -76,7 +76,7 @@ export async function getVault(wallet_address_id: string, callback: (r: Object[]
 }
 
 
-export async function parseTx(wallet_address_id: string, signature: string, callback: (r: Object) => void) {
+export async function getTxStatus(wallet_address_id: string, signature: string, callback: (r: Object) => void) {
 
     const connection = new Connection(clusterApiUrl('devnet'));
     //const user = new PublicKey(wallet_address_id);
@@ -135,7 +135,7 @@ export async function parseTx(wallet_address_id: string, signature: string, call
     //callback(data);
 }
 
-export async function parseTxsignatures(wallet_address_id: string, callback: (r: string[]) => void) {
+export async function getTxsignatures(wallet_address_id: string, callback: (r: string[]) => void) {
 
     const connection = new Connection(clusterApiUrl('devnet'));
     const user = new PublicKey(wallet_address_id);
@@ -154,7 +154,7 @@ export async function parseTxsignatures(wallet_address_id: string, callback: (r:
 }
 
 
-export async function addDeposit(wallet_address_id: string, data: TRANSACTION): Promise<TRANSACTION> {
+export async function addTransaction(wallet_address_id: string, data: TRANSACTION): Promise<TRANSACTION> {
     data["wallet_address_id"] = wallet_address_id;
     if (data["amount"] < 0)
         data["amount"] *= -1; // amount should be positive
@@ -177,163 +177,164 @@ export async function addDeposit(wallet_address_id: string, data: TRANSACTION): 
     );
     return data;
 }
-export async function addWithdraw(wallet_address_id: string, data: TRANSACTION) {
-    data["wallet_address_id"] = wallet_address_id;
-    if (data["amount"] > 0)
-        data["amount"] *= -1; // amount should be negative
-    dbcon.query(
-        `INSERT INTO RFDATA.TRANSACTIONS(transaction_id, 
-            wallet_address_id,
-            address_id,
-            amount,
-            transaction_type,
-            status,
-            slot) 
-        VALUES (?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
-        [data["transaction_id"],
-        data["wallet_address_id"],
-        data["address_id"],
-        data["amount"],
-            'withdraw',
-        data["status"],
-        data["slot"]]
-    );
-    return data;
-}
+
+// export async function addWithdraw(wallet_address_id: string, data: TRANSACTION) {
+//     data["wallet_address_id"] = wallet_address_id;
+//     if (data["amount"] > 0)
+//         data["amount"] *= -1; // amount should be negative
+//     dbcon.query(
+//         `INSERT INTO RFDATA.TRANSACTIONS(transaction_id, 
+//             wallet_address_id,
+//             address_id,
+//             amount,
+//             transaction_type,
+//             status,
+//             slot) 
+//         VALUES (?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
+//         [data["transaction_id"],
+//         data["wallet_address_id"],
+//         data["address_id"],
+//         data["amount"],
+//             'withdraw',
+//         data["status"],
+//         data["slot"]]
+//     );
+//     return data;
+// }
 
 
-export async function addBorrow(wallet_address_id: string, data: TRANSACTION) {
-    data["wallet_address_id"] = wallet_address_id;
-    if (data["amount"] > 0)
-        data["amount"] *= -1; // amount should be negative
-    dbcon.query(
-        `INSERT INTO RFDATA.TRANSACTIONS(transaction_id, 
-            wallet_address_id,
-            address_id,
-            amount,
-            transaction_type,
-            status,
-            slot) 
-        VALUES (?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
-        [data["transaction_id"],
-        data["wallet_address_id"],
-        data["address_id"],
-        data["amount"],
-            'borrow',
-        data["status"],
-        data["slot"]]
-    );
-    return data;
-}
-export async function addPayback(wallet_address_id: string, data: TRANSACTION) {
-    data["wallet_address_id"] = wallet_address_id;
-    if (data["amount"] < 0)
-        data["amount"] *= -1; // amount should be positive
-    dbcon.query(
-        `INSERT INTO RFDATA.TRANSACTIONS(transaction_id, 
-            wallet_address_id,
-            address_id,
-            amount,
-            transaction_type,
-            status,
-            slot) 
-        VALUES (?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
-        [data["transaction_id"],
-        data["wallet_address_id"],
-        data["address_id"],
-        data["amount"],
-            'payback',
-        data["status"],
-        data["slot"]]
-    );
-    return data;
+// export async function addBorrow(wallet_address_id: string, data: TRANSACTION) {
+//     data["wallet_address_id"] = wallet_address_id;
+//     if (data["amount"] > 0)
+//         data["amount"] *= -1; // amount should be negative
+//     dbcon.query(
+//         `INSERT INTO RFDATA.TRANSACTIONS(transaction_id, 
+//             wallet_address_id,
+//             address_id,
+//             amount,
+//             transaction_type,
+//             status,
+//             slot) 
+//         VALUES (?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
+//         [data["transaction_id"],
+//         data["wallet_address_id"],
+//         data["address_id"],
+//         data["amount"],
+//             'borrow',
+//         data["status"],
+//         data["slot"]]
+//     );
+//     return data;
+// }
+// export async function addPayback(wallet_address_id: string, data: TRANSACTION) {
+//     data["wallet_address_id"] = wallet_address_id;
+//     if (data["amount"] < 0)
+//         data["amount"] *= -1; // amount should be positive
+//     dbcon.query(
+//         `INSERT INTO RFDATA.TRANSACTIONS(transaction_id, 
+//             wallet_address_id,
+//             address_id,
+//             amount,
+//             transaction_type,
+//             status,
+//             slot) 
+//         VALUES (?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
+//         [data["transaction_id"],
+//         data["wallet_address_id"],
+//         data["address_id"],
+//         data["amount"],
+//             'payback',
+//         data["status"],
+//         data["slot"]]
+//     );
+//     return data;
 
-}
+// }
 
-export async function addStake(wallet_address_id: string, data: TRANSACTION) {
-    data["wallet_address_id"] = wallet_address_id;
-    if (data["amount"] > 0)
-        data["amount"] *= -1; // amount should be negative
-    dbcon.query(
-        `INSERT INTO RFDATA.TRANSACTIONS(transaction_id, 
-            wallet_address_id,
-            address_id,
-            amount,
-            transaction_type,
-            status,
-            slot) 
-        VALUES (?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
-        [data["transaction_id"],
-        data["wallet_address_id"],
-        data["address_id"],
-        data["amount"],
-            'stake',
-        data["status"],
-        data["slot"]]
-    );
-    return data;
-}
+// export async function addStake(wallet_address_id: string, data: TRANSACTION) {
+//     data["wallet_address_id"] = wallet_address_id;
+//     if (data["amount"] > 0)
+//         data["amount"] *= -1; // amount should be negative
+//     dbcon.query(
+//         `INSERT INTO RFDATA.TRANSACTIONS(transaction_id, 
+//             wallet_address_id,
+//             address_id,
+//             amount,
+//             transaction_type,
+//             status,
+//             slot) 
+//         VALUES (?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
+//         [data["transaction_id"],
+//         data["wallet_address_id"],
+//         data["address_id"],
+//         data["amount"],
+//             'stake',
+//         data["status"],
+//         data["slot"]]
+//     );
+//     return data;
+// }
 
-export async function addSwap(wallet_address_id: string, data: TRANSACTION[]) {
-    const guuid = uuid();
-    let move = 0
-    for (let trans of data) {
-        trans["wallet_address_id"] = wallet_address_id;
+// export async function addSwap(wallet_address_id: string, data: TRANSACTION[]) {
+//     const guuid = uuid();
+//     let move = 0
+//     for (let trans of data) {
+//         trans["wallet_address_id"] = wallet_address_id;
 
-        if (move == 0)
-            if (trans["amount"] > 0)
-                trans["amount"] *= -1; // amount should be negative
-            else
-                if (trans["amount"] < 0)
-                    trans["amount"] *= -1; // amount should be positive
-        move += 1;
-        dbcon.query(
-            `INSERT INTO RFDATA.TRANSACTIONS(transaction_id, 
-            wallet_address_id,
-            address_id,
-            amount,
-            transaction_type,
-            sawp_group,
-            conversion_rate,
-            status,
-            slot) 
-        VALUES (?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
-            [trans["transaction_id"],
-            trans["wallet_address_id"],
-            trans["address_id"],
-            trans["amount"],
-                'swap',
-                guuid,
-            trans["conversion_rate"],
-            trans["status"],
-            trans["slot"]]
-        );
-    }
-    return data;
-}
+//         if (move == 0)
+//             if (trans["amount"] > 0)
+//                 trans["amount"] *= -1; // amount should be negative
+//             else
+//                 if (trans["amount"] < 0)
+//                     trans["amount"] *= -1; // amount should be positive
+//         move += 1;
+//         dbcon.query(
+//             `INSERT INTO RFDATA.TRANSACTIONS(transaction_id, 
+//             wallet_address_id,
+//             address_id,
+//             amount,
+//             transaction_type,
+//             sawp_group,
+//             conversion_rate,
+//             status,
+//             slot) 
+//         VALUES (?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
+//             [trans["transaction_id"],
+//             trans["wallet_address_id"],
+//             trans["address_id"],
+//             trans["amount"],
+//                 'swap',
+//                 guuid,
+//             trans["conversion_rate"],
+//             trans["status"],
+//             trans["slot"]]
+//         );
+//     }
+//     return data;
+// }
 
-export async function addReward(wallet_address_id: string, data: TRANSACTION) {
-    data["wallet_address_id"] = wallet_address_id;
-    if (data["amount"] < 0)
-        data["amount"] *= -1; // amount should be positive
-    dbcon.query(
-        `INSERT INTO RFDATA.TRANSACTIONS(transaction_id, 
-            wallet_address_id,
-            address_id,
-            amount,
-            transaction_type,
-            base_id,
-            status,
-            slot) 
-        VALUES (?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
-        [data["transaction_id"],
-        data["wallet_address_id"],
-        data["address_id"],
-        data["amount"],
-            'reward',
-        data["base_address_id"],
-        data["status"],
-        data["slot"]]
-    );
-    return data;
-}
+// export async function addReward(wallet_address_id: string, data: TRANSACTION) {
+//     data["wallet_address_id"] = wallet_address_id;
+//     if (data["amount"] < 0)
+//         data["amount"] *= -1; // amount should be positive
+//     dbcon.query(
+//         `INSERT INTO RFDATA.TRANSACTIONS(transaction_id, 
+//             wallet_address_id,
+//             address_id,
+//             amount,
+//             transaction_type,
+//             base_id,
+//             status,
+//             slot) 
+//         VALUES (?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
+//         [data["transaction_id"],
+//         data["wallet_address_id"],
+//         data["address_id"],
+//         data["amount"],
+//             'reward',
+//         data["base_address_id"],
+//         data["status"],
+//         data["slot"]]
+//     );
+//     return data;
+// }

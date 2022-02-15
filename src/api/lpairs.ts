@@ -19,6 +19,7 @@ function map_row_lpair(row: RowDataPacket): LPair {
         "risk_rating": row.lp_risk_rating,
         "created_on": row.lp_created_on,
         "updated_on": row.lp_updated_on,
+        "icon": row.icon
     }
 }
 
@@ -30,6 +31,7 @@ export async function getAllLPairs(callback: (r: LPair[] | undefined) => void) {
                     lp.pool_size lp_pool_size,
                     lp.platform_id lp_platform_id,
                     lp.platform_symbol platform_symbol,
+                    lp.icon icon,
                     plt.name lp_platform_name,
                     plt.site lp_platform_site,
                     plt.icon lp_platform_icon,
@@ -84,6 +86,7 @@ export async function getLPair(address_id: string, callback: (r: LPair | undefin
                     lp.pool_size lp_pool_size,
                     lp.platform_id lp_platform_id,
                     lp.platform_symbol platform_symbol,
+                    lp.icon icon,
                     plt.name lp_platform_name,
                     plt.site lp_platform_site,
                     plt.icon lp_platform_icon,
@@ -141,6 +144,7 @@ export async function saveLPair(address_id: string, data: LPair): Promise<boolea
             collateralization_ratio,
             liquidation_ratio,
             risk_rating,
+            icon
             created_on,
             updated_on) 
         VALUES (?,?,?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001),FROM_UNIXTIME(? * 0.001))`,
@@ -153,6 +157,7 @@ export async function saveLPair(address_id: string, data: LPair): Promise<boolea
         data["collateralization_ratio"],
         data["liquidation_ratio"],
         data["risk_rating"],
+        data["icon"],
             ts, ts]
     );
     if (data["lpasset"])
