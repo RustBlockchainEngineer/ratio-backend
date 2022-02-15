@@ -636,7 +636,7 @@
 								}
 							]
 						},
-						"description": "Return a list of all the transaction for a specific LP or Token.\n\nReturn:\n\n``` json\n[\n{\n        \"transaction_id\": string,\n        \"wallet_address_id\": string,\n        \"address_id\": string,\n        \"amount\": number,\n        \"transaction_type\": TRANS_TYPE,\n        \"transaction_dt\": timestamp,\n        \"sawp_group\": string,\n        \"conversion_rate\": number,\n        \"base_address_id\": string\n    },...\n]\n\n```"
+						"description": "Return a list of all the transaction for a specific LP or Token.\n\nReturn:\n\n``` json\n[\n{\n        \"transaction_id\": string,\n        \"wallet_address_id\": string,\n        \"address_id\": string,\n        \"amount\": number,\n        \"transaction_type\": TRANS_TYPE,\n        \"slot\": timestamp,\n        \"sawp_group\": string,\n        \"conversion_rate\": number,\n        \"base_address_id\": string,\n        \"status\": string\n    },...\n]\n\n```"
 					},
 					"response": []
 				},
@@ -744,7 +744,7 @@
 								}
 							]
 						},
-						"description": "Add deposit Transaction.\n\nBody:\n\n``` json\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'deposit',\n}\n\n```"
+						"description": "Add deposit Transaction.\n\nBody:\n\n``` json\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'deposit',\n\"status\": string,\n\"slot\":number\n}\n\n```"
 					},
 					"response": []
 				},
@@ -770,7 +770,7 @@
 								}
 							]
 						},
-						"description": "Add withdraw Transaction.\n\nBody:\n\n``` json\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'withdraw',\n}\n\n```"
+						"description": "Add withdraw Transaction.\n\nBody:\n\n``` json\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'withdraw',\n\"status\": string,\n\"slot\":number\n}\n\n```"
 					},
 					"response": []
 				},
@@ -796,7 +796,7 @@
 								}
 							]
 						},
-						"description": "Add borrow Transaction.\n\nBody:\n\n``` json\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'borrow',\n}\n\n```"
+						"description": "Add borrow Transaction.\n\nBody:\n\n``` json\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'borrow',\n\"status\": string,\n\"slot\":number\n}\n\n```"
 					},
 					"response": []
 				},
@@ -822,7 +822,7 @@
 								}
 							]
 						},
-						"description": "Add payback Transaction.\n\nBody:\n\n``` json\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'payback',\n}\n\n```"
+						"description": "Add payback Transaction.\n\nBody:\n\n``` json\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'payback',\n\"status\": string,\n\"slot\":number\n}\n\n```"
 					},
 					"response": []
 				},
@@ -848,7 +848,7 @@
 								}
 							]
 						},
-						"description": "Add stake Transaction.\n\nBody:\n\n``` json\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'stake',\n}\n\n```"
+						"description": "Add stake Transaction.\n\nBody:\n\n``` json\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'stake',\n\"status\": string,\n\"slot\":number\n}\n\n```"
 					},
 					"response": []
 				},
@@ -874,7 +874,7 @@
 								}
 							]
 						},
-						"description": "Add reward Transaction.\n\nBody:\n\n``` json\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'reward',\n\"base_address_id\": string\n}\n\n```"
+						"description": "Add reward Transaction.\n\nBody:\n\n``` json\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'reward',\n\"base_address_id\": string,\n\"status\": string,\n\"slot\":number\n}\n\n```"
 					},
 					"response": []
 				},
@@ -900,7 +900,7 @@
 								}
 							]
 						},
-						"description": "Add swap Transaction.\n\nBody:\n\n``` json\n[{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'swap',\n\"conversion_rate\":number\n},\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'swap',\n\"conversion_rate\":number\n}]\n\n```"
+						"description": "Add swap Transaction.\n\nBody:\n\n``` json\n[{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'swap',\n\"conversion_rate\":number,\n\"status\": string,\n\"slot\":number\n},\n{\n\"transaction_id\": string,\n\"wallet_address_id\": string,\n\"address_id\": string,\n\"amount\": number,\n\"transaction_type\": 'swap',\n\"conversion_rate\":number,\n\"status\": string,\n\"slot\":number\n}]\n\n```"
 					},
 					"response": []
 				}

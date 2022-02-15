@@ -85,10 +85,11 @@ export interface TRANSACTION {
     symbol?: string,
     amount: number,
     transaction_type: TRANSACTION_TYPE
-    transaction_dt: number
+    slot: number
     sawp_group: string,
     conversion_rate: number,
-    base_address_id: string
+    base_address_id: string,
+    status: string
 }
 export interface LPAsset {
     token_address_id: string,
