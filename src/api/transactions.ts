@@ -12,6 +12,8 @@ import {
     sendAndConfirmTransaction,
     SystemProgram,
     Transaction,
+    TransactionError,
+    ConfirmedSignatureInfo
 
 } from '@solana/web3.js';
 
@@ -24,13 +26,13 @@ function map_row_vault(row: RowDataPacket): TRANSACTION {
         "transaction_id": row.transaction_id,
         "wallet_address_id": row.wallet_address_id,
         "address_id": row.address_id,
-        "symbol": cacheList[row.address_id],
+        "symbol": cacheList["_" + row.address_id],
         "amount": row.amount,
         "transaction_type": row.transaction_type,
         "slot": row.slot,
         "sawp_group": row.sawp_group,
         "conversion_rate": row.conversion_rate,
-        "base_address_id": cacheList[row.base_address_id] || "",
+        "base_address_id": cacheList["_" + row.base_address_id] || "",
         "status": row.status
     }
 }
@@ -67,7 +69,7 @@ export async function getVault(wallet_address_id: string, callback: (r: Object[]
         let records: Object[] = rows.map((row: RowDataPacket) => {
             return {
                 "address_id": row.address_id,
-                "symbol": cacheList[row.address_id],
+                "symbol": cacheList["_" + row.address_id],
                 "amount": row.amount
             };
         });
@@ -79,60 +81,26 @@ export async function getVault(wallet_address_id: string, callback: (r: Object[]
 export async function getTxStatus(wallet_address_id: string, signature: string, callback: (r: Object) => void) {
 
     const connection = new Connection(clusterApiUrl('devnet'));
-    //const user = new PublicKey(wallet_address_id);
-    //const data = await connection.getConfirmedSignaturesForAddress2(user);
-    // console.log('USER DATA TX');
-    // console.log(data);
-    // const tx = data.filter((ele) => { ele.signature === signature })
-    // console.log('filter USER DATA TX');
-    // console.log(tx);
+    const user = new PublicKey(wallet_address_id);
+    const signatures: ConfirmedSignatureInfo[] = await connection.getConfirmedSignaturesForAddress2(user);
 
+    const tx = signatures.filter((ele) => { return ele.signature == signature })
     const txInfo = await connection.getTransaction(signature);
-    // console.log('TX INFO');
-    // console.log(txInfo);
 
-    const meta: Object | undefined | null = txInfo?.meta;
-    let status: Object | undefined = undefined;
-    if (meta)
-        if ("status" in meta) {
-            status = meta["status"]
-        }
+    const accounts = txInfo?.transaction.message.accountKeys;
+    const err_status = txInfo?.meta?.err;
 
-    let validTx = undefined;
-    if (txInfo?.transaction?.message?.accountKeys)
-        for (let acc of txInfo?.transaction?.message?.accountKeys)
-            validTx = cacheList[acc.toString()];
+    const verified = accounts?.filter((ele) => { return "_" + ele.toString() in cacheList })
 
-    if (validTx)
+    if (verified)
         callback({
-            "timestamp": txInfo?.slot,
-            "status": status,
-            "signature": signature
+            "slot": tx[0].slot,
+            "status": err_status,
+            "signature": tx[0].signature
         });
     else
         callback({});
 
-    // console.log('--------- MESSAGE HEADER -------');
-    // console.log(txInfo?.transaction?.message?.header);
-    // console.log('--------- MESSAGE ACCOUNT KEYS -----');
-
-    //console.log(txInfo?.transaction?.message?.accountKeys);
-
-    // console.log('--------- MESSAGE INSTRUCTIONS ------');
-    // console.log(txInfo?.transaction?.message?.instructions);
-
-    // const tData = await connection.getParsedTransaction(data[data?.length - 3]?.signature);
-    // console.log('--------- TDATA ----------');
-    // console.log(tData);
-
-    // console.log('-------------------------- MAPPED DATA --------------------------');
-    // const txMapsx = data.map(async (tx) => {
-    //     console.log('------- TX DATA ------------');
-    //     const data = await connection.getParsedTransaction(tx?.signature);
-    //     console.log(data);
-    // });
-
-    //callback(data);
 }
 
 export async function getTxsignatures(wallet_address_id: string, callback: (r: string[]) => void) {
@@ -145,8 +113,11 @@ export async function getTxsignatures(wallet_address_id: string, callback: (r: s
         const txInfo = await connection.getTransaction(tx.signature)
         let validTx = undefined;
         if (txInfo?.transaction?.message?.accountKeys)
-            for (let acc of txInfo?.transaction?.message?.accountKeys)
-                validTx = cacheList[acc.toString()];
+            for (let acc of txInfo?.transaction?.message?.accountKeys) {
+                validTx = cacheList["_" + acc.toString()];
+                if (validTx)
+                    break
+            }
         return validTx != undefined
     });
     const signatures = txs.map((ele) => { return ele.signature });
@@ -154,7 +125,51 @@ export async function getTxsignatures(wallet_address_id: string, callback: (r: s
 }
 
 
-export async function addTransaction(wallet_address_id: string, data: TRANSACTION): Promise<Object> {
+export async function addTransaction(wallet_address_id: string, data: { "tx_type": string, "signature": string }): Promise<Object> {
+
+    const connection = new Connection(clusterApiUrl('devnet'));
+    //const user = new PublicKey(wallet_address_id);
+    //const data = await connection.getConfirmedSignaturesForAddress2(user);
+    // console.log('USER DATA TX');
+    // console.log(data);
+    // const tx = data.filter((ele) => { ele.signature === signature })
+    // console.log('filter USER DATA TX');
+    // console.log(tx);
+
+    const txInfo = await connection.getTransaction(data["signature"]);
+    console.log('TX INFO');
+    console.log(txInfo);
+
+    const post_balance = txInfo?.meta?.postBalances;
+    const pre_balance = txInfo?.meta?.postBalances;
+    const tk_post_balance = txInfo?.meta?.postTokenBalances;
+    const tk_pre_balance = txInfo?.meta?.preTokenBalances;
+
+    const accounts = txInfo?.transaction.message.accountKeys;
+
+
+
+    const meta: Object | undefined | null = txInfo?.meta;
+    let status: Object | undefined = undefined;
+    if (meta)
+        if ("status" in meta) {
+            status = meta["status"]
+        }
+
+    let validTx = undefined;
+    if (txInfo?.transaction?.message?.accountKeys)
+        for (let acc of txInfo?.transaction?.message?.accountKeys)
+            validTx = cacheList["_" + acc.toString()];
+
+    // if (validTx)
+    //     callback({
+    //         "timestamp": txInfo?.slot,
+    //         "status": status,
+    //         "signature": signature
+    //     });
+    // else
+    //     callback({});
+
     /*
     data["wallet_address_id"] = wallet_address_id;
     if (data["amount"] < 0)

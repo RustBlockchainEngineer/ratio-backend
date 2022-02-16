@@ -34,7 +34,7 @@ export async function getToken(address_id: string, callback: (r: Token | undefin
 
 export async function addToken(data: Token) {
     let ts = Date.now();
-    cacheList[data["address_id"]] = data["symbol"];
+    cacheList["_" + data["address_id"]] = data["symbol"];
     dbcon.query(
         `INSERT INTO RFDATA.TOKENS(address_id,symbol,icon,created_on,updated_on) VALUES (?,?,?,FROM_UNIXTIME(? * 0.001),FROM_UNIXTIME(? * 0.001))`,
         [data["address_id"], data["symbol"], data["icon"], ts, ts]
@@ -74,7 +74,7 @@ export async function getLatestTokenPrice(address_id: string, callback: (r: Pric
 
 export async function updateToken(address_id: string, data: Token) {
     let now = Date.now();
-    cacheList[address_id] = data["symbol"];
+    cacheList["_" + address_id] = data["symbol"];
     dbcon.query(
         `UPDATE RFDATA.TOKENS SET symbol = ? , icon = ?,updated_on = FROM_UNIXTIME(? * 0.001) WHERE address_id = "${address_id}"`,
         [data["symbol"], data["icon"], now, address_id]
@@ -83,7 +83,7 @@ export async function updateToken(address_id: string, data: Token) {
 }
 
 export async function deleteToken(address_id: string) {
-    delete cacheList[address_id];
+    delete cacheList["_" + address_id];
     dbcon.query(
         `DELETE FROM RFDATA.TOKENS WHERE address_id = "${address_id}"`
     );

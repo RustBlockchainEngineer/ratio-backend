@@ -126,7 +126,7 @@ export async function getLPair(address_id: string, callback: (r: LPair | undefin
 
 export async function saveLPair(address_id: string, data: LPair): Promise<boolean> {
     let ts = Date.now();
-    cacheList[address_id] = data["symbol"];
+    cacheList["_" + address_id] = data["symbol"];
     dbcon.query(
         `DELETE FROM RFDATA.LPAIRS WHERE address_id = "${address_id}"`
     );
@@ -135,7 +135,8 @@ export async function saveLPair(address_id: string, data: LPair): Promise<boolea
     );
 
     dbcon.query(
-        `INSERT INTO RFDATA.LPAIRS(address_id, 
+        `INSERT INTO RFDATA.LPAIRS(
+            address_id, 
             symbol,
             page_url,
             pool_size,
@@ -144,10 +145,10 @@ export async function saveLPair(address_id: string, data: LPair): Promise<boolea
             collateralization_ratio,
             liquidation_ratio,
             risk_rating,
-            icon
+            icon,
             created_on,
             updated_on) 
-        VALUES (?,?,?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001),FROM_UNIXTIME(? * 0.001))`,
+        VALUES (?,?,?,?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001),FROM_UNIXTIME(? * 0.001))`,
         [data["address_id"],
         data["symbol"],
         data["page_url"],
@@ -172,7 +173,7 @@ export async function saveLPair(address_id: string, data: LPair): Promise<boolea
 
 
 export async function deleteLPair(id: string) {
-    delete cacheList[id];
+    delete cacheList["_" + id];
     dbcon.query(
         `DELETE FROM RFDATA.LPAIRS WHERE address_id = "${id}"`
     );
