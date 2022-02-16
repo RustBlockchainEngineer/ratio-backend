@@ -666,7 +666,7 @@
 								}
 							]
 						},
-						"description": "Return:\n\n``` json\n{\n\"timestamp\":number,\n\"status\": object,\n\"signature\": string\n}\n\n```"
+						"description": "Return:\n\n``` json\n{\n\"slot\":number,\n\"status\": string,\n\"signature\": string\n}\n\n```"
 					},
 					"response": []
 				},
