@@ -778,7 +778,7 @@
 										}
 									]
 								},
-								"description": "Return get one transaction Fee's values:\n\nReturn:\n\n``` json\n[\n{\"param_name\": number,\"created_on\": timestamp},...\n]\n```\n\nWhere param_name is one of:\n\n\\['deposit_fee', 'withdraw_fee', 'borrow_fee', 'payback_fee', 'reward_fee', 'swap_fee', 'stake_fee'\\]"
+								"description": "Return get one transaction Fee's values:\n\nReturn:\n\n``` json\n[\n{\"param_name\": number,\"created_on\": timestamp},...\n]\n\n```\n\nWhere param_name is one of:\n\n\\['deposit_fee', 'withdraw_fee', 'borrow_fee', 'payback_fee', 'reward_fee', 'swap_fee', 'stake_fee','harvest_fee'\\]"
 							},
 							"response": []
 						},
@@ -798,7 +798,7 @@
 										"list"
 									]
 								},
-								"description": "Return the list of transaction fees:\n\nReturn:\n\n``` json\n['deposit_fee','withdraw_fee','borrow_fee','payback_fee','reward_fee','swap_fee','stake_fee']\n\n```"
+								"description": "Return the list of transaction fees:\n\nReturn:\n\n``` json\n['deposit_fee','withdraw_fee','borrow_fee','payback_fee','reward_fee','swap_fee','stake_fee','harvest_fee']\n\n```"
 							},
 							"response": []
 						},
@@ -818,7 +818,7 @@
 										"last"
 									]
 								},
-								"description": "Return the last list of all transaction fees:\n\nReturn:\n\n``` json\n[\n{\"deposit_fee\": number,\"created_on\": timestamp},\n{\"withdraw_fee\": number,\"created_on\": timestamp},\n{\"borrow_fee\": number,\"created_on\": timestamp},\n{\"payback_fee\": number,\"created_on\": timestamp},\n{\"reward_fee\": number,\"created_on\": timestamp},\n{\"swap_fee\": number,\"created_on\": timestamp},\n{\"stake_fee\": number,\"created_on\": timestamp}\n]\n\n```"
+								"description": "Return the last list of all transaction fees:\n\nReturn:\n\n``` json\n[\n{\"deposit_fee\": number,\"created_on\": timestamp},\n{\"withdraw_fee\": number,\"created_on\": timestamp},\n{\"borrow_fee\": number,\"created_on\": timestamp},\n{\"payback_fee\": number,\"created_on\": timestamp},\n{\"reward_fee\": number,\"created_on\": timestamp},\n{\"swap_fee\": number,\"created_on\": timestamp},\n{\"stake_fee\": number,\"created_on\": timestamp}\n{\"harvest_fee\": number,\"created_on\": timestamp}\n]\n\n```"
 							},
 							"response": []
 						},
@@ -846,7 +846,7 @@
 										"transfees"
 									]
 								},
-								"description": "Add new transaction fees values.\n\nBody:\n\n``` json\n{\n\"deposit_fee\":number,\n\"withdraw_fee\":number,\n\"borrow_fee\":number,\n\"payback_fee\":number,\n\"reward_fee\":number,\n\"swap_fee\":number,\n\"stake_fee\":number\n}\n\n```"
+								"description": "Add new transaction fees values.\n\nBody:\n\n``` json\n{\n\"deposit_fee\":number,\n\"withdraw_fee\":number,\n\"borrow_fee\":number,\n\"payback_fee\":number,\n\"reward_fee\":number,\n\"swap_fee\":number,\n\"stake_fee\":number,\n\"harvest_fee\":number\n}\n\n```"
 							},
 							"response": []
 						},

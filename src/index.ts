@@ -6,7 +6,7 @@ import cors from 'cors';
 import { cacheInit } from './api/cacheList'
 
 let bodyParser = require('body-parser')
-const https = require('https');
+const https = require('http');
 const fs = require('fs');
 
 let platforms = require('./routes/platforms');
@@ -16,6 +16,7 @@ let ratioconfig = require('./routes/ratioconf');
 let transactions = require('./routes/transactions');
 let users = require('./routes/users');
 let authRouter = require('./routes/auth');
+
 const app = express();
 
 const allowedOrigins: Array<string | RegExp> = process.env.API_CORS_ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'];
@@ -45,8 +46,8 @@ cacheInit();
 const port = process.env.PORT || 3000;
 
 https.createServer({
-    key: fs.readFileSync('/etc/letsencrypt/live/backend.ratio.finance/privkey.pem'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/backend.ratio.finance/fullchain.pem'),
+    // key: fs.readFileSync('/etc/letsencrypt/live/backend.ratio.finance/privkey.pem'),
+    // cert: fs.readFileSync('/etc/letsencrypt/live/backend.ratio.finance/fullchain.pem'),
 }, app).listen(port, () => {
     console.log(`HTTPS Server running on port ${port}`);
 });
