@@ -152,6 +152,7 @@ router.delete('/general', authorize([UserRole.ADMIN]), async function (req: Requ
 router.get('/transfees/list', async function (req: Request, res: Response) {
     res.send(JSON.stringify(TRANSACTIONFEE));
 });
+
 router.get('/transfees/last', async function (req: Request, res: Response) {
 
     await getlatestParamValue(TRANSACTIONFEE, function (result) {

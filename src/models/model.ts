@@ -106,7 +106,7 @@ export interface TRANSACTION {
     sawp_group: string,
     conversion_rate: number,
     base_address_id: string,
-    status: string
+    status?: string
 }
 export interface LPAsset {
     token_address_id: string,

@@ -16,11 +16,16 @@ export async function getParamValues(param_name: string, callback: (r: Object[])
 
 export async function getlatestParamValue(param_list: string[], callback: (r: Object[]) => void) {
     let pl = param_list.map(function (a) { return "'" + a.replace("'", "''") + "'"; }).join();
-    const sql_str = `SELECT DISTINCT param_type,
-    LAST_VALUE(param_value) OVER (PARTITION BY param_type ORDER BY created_on) AS param_value,
-    LAST_VALUE(created_on) OVER (PARTITION BY param_type ORDER BY created_on) AS created_on
-FROM RFDATA.RATIOCONFIG WHERE param_type IN (${pl})`;
-    console.log(sql_str);
+    //     const sql_str = `SELECT DISTINCT param_type,
+    //     LAST_VALUE(param_value) OVER (PARTITION BY param_type ORDER BY created_on) AS param_value,
+    //     LAST_VALUE(created_on) OVER (PARTITION BY param_type ORDER BY created_on) AS created_on
+    // FROM RFDATA.RATIOCONFIG WHERE param_type IN (${pl})`;
+
+    const sql_str = `select param_type, param_value,created_on
+                from( select param_type, param_value,created_on, ROW_NUMBER() OVER(PARTITION BY param_type ORDER BY created_on desc) as rn
+                from RFDATA.RATIOCONFIG WHERE param_type IN (${pl})) as a
+                where rn = 1;
+`
     dbcon.query(sql_str, function (err, result) {
         if (err)
             throw err;
