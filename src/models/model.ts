@@ -1,11 +1,11 @@
 export enum TRANSACTION_TYPE {
-    'deposit', // +  
-    'payback',   // +
-    'reward',  // +  2.5 %
-    'swap', //  +-
-    'withdraw',// -
-    'borrow',  // -
-    'stake'// -  
+    'deposit', // 
+    'payback',
+    'reward',  // 
+    'swap',
+    'withdraw', // 
+    'borrow',
+    'stake'
 }
 
 export enum RISK_RATING {
@@ -59,6 +59,7 @@ export interface LPair {
     created_on?: number,
     updated_on: number,
     icon: string,
+    lp_mint_address: string,
     lpasset?: LPAsset[]
 }
 
