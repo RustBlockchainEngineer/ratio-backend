@@ -7,7 +7,7 @@ import { cacheInit } from './api/cacheList'
 
 let bodyParser = require('body-parser')
 
-// const https = require('http');
+// const https = require('https');
 // const fs = require('fs');
 
 let platforms = require('./routes/platforms');
@@ -54,8 +54,8 @@ app.listen(port, () => {
 })
 
 // https.createServer({
-//     // key: fs.readFileSync('/etc/letsencrypt/live/backend.ratio.finance/privkey.pem'),
-//     // cert: fs.readFileSync('/etc/letsencrypt/live/backend.ratio.finance/fullchain.pem'),
+//     key: fs.readFileSync('/etc/letsencrypt/live/backend.ratio.finance/privkey.pem'),
+//     cert: fs.readFileSync('/etc/letsencrypt/live/backend.ratio.finance/fullchain.pem'),
 // }, app).listen(port, () => {
 //     console.log(`HTTPS Server running on port ${port}`);
 // });

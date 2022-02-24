@@ -20,7 +20,7 @@ function map_row_lpair(row: RowDataPacket): LPair {
         "created_on": row.lp_created_on,
         "updated_on": row.lp_updated_on,
         "icon": row.icon,
-        "lp_mint_address": row.lp_mint_address
+        "vault_address_id": row.vault_address_id
     }
 }
 
@@ -33,7 +33,7 @@ export async function getAllLPairs(callback: (r: LPair[] | undefined) => void) {
                     lp.platform_id lp_platform_id,
                     lp.platform_symbol platform_symbol,
                     lp.icon icon,
-                    lp.lp_mint_address lp_mint_address,
+                    lp.vault_address_id vault_address_id,
                     plt.name lp_platform_name,
                     plt.site lp_platform_site,
                     plt.icon lp_platform_icon,
@@ -89,7 +89,7 @@ export async function getLPair(address_id: string, callback: (r: LPair | undefin
                     lp.platform_id lp_platform_id,
                     lp.platform_symbol platform_symbol,
                     lp.icon icon,
-                    lp.lp_mint_address lp_mint_address,
+                    lp.vault_address_id vault_address_id,
                     plt.name lp_platform_name,
                     plt.site lp_platform_site,
                     plt.icon lp_platform_icon,
@@ -130,13 +130,12 @@ export async function getLPair(address_id: string, callback: (r: LPair | undefin
 export async function saveLPair(address_id: string, data: LPair): Promise<boolean> {
     let ts = Date.now();
     cacheList["_" + address_id] = data["symbol"];
-    dbcon.query(
-        `DELETE FROM RFDATA.LPAIRS WHERE address_id = "${address_id}"`
-    );
-    dbcon.query(
+    const ret = dbcon.query(
         `DELETE FROM RFDATA.LPASSETS WHERE lpair_address_id = "${address_id}"`
     );
-
+    const ret1 = dbcon.query(
+        `DELETE FROM RFDATA.LPAIRS WHERE address_id = "${address_id}"`
+    );
     dbcon.query(
         `INSERT INTO RFDATA.LPAIRS(
             address_id, 
@@ -149,7 +148,7 @@ export async function saveLPair(address_id: string, data: LPair): Promise<boolea
             liquidation_ratio,
             risk_rating,
             icon,
-            lp_mint_address,
+            vault_address_id,
             created_on,
             updated_on) 
         VALUES (?,?,?,?,?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001),FROM_UNIXTIME(? * 0.001))`,
@@ -163,7 +162,7 @@ export async function saveLPair(address_id: string, data: LPair): Promise<boolea
         data["liquidation_ratio"],
         data["risk_rating"],
         data["icon"],
-        data["lp_mint_address"],
+        data["vault_address_id"],
             ts, ts]
     );
     if (data["lpasset"])
@@ -180,16 +179,16 @@ export async function saveLPair(address_id: string, data: LPair): Promise<boolea
 export async function deleteLPair(id: string) {
     delete cacheList["_" + id];
     dbcon.query(
-        `DELETE FROM RFDATA.LPAIRS WHERE address_id = "${id}"`
+        `DELETE FROM RFDATA.LPAIRPARAMS WHERE lpair_address_id = "${id}"`
+    );
+    dbcon.query(
+        `DELETE FROM RFDATA.LPAIRAPRS WHERE lpair_address_id = "${id}"`
     );
     dbcon.query(
         `DELETE FROM RFDATA.LPASSETS WHERE lpair_address_id = "${id}"`
     );
     dbcon.query(
-        `DELETE FROM RFDATA.LPAIRPARAMS WHERE lpair_address_id = "${id}"`
-    );
-    dbcon.query(
-        `DELETE FROM RFDATA.LPAIRAPRS WHERE lpair_address_id = "${id}"`
+        `DELETE FROM RFDATA.LPAIRS WHERE address_id = "${id}"`
     );
     return { "address_id": id }
 }
