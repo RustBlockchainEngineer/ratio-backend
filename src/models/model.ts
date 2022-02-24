@@ -59,7 +59,7 @@ export interface LPair {
     created_on?: number,
     updated_on: number,
     icon: string,
-    lp_mint_address: string,
+    vault_address_id: string,
     lpasset?: LPAsset[]
 }
 
