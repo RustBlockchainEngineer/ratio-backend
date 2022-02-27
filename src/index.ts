@@ -44,9 +44,6 @@ app.use('/users', users);
 // Init the tokens and LPs cache list;
 cacheInit();
 
-// Init the tokens and LPs cache list;
-cacheInit();
-
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
