@@ -28,6 +28,7 @@ jobs:
         with:
           host: ${{ secrets.DEV_SSH_HOST }}
           username: ${{ secrets.DEV_SSH_USERNAME }}
+          key: ${{ secrets.DEV_SSH_KEY }}
           script: |
                 whoami
                 ls -l
