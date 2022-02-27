@@ -31,5 +31,7 @@ jobs:
           key: ${{ secrets.DEV_SSH_KEY }}
           port: 22
           script: |
-                whoami
-                ls -l
+                git clone --branch dev git@github.com:RatioFinance/rf-engine.git
+                
+                
+                
