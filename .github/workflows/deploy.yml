@@ -24,7 +24,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Deploy to Dev Server        
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v0.1.2
         with:
           host: ${{ secrets.DEV_SSH_HOST }}
           username: ${{ secrets.DEV_SSH_USERNAME }}
