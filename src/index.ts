@@ -1,55 +1,58 @@
-import 'dotenv/config'
-import express, { Router } from 'express';
-import { buildPriceChangeSpot } from './api/pyth';
+
+import 'dotenv/config';
+import express from 'express';
 import cors from 'cors';
-import authMiddleware from './middlewares/auth';
 
-let users = require('./routes/users') as Router;
-let pyth = require('./routes/pyth') as Router;
-let platforms = require('./routes/platforms') as Router;
-let lppairs = require('./routes/lppairs') as Router;
-let lpassets = require('./routes/lpassets') as Router;
-let lppairaprs = require('./routes/lppairaprs') as Router;
-let tokens = require('./routes/tokens') as Router;
-let authRouter = require('./routes/auth') as Router;
+import { cacheInit } from './api/cacheList'
 
-buildPriceChangeSpot("devnet");
+let bodyParser = require('body-parser')
 
+// const https = require('https');
+// const fs = require('fs');
+
+let platforms = require('./routes/platforms');
+let lpairs = require('./routes/lpairs');
+let tokens = require('./routes/tokens');
+let ratioconfig = require('./routes/ratioconf');
+let transactions = require('./routes/transactions');
+let users = require('./routes/users');
+let authRouter = require('./routes/auth');
 
 const app = express();
 
+const allowedOrigins: Array<string | RegExp> = process.env.API_CORS_ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'];
+allowedOrigins.push(/\.netlify.app$/);
+
+app.use(bodyParser.json());
+
+const options: cors.CorsOptions = {
+    origin: allowedOrigins
+};
+console.log(options);
+app.use(cors(options));
 app.use(express.json());
 
-const allowedOrigins = process.env.API_CORS_ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'];
-const options: cors.CorsOptions = {
-  origin: allowedOrigins
-};
-app.use(cors(options))
-
-const pathsToIgnore = [/\/auth(\/.*)?/, new RegExp("\/users\/[^\/]+") ];
-
-const applyMiddlewareByPathFilter = function(middleware, paths:RegExp[]){
-    return (req, res, next) => {
-        if(paths.some((pathRegex) => (req._parsedUrl.pathname as string).match(pathRegex))) {
-            next();
-        } else {
-            middleware(req, res, next);
-        }
-    };
-};
-
-app.use(applyMiddlewareByPathFilter(authMiddleware.verifyToken, pathsToIgnore));
-app.use(applyMiddlewareByPathFilter(authMiddleware.validateUser, pathsToIgnore));
-app.use('/auth', authRouter);
 app.use('/platforms', platforms);
-app.use('/lppairs', lppairs);
-app.use('/lpassets', lpassets);
-app.use('/lppairaprs', lppairaprs);
-app.use('/users', users);
+app.use('/lpairs', lpairs);
 app.use('/tokens', tokens);
-app.use('/price', pyth);
+app.use('/ratioconfig', ratioconfig);
+app.use('/transaction', transactions);
+
+app.use('/auth', authRouter);
+app.use('/users', users);
+
+// Init the tokens and LPs cache list;
+cacheInit();
 
 const port = process.env.PORT || 3000;
+
 app.listen(port, () => {
-    console.log(`rf-engine start on port ${port}.`);
-});
+    console.log(`Ratio Finance Backend listening on port ${port}`)
+})
+
+// https.createServer({
+//     key: fs.readFileSync('/etc/letsencrypt/live/backend.ratio.finance/privkey.pem'),
+//     cert: fs.readFileSync('/etc/letsencrypt/live/backend.ratio.finance/fullchain.pem'),
+// }, app).listen(port, () => {
+//     console.log(`HTTPS Server running on port ${port}`);
+// });
