@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Deploy To Dev
 
 # Controls when the workflow will run
 on:
@@ -35,6 +35,14 @@ jobs:
                 cd ~
                 rm -rf rf-engine
                 git clone --branch dev git@github.com:RatioFinance/rf-engine.git
+                cp ecosystem.config.js rf-engine/
+                cd rf-engine
+                pm2 install
+                tsc
+                pm2 stop rf-engine
+                pm2 start ecosystem.config.js
+                cd ..
+                pm2 list
 
 
                 
