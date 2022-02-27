@@ -37,7 +37,7 @@ jobs:
                 git clone --branch dev git@github.com:RatioFinance/rf-engine.git
                 cp ecosystem.config.js rf-engine/
                 cd rf-engine
-                pm2 install
+                npm install
                 tsc
                 pm2 stop rf-engine
                 pm2 start ecosystem.config.js
