@@ -15,7 +15,10 @@ router.get('/', async function (req: Request, res: Response) {
 
 router.get('/:id', async function (req: Request, res: Response) {
     let result = await getLPair(req.params.id, function (result) {
-        res.send(JSON.stringify(result));
+        if (result)
+            res.send(JSON.stringify(result));
+        else
+            res.status(404).send({ error: 'LPair not found' });
     });
 })
 
