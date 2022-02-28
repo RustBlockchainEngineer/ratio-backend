@@ -47,7 +47,12 @@ router.get('/:id/apr', async function (req: Request, res: Response) {
 
 router.get('/:id/apr/last', async function (req: Request, res: Response) {
     let result = await getlatestLPairAPRS(req.params.id, function (result) {
-        res.send(JSON.stringify(result));
+        if (result)
+            res.send(JSON.stringify(result));
+        else
+            res.status(404).send({ error: 'No APR value for that LPair' });
+
+        
     });
 })
 
