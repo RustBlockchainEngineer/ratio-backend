@@ -5,8 +5,6 @@ import cors from 'cors';
 
 import { cacheInit } from './api/cacheList'
 
-let bodyParser = require('body-parser')
-
 let platforms = require('./routes/platforms');
 let lpairs = require('./routes/lpairs');
 let tokens = require('./routes/tokens');
@@ -22,13 +20,12 @@ const app = express();
 const allowedOrigins: Array<string | RegExp> = process.env.API_CORS_ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'];
 allowedOrigins.push(/\.netlify.app$/);
 
-app.use(bodyParser.json());
-
 const options: cors.CorsOptions = {
     origin: allowedOrigins
 };
 console.log(options);
 app.use(cors(options));
+
 app.use(express.json());
 
 app.use('/platforms', platforms);
