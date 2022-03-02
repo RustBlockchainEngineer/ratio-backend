@@ -5,8 +5,6 @@ import cors from 'cors';
 
 import { cacheInit } from './api/cacheList'
 
-let bodyParser = require('body-parser')
-
 let platforms = require('./routes/platforms');
 let lpairs = require('./routes/lpairs');
 let tokens = require('./routes/tokens');
@@ -26,8 +24,6 @@ const options: cors.CorsOptions = {
 };
 console.log(options);
 app.use(cors(options));
-
-app.use(bodyParser.json());
 
 app.use(express.json());
 
