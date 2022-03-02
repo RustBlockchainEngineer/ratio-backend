@@ -15,6 +15,7 @@ let transactions = require('./routes/transactions');
 let users = require('./routes/users');
 let authRouter = require('./routes/auth');
 let coingecko = require('./routes/coingecko');
+let saber = require('./routes/saberpoolSizes');
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use('/tokens', tokens);
 app.use('/ratioconfig', ratioconfig);
 app.use('/transaction', transactions);
 app.use('/coingecko',coingecko);
+app.use('/saberlpprices',saber);;
 
 app.use('/auth', authRouter);
 app.use('/users', users);
