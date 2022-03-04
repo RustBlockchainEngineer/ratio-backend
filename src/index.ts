@@ -41,7 +41,7 @@ app.use('/users', users);
 
 // Init the tokens and LPs cache list;
 cacheInit();
-
+console.log("Cache initialized");
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
