@@ -5,6 +5,8 @@ import { UserRole } from '../models/model';
 import { getAllUsers, getUserByPublicKey, addUser, updateUser, deleteUser, getUserNonce } from '../api/users'
 import { getAllUserParam, getlatestUserParam, addUserParam, deleteAllUserParam } from '../api/userparam';
 import { isNotSafe } from '../utils/utils';
+import { WhitelistMode } from '../config/types';
+import { getWhiteListMode } from '../utils/config';
 
 let router = express.Router();
 
@@ -16,17 +18,29 @@ router.get('/', authorize([UserRole.ADMIN]), async function (req: Request, res: 
 })
 
 router.get('/auth/:wallet_address_id', async function (req: Request, res: Response) {
-    const user = await getUserByPublicKey(req.params.wallet_address_id);
-    if (!user)
-        res.send(false)
-    else
-        res.send(true);
+    try{
+        const whitelistMode = getWhiteListMode();
+        if(whitelistMode === WhitelistMode.DISABLED){
+            res.send(true);
+        }
+        const user = await getUserByPublicKey(req.params.wallet_address_id);
+        if (!user)
+            res.send(false)
+        else
+            res.send(whitelistMode === WhitelistMode.ADMIN_ONLY? user.role === UserRole.ADMIN : true);
+    }
+    catch(error) {
+        console.error("There was an error when checking authorization: ", error);
+        res.status(500).send({
+            error: `There was an error when checking authorization. Contact administrator.`
+        })
+    }
 })
 
 router.get('/:wallet_address_id', async function (req: Request, res: Response) {
     const user = await getUserByPublicKey(req.params.wallet_address_id);
     if (!user) {
-        return res.send(404).send({
+        return res.status(404).send({
             error: `User with publicAddress ${req.params.wallet_address_id} is not found in database`
         })
     }
