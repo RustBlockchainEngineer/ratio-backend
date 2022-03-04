@@ -34,7 +34,7 @@ jobs:
           script: |
                 cd ~
                 rm -rf rf-engine
-                git clone --branch dev git@github.com:RatioFinance/rf-engine.git
+                git clone --branch prerelease git@github.com:RatioFinance/rf-engine.git
                 cp ecosystem.config.js rf-engine/
                 cd rf-engine
                 npm install
