@@ -48,6 +48,23 @@ router.post('/', authorize([UserRole.ADMIN]), async function (req: Request, res:
     res.send(JSON.stringify(result));
 })
 
+router.post("/register", async function (req: Request, res: Response) {
+  console.log("ENABLE_WHITELIST_MODE", process.env.ENABLE_WHITELIST_MODE);
+  if (JSON.parse((process.env.ENABLE_WHITELIST_MODE ?? "true").toLowerCase())) {
+    return res.status(403).send({ error: "Register is currently not allowed" });
+  }
+  const keylist: string[] = ["wallet_address_id"];
+  if (isNotSafe(keylist, req.body)) {
+    return res
+      .status(400)
+      .send({ error: "Request body missing some parameters" });
+  }
+  req.body["name"] = "Automatically registered user";
+  req.body["role"] = UserRole.USER;
+  let result = await addUser(req.body);
+  res.send(JSON.stringify(result));
+});
+
 router.put('/:wallet_address_id', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     const keylist: string[] = ['name', 'role'];
     if (isNotSafe(keylist, req.body)) {
