@@ -13,7 +13,7 @@ let transactions = require('./routes/transactions');
 let users = require('./routes/users');
 let authRouter = require('./routes/auth');
 let coingecko = require('./routes/coingecko');
-let saber = require('./routes/saberpoolSizes');
+let saber = require('./routes/saberPoolSizes');
 
 const app = express();
 
