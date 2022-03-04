@@ -6,7 +6,6 @@ export const cacheList: { [key: string]: string } = {};
 
 
 export async function cacheInit() {
-
     dbcon.query("SELECT address_id,symbol FROM RFDATA.TOKENS", function (err, result) {
         if (err)
             throw err;
