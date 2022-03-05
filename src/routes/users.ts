@@ -49,8 +49,8 @@ router.post('/', authorize([UserRole.ADMIN]), async function (req: Request, res:
 })
 
 router.post("/register", async function (req: Request, res: Response) {
-  console.log("ENABLE_WHITELIST_MODE", process.env.ENABLE_WHITELIST_MODE);
-  if (JSON.parse((process.env.ENABLE_WHITELIST_MODE ?? "true").toLowerCase())) {
+  const whitelistModeEnabled = getWhiteListMode() !== WhitelistMode.DISABLED;
+  if (whitelistModeEnabled) {
     return res.status(403).send({ error: "Register is currently not allowed" });
   }
   const keylist: string[] = ["wallet_address_id"];
