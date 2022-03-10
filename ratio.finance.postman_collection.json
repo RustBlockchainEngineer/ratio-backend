@@ -1,1298 +1,1699 @@
 {
-  "info": {
-    "_postman_id": "4dc14663-764a-4004-945c-1eb1dbe27e3b",
-    "name": "ratio.finance",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "item": [
-    {
-      "name": "Platforms",
-      "item": [
-        {
-          "name": "Platform List",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/platforms",
-              "host": ["{{base_url}}"],
-              "path": ["platforms"]
-            },
-            "description": "Return all the platforms we have on our system.\n\nreturn list of:\n\n``` json\n[{\n        \"id\": string,\n        \"name\": string,\n        \"site\": string,\n        \"icon\": string,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp\n},...]\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Get Platform",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/platforms/:platform_id",
-              "host": ["{{base_url}}"],
-              "path": ["platforms", ":platform_id"],
-              "variable": [
-                {
-                  "key": "platform_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "Return a specific platform.\n\n``` json\n{\n        \"id\": string,\n        \"name\": string,\n        \"site\": string,\n        \"icon\": string,        \n        \"created_on\": timestamp,\n        \"updated_on\": timestamp\n}\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Add Platform",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/platforms",
-              "host": ["{{base_url}}"],
-              "path": ["platforms"]
-            },
-            "description": "Add a new platform.\n\nthe request body should contains:\n\n``` json\n{\n\"address_id\": string,\n\"site\": string,\n\"icon\": string\n}\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Update Platform",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/platforms/:platform_id",
-              "host": ["{{base_url}}"],
-              "path": ["platforms", ":platform_id"],
-              "variable": [
-                {
-                  "key": "platform_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "update a specific platform.\n\nthe body should contains:\n\n``` json\n{\n\"name\": string,\n\"site\": string,\n\"icon\": string\n}\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Platform",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/platforms/:platform_id",
-              "host": ["{{base_url}}"],
-              "path": ["platforms", ":platform_id"],
-              "variable": [
-                {
-                  "key": "platform_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "Delete a specific Platform"
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "LPair",
-      "item": [
-        {
-          "name": "List Liquid Pairs",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/lpairs",
-              "host": ["{{base_url}}"],
-              "path": ["lpairs"]
-            },
-            "description": "return a list of all Liquid Pairs we have in the system.\n\nReturn:\n\n``` json\n[{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"platform_name\": string,\n        \"platform_site\": string,\n        \"platform_icon\": string,        \n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n        \"icon\": stirng,\n        \"lp_mint_address\": string,\n        \"lpasset\":[\n        {\n        \"token_address_id\":string,\n        \"token_symbole\":string,\n        \"token_pool_size\":string,\n        \"token_icon\":string\n        },...]\n}\n,...]\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Get Liquid Pair",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/lpairs/:lpair_id",
-              "host": ["{{base_url}}"],
-              "path": ["lpairs", ":lpair_id"],
-              "variable": [
-                {
-                  "key": "lpair_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "return a specific Liquid Pair:\n\nReturn:\n\n``` json\n{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"platform_name\": string,\n        \"platform_site\": string,\n        \"platform_icon\": string,        \n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n        \"icon\": stirng,\n        \"lp_mint_address\": string,\n        \"lpasset\":[\n        {\n        \"token_address_id\":string,\n        \"token_symbole\":string,\n        \"token_pool_size\":string,\n        \"token_icon\":string\n        },...]\n}\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Add new Liquid Pair",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/lpairs/:lpair_id",
-              "host": ["{{base_url}}"],
-              "path": ["lpairs", ":lpair_id"],
-              "variable": [
-                {
-                  "key": "lpair_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "add and update liquid pair:\n\nThe body should be as:\n\n``` json\n{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"icon\": stirng,\n        \"lp_mint_address\": string,\n        \"lpasset\": [{\n            \"token_address_id\": string,\n            \"token_pool_size\"\n          },...]\n}\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Liquid Pair",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/lpairs/:lpair_id",
-              "host": ["{{base_url}}"],
-              "path": ["lpairs", ":lpair_id"],
-              "variable": [
-                {
-                  "key": "lpair_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "Delete a specific liquid pair and it's assets, APRs, and params."
-          },
-          "response": []
-        },
-        {
-          "name": "List a Liquid Pair APRs",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/lpairs/:lpair_id/apr",
-              "host": ["{{base_url}}"],
-              "path": ["lpairs", ":lpair_id", "apr"],
-              "variable": [
-                {
-                  "key": "lpair_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "return a liquid pair's APRs as list:\n\n``` json\n[{ \n\"lpair_address_id\": string, \n\"apr\": number, \n\"created_on\": timestamp \n},...]\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Get latest APR value",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/lpairs/:lpair_id/apr/last",
-              "host": ["{{base_url}}"],
-              "path": ["lpairs", ":lpair_id", "apr", "last"],
-              "variable": [
-                {
-                  "key": "lpair_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "return the latest value for APR for a specific liquid pair.\n\nReturn:\n\n``` json\n{\n  \"lpair_address_id\": string,\n  \"apr\": number,\n  \"created_on\": timestamp\n}\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Add new APR",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/lpairs/:lpair_id/apr",
-              "host": ["{{base_url}}"],
-              "path": ["lpairs", ":lpair_id", "apr"],
-              "variable": [
-                {
-                  "key": "lpair_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "Add new APR value for a specific liquid pair\n\nthe body:\n\n``` json\n{\n\"apr\": number\n}\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Delete all the APRs",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/lpairs/:lpair_id/aprs",
-              "host": ["{{base_url}}"],
-              "path": ["lpairs", ":lpair_id", "aprs"],
-              "variable": [
-                {
-                  "key": "lpair_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "Delete all the APRs value for a specific liquid pair."
-          },
-          "response": []
-        },
-        {
-          "name": "List a Liquid Pair Params",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/lpairs/:lpair_id/param",
-              "host": ["{{base_url}}"],
-              "path": ["lpairs", ":lpair_id", "param"],
-              "variable": [
-                {
-                  "key": "lpair_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "return a liquid pair's Params as list:\n\n``` json\n[{ \n\"lpair_address_id\": string, \n\"max_deposit\": number, \n\"max_borrow\": number,\n\"created_on\": timestamp \n},...]\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Get latest Params value",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/lpairs/:lpair_id/param/last",
-              "host": ["{{base_url}}"],
-              "path": ["lpairs", ":lpair_id", "param", "last"],
-              "variable": [
-                {
-                  "key": "lpair_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "return the latest value for Params for a specific liquid pair.\n\nReturn:\n\n``` json\n{\n  \"lpair_address_id\": string,\n  \"max_deposit\": number,\n  \"max_borrow\": number,\n  \"created_on\": timestamp\n}\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Add new Params",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/lpairs/:lpair_id/param",
-              "host": ["{{base_url}}"],
-              "path": ["lpairs", ":lpair_id", "param"],
-              "variable": [
-                {
-                  "key": "lpair_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "Add new Param value for a specific liquid pair\n\nthe body:\n\n``` json\n{\n\"max_deposit\": number,\n\"max_borrow\": number\n}\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Delete all the Params",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/lpairs/:lpair_id/params",
-              "host": ["{{base_url}}"],
-              "path": ["lpairs", ":lpair_id", "params"],
-              "variable": [
-                {
-                  "key": "lpair_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "Delete all the Params values for a specific liquid pair."
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Tokens",
-      "item": [
-        {
-          "name": "Get all Tokens",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/tokens",
-              "host": ["{{base_url}}"],
-              "path": ["tokens"]
-            },
-            "description": "Return a list of all the tokens.\n\nReturn:\n\n``` json\n[{\n\"address_id\": string,\n\"symbol\": string,\n\"icon\": string\n},...]\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Add a Token",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/tokens",
-              "host": ["{{base_url}}"],
-              "path": ["tokens"]
-            },
-            "description": "Add new token.\n\nThe body:\n\n``` json\n{\n\"address_id\": string,\n\"symbol\": string,\n\"icon\": string\n}\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Get a Token",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/tokens/:token_id",
-              "host": ["{{base_url}}"],
-              "path": ["tokens", ":token_id"],
-              "variable": [
-                {
-                  "key": "token_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "Return a specific token.\n\nReturn:\n\n``` json\n{\n\"address_id\": string,\n\"symbol\": string,\n\"icon\": string\n}\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Update a Token",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/tokens/:token_id",
-              "host": ["{{base_url}}"],
-              "path": ["tokens", ":token_id"],
-              "variable": [
-                {
-                  "key": "token_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "Update a specific token.\n\nBody:\n\n``` json\n{\n\"symbol\": string,\n\"icon\": string\n}\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Delete a Token",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/tokens/:token_id",
-              "host": ["{{base_url}}"],
-              "path": ["tokens", ":token_id"],
-              "variable": [
-                {
-                  "key": "token_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "Delete a specific token."
-          },
-          "response": []
-        },
-        {
-          "name": "Get a Token Price",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/tokens/:token_id/price",
-              "host": ["{{base_url}}"],
-              "path": ["tokens", ":token_id", "price"],
-              "variable": [
-                {
-                  "key": "token_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "Return the latest price for a specific token.\n\nReturn:\n\n``` json\n{\n\"token_address_id\": string,\n\"price\": number,\n\"confidence\": number,\n\"created_on\": timestamp\n}\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Add a Token Price",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/tokens/:token_id/price",
-              "host": ["{{base_url}}"],
-              "path": ["tokens", ":token_id", "price"],
-              "variable": [
-                {
-                  "key": "token_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "Add new price for a specific token.\n\nBody:\n\n``` json\n{\n\"price\": number,\n\"confidence\": number,\n}\n\n```"
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Transactions",
-      "item": [
-        {
-          "name": "Get Detail Transactions",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/transaction/:wallet_id/detail/:address_id",
-              "host": ["{{base_url}}"],
-              "path": ["transaction", ":wallet_id", "detail", ":address_id"],
-              "variable": [
-                {
-                  "key": "wallet_id",
-                  "value": null
-                },
-                {
-                  "key": "address_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "Return a list of all the transaction for a specific LP or Token.\n\nReturn:\n\n``` json\n[\n{\n        \"transaction_id\": string,\n        \"wallet_address_id\": string,\n        \"address_id\": string,\n        \"amount\": number,\n        \"transaction_type\": TRANS_TYPE,\n        \"slot\": timestamp,\n        \"sawp_group\": string,\n        \"conversion_rate\": number,\n        \"base_address_id\": string,\n        \"status\": string\n    },...\n]\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Get Transaction status and slot",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/transaction/:wallet_id/:signature",
-              "host": ["{{base_url}}"],
-              "path": ["transaction", ":wallet_id", ":signature"],
-              "variable": [
-                {
-                  "key": "wallet_id",
-                  "value": null
-                },
-                {
-                  "key": "signature",
-                  "value": null
-                }
-              ]
-            },
-            "description": "Return:\n\n``` json\n{\n\"slot\":number,\n\"status\": string,\n\"signature\": string\n}\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Get Transactions Signatures",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/transaction/:wallet_id/signatures",
-              "host": ["{{base_url}}"],
-              "path": ["transaction", ":wallet_id", "signatures"],
-              "variable": [
-                {
-                  "key": "wallet_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "Return a list of all transactions signatures as list of strings."
-          },
-          "response": []
-        },
-        {
-          "name": "Get The Vault",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/transaction/:wallet_id/vault",
-              "host": ["{{base_url}}"],
-              "path": ["transaction", ":wallet_id", "vault"],
-              "variable": [
-                {
-                  "key": "wallet_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "Return the balance of all the crypto.\n\nReturn:\n\n``` json\n[\n{\n\"address_id\": string,\n\"amount\": number\n},...\n]\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Add Transaction",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/transaction/:wallet_id/deposit",
-              "host": ["{{base_url}}"],
-              "path": ["transaction", ":wallet_id", "deposit"],
-              "variable": [
-                {
-                  "key": "wallet_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "Add new Transaction.\n\nBody:\n\n``` json\n{\n\"tx_type\": string,\n\"signature\": string\n}\n```"
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "ratioconfig",
-      "item": [
-        {
-          "name": "Transactions Fees",
-          "item": [
-            {
-              "name": "Get One Transaction Fee's Values",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/transfees/:param_name",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "transfees", ":param_name"],
-                  "variable": [
-                    {
-                      "key": "param_name",
-                      "value": null
-                    }
-                  ]
-                },
-                "description": "Return get one transaction Fee's values:\n\nReturn:\n\n``` json\n[\n{\"param_name\": number,\"created_on\": timestamp},...\n]\n\n```\n\nWhere param_name is one of:\n\n\\['deposit_fee', 'withdraw_fee', 'borrow_fee', 'payback_fee', 'reward_fee', 'swap_fee', 'stake_fee','harvest_fee'\\]"
-              },
-              "response": []
-            },
-            {
-              "name": "Get Transactions Fees List",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/transfees/list",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "transfees", "list"]
-                },
-                "description": "Return the list of transaction fees:\n\nReturn:\n\n``` json\n['deposit_fee','withdraw_fee','borrow_fee','payback_fee','reward_fee','swap_fee','stake_fee','harvest_fee']\n\n```"
-              },
-              "response": []
-            },
-            {
-              "name": "Get Last Transactions Fees values",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/transfees/last",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "transfees", "last"]
-                },
-                "description": "Return the last list of all transaction fees:\n\nReturn:\n\n``` json\n[\n{\"deposit_fee\": number,\"created_on\": timestamp},\n{\"withdraw_fee\": number,\"created_on\": timestamp},\n{\"borrow_fee\": number,\"created_on\": timestamp},\n{\"payback_fee\": number,\"created_on\": timestamp},\n{\"reward_fee\": number,\"created_on\": timestamp},\n{\"swap_fee\": number,\"created_on\": timestamp},\n{\"stake_fee\": number,\"created_on\": timestamp}\n{\"harvest_fee\": number,\"created_on\": timestamp}\n]\n\n```"
-              },
-              "response": []
-            },
-            {
-              "name": "Add New Transaction Fees Values",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/transfees",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "transfees"]
-                },
-                "description": "Add new transaction fees values.\n\nBody:\n\n``` json\n{\n\"deposit_fee\":number,\n\"withdraw_fee\":number,\n\"borrow_fee\":number,\n\"payback_fee\":number,\n\"reward_fee\":number,\n\"swap_fee\":number,\n\"stake_fee\":number,\n\"harvest_fee\":number\n}\n\n```"
-              },
-              "response": []
-            },
-            {
-              "name": "Delete All Transactions Fees",
-              "request": {
-                "method": "DELETE",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/transfees",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "transfees"]
-                },
-                "description": "Delete all the transaction fees data."
-              },
-              "response": []
-            }
-          ]
-        },
-        {
-          "name": "Collateralization Ratios",
-          "item": [
-            {
-              "name": "Get One Collateralization Ratio Values",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/collateralratio/:param_name",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "collateralratio", ":param_name"],
-                  "variable": [
-                    {
-                      "key": "param_name",
-                      "value": null
-                    }
-                  ]
-                },
-                "description": "Return one collateralization ratio values:\n\nReturn:\n\n``` json\n[\n{\"param_name\":number,\"created_on\":timestamp},...\n]\n\n```\n\nwhere param_name is one of:\n\n\\['cr_aaa_ratio', 'cr_aa_ratio', 'cr_a_ratio', 'cr_bbb_ratio', 'cr_bb_ratio', 'cr_b_ratio', 'cr_ccc_ratio', 'cr_cc_ratio', 'cr_c_ratio', 'cr_d_ratio'\\]"
-              },
-              "response": []
-            },
-            {
-              "name": "Get Collateralization Ratios List",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/collateralratio/list",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "collateralratio", "list"]
-                },
-                "description": "Return the collateralization ratios list:\n\nReturn:\n\n``` json\n['cr_aaa_ratio','cr_aa_ratio','cr_a_ratio','cr_bbb_ratio','cr_bb_ratio','cr_b_ratio','cr_ccc_ratio','cr_cc_ratio','cr_c_ratio','cr_d_ratio']\n\n```"
-              },
-              "response": []
-            },
-            {
-              "name": "Get Last Collateralization Ratios values",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/collateralratio/last",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "collateralratio", "last"]
-                },
-                "description": "Return a list of the last collateralization ratios:\n\nReturn:\n\n``` json\n[\n{\"cr_a_ratio\":number,\"created_on\":timestamp},{\"cr_aa_ratio\":number,\"created_on\":timestamp},{\"cr_aaa_ratio\":number,\"created_on\":timestamp},{\"cr_b_ratio\":number,\"created_on\":timestamp},{\"cr_bb_ratio\":number,\"created_on\":timestamp},{\"cr_bbb_ratio\":number,\"created_on\":timestamp},{\"cr_c_ratio\":number,\"created_on\":timestamp},{\"cr_cc_ratio\":number,\"created_on\":timestamp},{\"cr_ccc_ratio\":number,\"created_on\":timestamp},{\"cr_d_ratio\":number,\"created_on\":timestamp}\n]\n\n\n```"
-              },
-              "response": []
-            },
-            {
-              "name": "Add New Collateralization Ratios Values",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/collateralratio",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "collateralratio"]
-                },
-                "description": "Add new collateralization ratios values:\n\nbody:\n\n``` json\n{\n'cr_aaa_ratio': number,\n'cr_aa_ratio': number,\n'cr_a_ratio': number,\n'cr_bbb_ratio': number,\n'cr_bb_ratio': number,\n'cr_b_ratio': number,\n'cr_ccc_ratio': number,\n'cr_cc_ratio': number,\n'cr_c_ratio': number,\n'cr_d_ratio': number\n}\n\n```"
-              },
-              "response": []
-            },
-            {
-              "name": "Delete All Collateralization Ratios Data",
-              "request": {
-                "method": "DELETE",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/collateralratio",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "collateralratio"]
-                },
-                "description": "Delete all the collateralization ratios data:"
-              },
-              "response": []
-            }
-          ]
-        },
-        {
-          "name": "Groupping Risk Rating",
-          "item": [
-            {
-              "name": "Get List Risk rating grouping",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/grr/list",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "grr", "list"]
-                },
-                "description": "Return a list of all the latest grouping.\n\nReturn list of these collection:\n\n``` json\n['AAA', 'AA', 'A', 'BBB', 'BB', 'B', 'CCC', 'CC', 'C', 'D']\n\n```"
-              },
-              "response": []
-            },
-            {
-              "name": "Get Last Risk rating grouping",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/grr/last",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "grr", "last"]
-                },
-                "description": "Return a list of all the latest grouping.\n\nReturn\n\n``` json\n[{\n\"Risk_Rating_Group\": number,\n\"created_on\": timestamp\n},...]\n\n```\n\nWhere Risk_Rating_Group is a collections of these:\n\n'AAA', 'AA', 'A', 'BBB', 'BB', 'B', 'CCC', 'CC', 'C', 'D'"
-              },
-              "response": []
-            },
-            {
-              "name": "Add New Risk rating grouping values",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/grr",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "grr"]
-                },
-                "description": "Add new risk rating grouping value.\n\nBody:\n\n``` json\n[{\nGROUP_NAME: number\n},...]\n\n```\n\nWhere GROUP_NAME is a collections of these:\n\n'AAA', 'AA', 'A', 'BBB', 'BB', 'B', 'CCC', 'CC', 'C', 'D'"
-              },
-              "response": []
-            },
-            {
-              "name": "Delete All Risk rating grouping",
-              "request": {
-                "method": "DELETE",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/grr",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "grr"]
-                },
-                "description": "Delete all risk rating grouping data."
-              },
-              "response": []
-            }
-          ]
-        },
-        {
-          "name": "General",
-          "item": [
-            {
-              "name": "Get One General parameter values",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/general/:param_name",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "general", ":param_name"],
-                  "variable": [
-                    {
-                      "key": "param_name",
-                      "value": null
-                    }
-                  ]
-                },
-                "description": "Return one general parameter values:\n\n``` json\n[\n{\"max_usd\":number,\"created_on\": timestamp},...\n]\n\n```\n\nwhere param_name is one of:\n\n\\['global_max_usdr', 'user_max_usdr', 'global_max_deposit', 'price_interval'\\]"
-              },
-              "response": []
-            },
-            {
-              "name": "Get list of General parameters",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/general/list",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "general", "list"]
-                },
-                "description": "Return the list of:\n\n``` json\n['global_max_usdr', 'user_max_usdr', 'global_max_deposit', 'price_interval']\n```"
-              },
-              "response": []
-            },
-            {
-              "name": "Get last general parameter value",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/general/:param_name/last",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "general", ":param_name", "last"],
-                  "variable": [
-                    {
-                      "key": "param_name",
-                      "value": null
-                    }
-                  ]
-                },
-                "description": "Return the last value of a specific general parameter:\n\n``` json\n[{\n\"param_name\":\"param_value\",\n\"created_on\": timestamp}\n]\n\n```\n\nWhere param_name is one of:\n\n\\['global_max_usdr', 'user_max_usdr', 'global_max_deposit', 'price_interval'\\]"
-              },
-              "response": []
-            },
-            {
-              "name": "Get last general parameter values",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/general/last",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "general", "last"]
-                },
-                "description": "Return the last value of the general parameters:\n\n``` json\n[\n{\"global_max_usdr\":number,\"created_on\": timestamp},\n{\"user_max_usdr\":number,\"created_on\": timestamp},\n{\"global_max_deposit\":number,\"created_on\": timestamp},\n{\"price_interval\":number,\"created_on\": timestamp},\n]\n\n```"
-              },
-              "response": []
-            },
-            {
-              "name": "Add New General parameters values",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/general",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "general"]
-                },
-                "description": "Add new general parameters values:\n\nBody:\n\n``` json\n{\n\"global_max_usdr\":number,\n\"user_max_usdr\": number,\n\"global_max_deposit\":number,\n\"price_interval\":number\n}\n\n```"
-              },
-              "response": []
-            },
-            {
-              "name": "Add New General parameter value",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/general/:param_name",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "general", ":param_name"],
-                  "variable": [
-                    {
-                      "key": "param_name",
-                      "value": null
-                    }
-                  ]
-                },
-                "description": "Add new general parameter value:\n\nBody:\n\n``` json\n{\n\"param_value\":number\n}\n\n```"
-              },
-              "response": []
-            },
-            {
-              "name": "Delete all General parameters data",
-              "request": {
-                "method": "DELETE",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/general",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "general"]
-                },
-                "description": "Delete all the general parameters data."
-              },
-              "response": []
-            }
-          ]
-        },
-        {
-          "name": "Max Risk Rating",
-          "item": [
-            {
-              "name": "Get One Max Risk Rate values",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/maxriskrating/:param_name",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "maxriskrating", ":param_name"],
-                  "variable": [
-                    {
-                      "key": "param_name",
-                      "value": null
-                    }
-                  ]
-                },
-                "description": "Return one max risk rating values:\n\nReturn:\n\n``` json\n[\n{\"param_name\":number,\"created_on\":timestamp},...\n]\n\n```\n\nWhere param_name is one of:\n\n\\['max_usdr_aaa', 'max_usdr_aa', 'max_usdr_a', 'max_usdr_bbb', 'max_usdr_bb', 'max_usdr_b', 'max_usdr_ccc', 'max_usdr_cc', 'max_usdr_c', 'max_usdr_d'\\]"
-              },
-              "response": []
-            },
-            {
-              "name": "Get Max Risk Rating parameters name",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/maxriskrating/list",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "maxriskrating", "list"]
-                },
-                "description": "Return the collateralization ratios list:\n\nReturn:\n\n``` json\n['max_usdr_aaa', 'max_usdr_aa', 'max_usdr_a', 'max_usdr_bbb', 'max_usdr_bb', 'max_usdr_b', 'max_usdr_ccc', 'max_usdr_cc', 'max_usdr_c', 'max_usdr_d']\n```"
-              },
-              "response": []
-            },
-            {
-              "name": "Get Last Max Risk Rating value",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/maxriskrating/last",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "maxriskrating", "last"]
-                },
-                "description": "Return a list of the last max risk rating values:\n\nReturn:\n\n``` json\n[\n{\"max_usdr_aaa\":number,\"created_on\":timestamp},\n{\"max_usdr_aa\":number,\"created_on\":timestamp},\n{\"max_usdr_a\":number,\"created_on\":timestamp},\n{\"max_usdr_bbb\":number,\"created_on\":timestamp},\n{\"max_usdr_bb\":number,\"created_on\":timestamp},\n{\"max_usdr_b\":number,\"created_on\":timestamp},\n{\"max_usdr_ccc\":number,\"created_on\":timestamp},\n{\"max_usdr_cc\":number,\"created_on\":timestamp},\n{\"max_usdr_c\":number,\"created_on\":timestamp},\n{\"max_usdr_d\":number,\"created_on\":timestamp}\n]\n\n```"
-              },
-              "response": []
-            },
-            {
-              "name": "Add New Max Risk Rating Values",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/maxriskrating",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "maxriskrating"]
-                },
-                "description": "Add new max risk rating values:\n\nbody:\n\n``` json\n{\n'max_usdr_aaa': number,\n'max_usdr_aa': number,\n'max_usdr_a': number,\n'max_usdr_bbb': number,\n'max_usdr_bb': number,\n'max_usdr_b': number,\n'max_usdr_ccc': number,\n'max_usdr_cc': number,\n'max_usdr_c': number,\n'max_usdr_d': number\n}\n\n```"
-              },
-              "response": []
-            },
-            {
-              "name": "Delete All Max Risk Rating values",
-              "request": {
-                "method": "DELETE",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ratioconfig/maxriskrating",
-                  "host": ["{{base_url}}"],
-                  "path": ["ratioconfig", "maxriskrating"]
-                },
-                "description": "Delete all the max risk rating values."
-              },
-              "response": []
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Users",
-      "item": [
-        {
-          "name": "Get All Users",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/users",
-              "host": ["{{base_url}}"],
-              "path": ["users"]
-            },
-            "description": "return all the users.\n\nReturn:\n\n``` json\n[\n{\n\"wallet_address_id\":string,\n\"name\":string,\n\"role\":USER_ROLE\n},...\n]\n\n```\n\nUSER_ROLE can be one of these value:\n\n\\['USER', 'USER_WHITELIST', 'ADMIN'\\]"
-          },
-          "response": []
-        },
-        {
-          "name": "Get a Users",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/users/:wallet_address_id",
-              "host": ["{{base_url}}"],
-              "path": ["users", ":wallet_address_id"],
-              "variable": [
-                {
-                  "key": "wallet_address_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "return a user.\n\nReturn:\n\n``` json\n{\n\"wallet_address_id\":string,\n\"name\":string,\n\"role\":USER_ROLE\n}\n\n```\n\nUSER_ROLE can be one of these value:\n\n\\['USER', 'USER_WHITELIST', 'ADMIN'\\]"
-          },
-          "response": []
-        },
-        {
-          "name": "Check if a User is exited",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/users/auth/:wallet_address_id",
-              "host": ["{{base_url}}"],
-              "path": ["users", "auth", ":wallet_address_id"],
-              "variable": [
-                {
-                  "key": "wallet_address_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "return a true if the wallet_address_id is exiting in the system."
-          },
-          "response": []
-        },
-        {
-          "name": "Get A User's nonce",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/users/nonce/:wallet_address_id",
-              "host": ["{{base_url}}"],
-              "path": ["users", "nonce", ":wallet_address_id"],
-              "variable": [
-                {
-                  "key": "wallet_address_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "return a user's nonce.\n\nReturn:\n\n``` json\n{\n\"nonce\":number,\n}\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Add A Users",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/users",
-              "host": ["{{base_url}}"],
-              "path": ["users"]
-            },
-            "description": "add a user.\n\nbody:\n\n``` json\n{\n\"wallet_address_id\":string,\n\"name\":string,\n\"role\":USER_ROLE\n}\n\n```\n\nUSER_ROLE can be one of these value:\n\n\\['USER', 'USER_WHITELIST', 'ADMIN'\\]"
-          },
-          "response": []
-        },
-        {
-          "name": "Register a user",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/users/register",
-              "host": ["{{base_url}}"],
-              "path": ["users/register"]
-            },
-            "description": "Registers a user.\n\nbody:\n\n``` json\n{\n\"wallet_address_id\":string\n}\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Update A Users",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/users/:wallet_address_id",
-              "host": ["{{base_url}}"],
-              "path": ["users", ":wallet_address_id"],
-              "variable": [
-                {
-                  "key": "wallet_address_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "update a user.\n\nbody:\n\n``` json\n{\n\"name\":string,\n\"role\":USER_ROLE\n}\n\n```\n\nUSER_ROLE can be one of these value:\n\n\\['USER', 'USER_WHITELIST', 'ADMIN'\\]"
-          },
-          "response": []
-        },
-        {
-          "name": "Delete A User",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/users/:wallet_address_id",
-              "host": ["{{base_url}}"],
-              "path": ["users", ":wallet_address_id"],
-              "variable": [
-                {
-                  "key": "wallet_address_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "delete a user."
-          },
-          "response": []
-        },
-        {
-          "name": "List All user's parameters values",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/users/:wallet_address_id/param",
-              "host": ["{{base_url}}"],
-              "path": ["users", ":wallet_address_id", "param"],
-              "variable": [
-                {
-                  "key": "wallet_address_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "return a list of all the users's parameters values:\n\n``` json\n[{ \n\"wallet_address_id\": string, \n\"max_deposit\": number, \n\"max_borrow\": number,\n\"created_on\": timestamp \n},...]\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Get latest Users's Params value",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/users/:wallet_address_id/param/last",
-              "host": ["{{base_url}}"],
-              "path": ["users", ":wallet_address_id", "param", "last"],
-              "variable": [
-                {
-                  "key": "wallet_address_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "return the latest users's parameters value.\n\nReturn:\n\n``` json\n{\n  \"wallet_address_id\": string,\n  \"max_deposit\": number,\n  \"max_borrow\": number,\n  \"created_on\": timestamp\n}\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Add new Users's Param",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/users/:wallet_address_id/param",
-              "host": ["{{base_url}}"],
-              "path": ["users", ":wallet_address_id", "param"],
-              "variable": [
-                {
-                  "key": "wallet_address_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "Add new Users's Param value.\n\nthe body:\n\n``` json\n{\n\"max_deposit\": number,\n\"max_borrow\": number\n}\n\n```"
-          },
-          "response": []
-        },
-        {
-          "name": "Delete all User's Param values",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/users/:wallet_address_id/params",
-              "host": ["{{base_url}}"],
-              "path": ["users", ":wallet_address_id", "params"],
-              "variable": [
-                {
-                  "key": "wallet_address_id",
-                  "value": null
-                }
-              ]
-            },
-            "description": "Delete all the User's Params values\n\n."
-          },
-          "response": []
-        }
-      ]
-    }
-  ]
+	"info": {
+		"_postman_id": "4dc14663-764a-4004-945c-1eb1dbe27e3b",
+		"name": "ratio.finance",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Platforms",
+			"item": [
+				{
+					"name": "Platform List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/platforms",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"platforms"
+							]
+						},
+						"description": "Return all the platforms we have on our system.\n\nreturn list of:\n\n``` json\n[{\n        \"id\": string,\n        \"name\": string,\n        \"site\": string,\n        \"icon\": string,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp\n},...]\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Platform",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/platforms/:platform_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"platforms",
+								":platform_id"
+							],
+							"variable": [
+								{
+									"key": "platform_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Return a specific platform.\n\n``` json\n{\n        \"id\": string,\n        \"name\": string,\n        \"site\": string,\n        \"icon\": string,        \n        \"created_on\": timestamp,\n        \"updated_on\": timestamp\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Platform",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/platforms",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"platforms"
+							]
+						},
+						"description": "Add a new platform.\n\nthe request body should contains:\n\n``` json\n{\n\"address_id\": string,\n\"site\": string,\n\"icon\": string\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Platform",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/platforms/:platform_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"platforms",
+								":platform_id"
+							],
+							"variable": [
+								{
+									"key": "platform_id",
+									"value": null
+								}
+							]
+						},
+						"description": "update a specific platform.\n\nthe body should contains:\n\n``` json\n{\n\"name\": string,\n\"site\": string,\n\"icon\": string\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Platform",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/platforms/:platform_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"platforms",
+								":platform_id"
+							],
+							"variable": [
+								{
+									"key": "platform_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Delete a specific Platform"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "LPair",
+			"item": [
+				{
+					"name": "List Liquid Pairs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lpairs",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lpairs"
+							]
+						},
+						"description": "return a list of all Liquid Pairs we have in the system.\n\nReturn:\n\n``` json\n[{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"platform_name\": string,\n        \"platform_site\": string,\n        \"platform_icon\": string,        \n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n        \"icon\": stirng,\n        \"lp_mint_address\": string,\n        \"lpasset\":[\n        {\n        \"token_address_id\":string,\n        \"token_symbole\":string,\n        \"token_pool_size\":string,\n        \"token_icon\":string\n        },...]\n}\n,...]\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Liquid Pair",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lpairs/:lpair_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lpairs",
+								":lpair_id"
+							],
+							"variable": [
+								{
+									"key": "lpair_id",
+									"value": null
+								}
+							]
+						},
+						"description": "return a specific Liquid Pair:\n\nReturn:\n\n``` json\n{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"platform_name\": string,\n        \"platform_site\": string,\n        \"platform_icon\": string,        \n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n        \"icon\": stirng,\n        \"lp_mint_address\": string,\n        \"lpasset\":[\n        {\n        \"token_address_id\":string,\n        \"token_symbole\":string,\n        \"token_pool_size\":string,\n        \"token_icon\":string\n        },...]\n}\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Add new Liquid Pair",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lpairs/:lpair_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lpairs",
+								":lpair_id"
+							],
+							"variable": [
+								{
+									"key": "lpair_id",
+									"value": null
+								}
+							]
+						},
+						"description": "add and update liquid pair:\n\nThe body should be as:\n\n``` json\n{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"icon\": stirng,\n        \"lp_mint_address\": string,\n        \"lpasset\": [{\n            \"token_address_id\": string,\n            \"token_pool_size\"\n          },...]\n}\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Liquid Pair",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lpairs/:lpair_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lpairs",
+								":lpair_id"
+							],
+							"variable": [
+								{
+									"key": "lpair_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Delete a specific liquid pair and it's assets, APRs, and params."
+					},
+					"response": []
+				},
+				{
+					"name": "List a Liquid Pair APRs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lpairs/:lpair_id/apr",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lpairs",
+								":lpair_id",
+								"apr"
+							],
+							"variable": [
+								{
+									"key": "lpair_id",
+									"value": null
+								}
+							]
+						},
+						"description": "return a liquid pair's APRs as list:\n\n``` json\n[{ \n\"lpair_address_id\": string, \n\"apr\": number, \n\"created_on\": timestamp \n},...]\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get latest APR value",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lpairs/:lpair_id/apr/last",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lpairs",
+								":lpair_id",
+								"apr",
+								"last"
+							],
+							"variable": [
+								{
+									"key": "lpair_id",
+									"value": null
+								}
+							]
+						},
+						"description": "return the latest value for APR for a specific liquid pair.\n\nReturn:\n\n``` json\n{\n  \"lpair_address_id\": string,\n  \"apr\": number,\n  \"created_on\": timestamp\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Add new APR",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lpairs/:lpair_id/apr",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lpairs",
+								":lpair_id",
+								"apr"
+							],
+							"variable": [
+								{
+									"key": "lpair_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Add new APR value for a specific liquid pair\n\nthe body:\n\n``` json\n{\n\"apr\": number\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete all the APRs",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lpairs/:lpair_id/aprs",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lpairs",
+								":lpair_id",
+								"aprs"
+							],
+							"variable": [
+								{
+									"key": "lpair_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Delete all the APRs value for a specific liquid pair."
+					},
+					"response": []
+				},
+				{
+					"name": "List a Liquid Pair Params",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lpairs/:lpair_id/param",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lpairs",
+								":lpair_id",
+								"param"
+							],
+							"variable": [
+								{
+									"key": "lpair_id",
+									"value": null
+								}
+							]
+						},
+						"description": "return a liquid pair's Params as list:\n\n``` json\n[{ \n\"lpair_address_id\": string, \n\"max_deposit\": number, \n\"max_borrow\": number,\n\"created_on\": timestamp \n},...]\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get latest Params value",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lpairs/:lpair_id/param/last",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lpairs",
+								":lpair_id",
+								"param",
+								"last"
+							],
+							"variable": [
+								{
+									"key": "lpair_id",
+									"value": null
+								}
+							]
+						},
+						"description": "return the latest value for Params for a specific liquid pair.\n\nReturn:\n\n``` json\n{\n  \"lpair_address_id\": string,\n  \"max_deposit\": number,\n  \"max_borrow\": number,\n  \"created_on\": timestamp\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Add new Params",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lpairs/:lpair_id/param",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lpairs",
+								":lpair_id",
+								"param"
+							],
+							"variable": [
+								{
+									"key": "lpair_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Add new Param value for a specific liquid pair\n\nthe body:\n\n``` json\n{\n\"max_deposit\": number,\n\"max_borrow\": number\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete all the Params",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lpairs/:lpair_id/params",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lpairs",
+								":lpair_id",
+								"params"
+							],
+							"variable": [
+								{
+									"key": "lpair_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Delete all the Params values for a specific liquid pair."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tokens",
+			"item": [
+				{
+					"name": "Get all Tokens",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/tokens",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tokens"
+							]
+						},
+						"description": "Return a list of all the tokens.\n\nReturn:\n\n``` json\n[{\n\"address_id\": string,\n\"symbol\": string,\n\"icon\": string,\n\"platforms\": [\n{\n\"id\":string,\n\"name\":string,\n\"site\":string,\n\"icon\":string\n},...\n]\n},...]\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Add a Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/tokens",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tokens"
+							]
+						},
+						"description": "Add new token.\n\nThe body:\n\n``` json\n{\n\"address_id\": string,\n\"symbol\": string,\n\"icon\": string,\n\"platforms\":[{\"id\":string},...]\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/tokens/:token_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tokens",
+								":token_id"
+							],
+							"variable": [
+								{
+									"key": "token_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Return a specific token.\n\nReturn:\n\n``` json\n{\n\"address_id\": string,\n\"symbol\": string,\n\"icon\": string,\n\"platforms\": [\n{\n\"id\":string,\n\"name\":string,\n\"site\":string,\n\"icon\":string\n},...\n]\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Update a Token",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/tokens/:token_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tokens",
+								":token_id"
+							],
+							"variable": [
+								{
+									"key": "token_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Update a specific token.\n\nBody:\n\n``` json\n{\n\"symbol\": string,\n\"icon\": string,\n\"platforms\":[{\"id\":string},...]\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Token",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/tokens/:token_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tokens",
+								":token_id"
+							],
+							"variable": [
+								{
+									"key": "token_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Delete a specific token."
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Token Price",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/tokens/:token_id/price",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tokens",
+								":token_id",
+								"price"
+							],
+							"variable": [
+								{
+									"key": "token_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Return the latest price for a specific token.\n\nReturn:\n\n``` json\n{\n\"token_address_id\": string,\n\"price\": number,\n\"confidence\": number,\n\"created_on\": timestamp\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Add a Token Price",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/tokens/:token_id/price",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tokens",
+								":token_id",
+								"price"
+							],
+							"variable": [
+								{
+									"key": "token_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Add new price for a specific token.\n\nBody:\n\n``` json\n{\n\"price\": number,\n\"confidence\": number,\n}\n\n```"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "Get Detail Transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/transaction/:wallet_id/detail/:address_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transaction",
+								":wallet_id",
+								"detail",
+								":address_id"
+							],
+							"variable": [
+								{
+									"key": "wallet_id",
+									"value": null
+								},
+								{
+									"key": "address_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Return a list of all the transaction for a specific LP or Token.\n\nReturn:\n\n``` json\n[\n{\n        \"transaction_id\": string,\n        \"wallet_address_id\": string,\n        \"address_id\": string,\n        \"amount\": number,\n        \"transaction_type\": TRANS_TYPE,\n        \"slot\": timestamp,\n        \"sawp_group\": string,\n        \"conversion_rate\": number,\n        \"base_address_id\": string,\n        \"status\": string\n    },...\n]\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transaction status and slot",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/transaction/:wallet_id/:signature",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transaction",
+								":wallet_id",
+								":signature"
+							],
+							"variable": [
+								{
+									"key": "wallet_id",
+									"value": null
+								},
+								{
+									"key": "signature",
+									"value": null
+								}
+							]
+						},
+						"description": "Return:\n\n``` json\n{\n\"slot\":number,\n\"status\": string,\n\"signature\": string\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transactions Signatures",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/transaction/:wallet_id/signatures",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transaction",
+								":wallet_id",
+								"signatures"
+							],
+							"variable": [
+								{
+									"key": "wallet_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Return a list of all transactions signatures as list of strings."
+					},
+					"response": []
+				},
+				{
+					"name": "Get The Vault",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/transaction/:wallet_id/vault",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transaction",
+								":wallet_id",
+								"vault"
+							],
+							"variable": [
+								{
+									"key": "wallet_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Return the balance of all the crypto.\n\nReturn:\n\n``` json\n[\n{\n\"address_id\": string,\n\"amount\": number\n},...\n]\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/transaction/:wallet_id/deposit",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transaction",
+								":wallet_id",
+								"deposit"
+							],
+							"variable": [
+								{
+									"key": "wallet_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Add new Transaction.\n\nBody:\n\n``` json\n{\n\"tx_type\": string,\n\"signature\": string\n}\n```"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ratioconfig",
+			"item": [
+				{
+					"name": "Transactions Fees",
+					"item": [
+						{
+							"name": "Get One Transaction Fee's Values",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/transfees/:param_name",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"transfees",
+										":param_name"
+									],
+									"variable": [
+										{
+											"key": "param_name",
+											"value": null
+										}
+									]
+								},
+								"description": "Return get one transaction Fee's values:\n\nReturn:\n\n``` json\n[\n{\"param_name\": number,\"created_on\": timestamp},...\n]\n\n```\n\nWhere param_name is one of:\n\n\\['deposit_fee', 'withdraw_fee', 'borrow_fee', 'payback_fee', 'reward_fee', 'swap_fee', 'stake_fee','harvest_fee'\\]"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Transactions Fees List",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/transfees/list",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"transfees",
+										"list"
+									]
+								},
+								"description": "Return the list of transaction fees:\n\nReturn:\n\n``` json\n['deposit_fee','withdraw_fee','borrow_fee','payback_fee','reward_fee','swap_fee','stake_fee','harvest_fee']\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Last Transactions Fees values",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/transfees/last",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"transfees",
+										"last"
+									]
+								},
+								"description": "Return the last list of all transaction fees:\n\nReturn:\n\n``` json\n[\n{\"deposit_fee\": number,\"created_on\": timestamp},\n{\"withdraw_fee\": number,\"created_on\": timestamp},\n{\"borrow_fee\": number,\"created_on\": timestamp},\n{\"payback_fee\": number,\"created_on\": timestamp},\n{\"reward_fee\": number,\"created_on\": timestamp},\n{\"swap_fee\": number,\"created_on\": timestamp},\n{\"stake_fee\": number,\"created_on\": timestamp}\n{\"harvest_fee\": number,\"created_on\": timestamp}\n]\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Add New Transaction Fees Values",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/transfees",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"transfees"
+									]
+								},
+								"description": "Add new transaction fees values.\n\nBody:\n\n``` json\n{\n\"deposit_fee\":number,\n\"withdraw_fee\":number,\n\"borrow_fee\":number,\n\"payback_fee\":number,\n\"reward_fee\":number,\n\"swap_fee\":number,\n\"stake_fee\":number,\n\"harvest_fee\":number\n}\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete All Transactions Fees",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/transfees",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"transfees"
+									]
+								},
+								"description": "Delete all the transaction fees data."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Collateralization Ratios",
+					"item": [
+						{
+							"name": "Get One Collateralization Ratio Values",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/collateralratio/:param_name",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"collateralratio",
+										":param_name"
+									],
+									"variable": [
+										{
+											"key": "param_name",
+											"value": null
+										}
+									]
+								},
+								"description": "Return one collateralization ratio values:\n\nReturn:\n\n``` json\n[\n{\"param_name\":number,\"created_on\":timestamp},...\n]\n\n```\n\nwhere param_name is one of:\n\n\\['cr_aaa_ratio', 'cr_aa_ratio', 'cr_a_ratio', 'cr_bbb_ratio', 'cr_bb_ratio', 'cr_b_ratio', 'cr_ccc_ratio', 'cr_cc_ratio', 'cr_c_ratio', 'cr_d_ratio'\\]"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Collateralization Ratios List",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/collateralratio/list",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"collateralratio",
+										"list"
+									]
+								},
+								"description": "Return the collateralization ratios list:\n\nReturn:\n\n``` json\n['cr_aaa_ratio','cr_aa_ratio','cr_a_ratio','cr_bbb_ratio','cr_bb_ratio','cr_b_ratio','cr_ccc_ratio','cr_cc_ratio','cr_c_ratio','cr_d_ratio']\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Last Collateralization Ratios values",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/collateralratio/last",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"collateralratio",
+										"last"
+									]
+								},
+								"description": "Return a list of the last collateralization ratios:\n\nReturn:\n\n``` json\n[\n{\"cr_a_ratio\":number,\"created_on\":timestamp},{\"cr_aa_ratio\":number,\"created_on\":timestamp},{\"cr_aaa_ratio\":number,\"created_on\":timestamp},{\"cr_b_ratio\":number,\"created_on\":timestamp},{\"cr_bb_ratio\":number,\"created_on\":timestamp},{\"cr_bbb_ratio\":number,\"created_on\":timestamp},{\"cr_c_ratio\":number,\"created_on\":timestamp},{\"cr_cc_ratio\":number,\"created_on\":timestamp},{\"cr_ccc_ratio\":number,\"created_on\":timestamp},{\"cr_d_ratio\":number,\"created_on\":timestamp}\n]\n\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Add New Collateralization Ratios Values",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/collateralratio",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"collateralratio"
+									]
+								},
+								"description": "Add new collateralization ratios values:\n\nbody:\n\n``` json\n{\n'cr_aaa_ratio': number,\n'cr_aa_ratio': number,\n'cr_a_ratio': number,\n'cr_bbb_ratio': number,\n'cr_bb_ratio': number,\n'cr_b_ratio': number,\n'cr_ccc_ratio': number,\n'cr_cc_ratio': number,\n'cr_c_ratio': number,\n'cr_d_ratio': number\n}\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete All Collateralization Ratios Data",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/collateralratio",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"collateralratio"
+									]
+								},
+								"description": "Delete all the collateralization ratios data:"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Groupping Risk Rating",
+					"item": [
+						{
+							"name": "Get List Risk rating grouping",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/grr/list",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"grr",
+										"list"
+									]
+								},
+								"description": "Return a list of all the latest grouping.\n\nReturn list of these collection:\n\n``` json\n['AAA', 'AA', 'A', 'BBB', 'BB', 'B', 'CCC', 'CC', 'C', 'D']\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Last Risk rating grouping",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/grr/last",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"grr",
+										"last"
+									]
+								},
+								"description": "Return a list of all the latest grouping.\n\nReturn\n\n``` json\n[{\n\"Risk_Rating_Group\": number,\n\"created_on\": timestamp\n},...]\n\n```\n\nWhere Risk_Rating_Group is a collections of these:\n\n'AAA', 'AA', 'A', 'BBB', 'BB', 'B', 'CCC', 'CC', 'C', 'D'"
+							},
+							"response": []
+						},
+						{
+							"name": "Add New Risk rating grouping values",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/grr",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"grr"
+									]
+								},
+								"description": "Add new risk rating grouping value.\n\nBody:\n\n``` json\n[{\nGROUP_NAME: number\n},...]\n\n```\n\nWhere GROUP_NAME is a collections of these:\n\n'AAA', 'AA', 'A', 'BBB', 'BB', 'B', 'CCC', 'CC', 'C', 'D'"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete All Risk rating grouping",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/grr",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"grr"
+									]
+								},
+								"description": "Delete all risk rating grouping data."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "General",
+					"item": [
+						{
+							"name": "Get One General parameter values",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/general/:param_name",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"general",
+										":param_name"
+									],
+									"variable": [
+										{
+											"key": "param_name",
+											"value": null
+										}
+									]
+								},
+								"description": "Return one general parameter values:\n\n``` json\n[\n{\"max_usd\":number,\"created_on\": timestamp},...\n]\n\n```\n\nwhere param_name is one of:\n\n\\['global_max_usdr', 'user_max_usdr', 'global_max_deposit', 'price_interval'\\]"
+							},
+							"response": []
+						},
+						{
+							"name": "Get list of General parameters",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/general/list",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"general",
+										"list"
+									]
+								},
+								"description": "Return the list of:\n\n``` json\n['global_max_usdr', 'user_max_usdr', 'global_max_deposit', 'price_interval']\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Get last general parameter value",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/general/:param_name/last",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"general",
+										":param_name",
+										"last"
+									],
+									"variable": [
+										{
+											"key": "param_name",
+											"value": null
+										}
+									]
+								},
+								"description": "Return the last value of a specific general parameter:\n\n``` json\n[{\n\"param_name\":\"param_value\",\n\"created_on\": timestamp}\n]\n\n```\n\nWhere param_name is one of:\n\n\\['global_max_usdr', 'user_max_usdr', 'global_max_deposit', 'price_interval'\\]"
+							},
+							"response": []
+						},
+						{
+							"name": "Get last general parameter values",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/general/last",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"general",
+										"last"
+									]
+								},
+								"description": "Return the last value of the general parameters:\n\n``` json\n[\n{\"global_max_usdr\":number,\"created_on\": timestamp},\n{\"user_max_usdr\":number,\"created_on\": timestamp},\n{\"global_max_deposit\":number,\"created_on\": timestamp},\n{\"price_interval\":number,\"created_on\": timestamp},\n]\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Add New General parameters values",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/general",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"general"
+									]
+								},
+								"description": "Add new general parameters values:\n\nBody:\n\n``` json\n{\n\"global_max_usdr\":number,\n\"user_max_usdr\": number,\n\"global_max_deposit\":number,\n\"price_interval\":number\n}\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Add New General parameter value",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/general/:param_name",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"general",
+										":param_name"
+									],
+									"variable": [
+										{
+											"key": "param_name",
+											"value": null
+										}
+									]
+								},
+								"description": "Add new general parameter value:\n\nBody:\n\n``` json\n{\n\"param_value\":number\n}\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete all General parameters data",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/general",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"general"
+									]
+								},
+								"description": "Delete all the general parameters data."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Max Risk Rating",
+					"item": [
+						{
+							"name": "Get One Max Risk Rate values",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/maxriskrating/:param_name",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"maxriskrating",
+										":param_name"
+									],
+									"variable": [
+										{
+											"key": "param_name",
+											"value": null
+										}
+									]
+								},
+								"description": "Return one max risk rating values:\n\nReturn:\n\n``` json\n[\n{\"param_name\":number,\"created_on\":timestamp},...\n]\n\n```\n\nWhere param_name is one of:\n\n\\['max_usdr_aaa', 'max_usdr_aa', 'max_usdr_a', 'max_usdr_bbb', 'max_usdr_bb', 'max_usdr_b', 'max_usdr_ccc', 'max_usdr_cc', 'max_usdr_c', 'max_usdr_d'\\]"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Max Risk Rating parameters name",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/maxriskrating/list",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"maxriskrating",
+										"list"
+									]
+								},
+								"description": "Return the collateralization ratios list:\n\nReturn:\n\n``` json\n['max_usdr_aaa', 'max_usdr_aa', 'max_usdr_a', 'max_usdr_bbb', 'max_usdr_bb', 'max_usdr_b', 'max_usdr_ccc', 'max_usdr_cc', 'max_usdr_c', 'max_usdr_d']\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Last Max Risk Rating value",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/maxriskrating/last",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"maxriskrating",
+										"last"
+									]
+								},
+								"description": "Return a list of the last max risk rating values:\n\nReturn:\n\n``` json\n[\n{\"max_usdr_aaa\":number,\"created_on\":timestamp},\n{\"max_usdr_aa\":number,\"created_on\":timestamp},\n{\"max_usdr_a\":number,\"created_on\":timestamp},\n{\"max_usdr_bbb\":number,\"created_on\":timestamp},\n{\"max_usdr_bb\":number,\"created_on\":timestamp},\n{\"max_usdr_b\":number,\"created_on\":timestamp},\n{\"max_usdr_ccc\":number,\"created_on\":timestamp},\n{\"max_usdr_cc\":number,\"created_on\":timestamp},\n{\"max_usdr_c\":number,\"created_on\":timestamp},\n{\"max_usdr_d\":number,\"created_on\":timestamp}\n]\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Add New Max Risk Rating Values",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/maxriskrating",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"maxriskrating"
+									]
+								},
+								"description": "Add new max risk rating values:\n\nbody:\n\n``` json\n{\n'max_usdr_aaa': number,\n'max_usdr_aa': number,\n'max_usdr_a': number,\n'max_usdr_bbb': number,\n'max_usdr_bb': number,\n'max_usdr_b': number,\n'max_usdr_ccc': number,\n'max_usdr_cc': number,\n'max_usdr_c': number,\n'max_usdr_d': number\n}\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete All Max Risk Rating values",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ratioconfig/maxriskrating",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ratioconfig",
+										"maxriskrating"
+									]
+								},
+								"description": "Delete all the max risk rating values."
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "return all the users.\n\nReturn:\n\n``` json\n[\n{\n\"wallet_address_id\":string,\n\"name\":string,\n\"role\":USER_ROLE\n},...\n]\n\n```\n\nUSER_ROLE can be one of these value:\n\n\\['USER', 'USER_WHITELIST', 'ADMIN'\\]"
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/:wallet_address_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								":wallet_address_id"
+							],
+							"variable": [
+								{
+									"key": "wallet_address_id",
+									"value": null
+								}
+							]
+						},
+						"description": "return a user.\n\nReturn:\n\n``` json\n{\n\"wallet_address_id\":string,\n\"name\":string,\n\"role\":USER_ROLE\n}\n\n```\n\nUSER_ROLE can be one of these value:\n\n\\['USER', 'USER_WHITELIST', 'ADMIN'\\]"
+					},
+					"response": []
+				},
+				{
+					"name": "Check if a User is exited",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/auth/:wallet_address_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								":wallet_address_id"
+							],
+							"variable": [
+								{
+									"key": "wallet_address_id",
+									"value": null
+								}
+							]
+						},
+						"description": "return a true if the wallet_address_id is exiting in the system."
+					},
+					"response": []
+				},
+				{
+					"name": "Get A User's nonce",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/nonce/:wallet_address_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"nonce",
+								":wallet_address_id"
+							],
+							"variable": [
+								{
+									"key": "wallet_address_id",
+									"value": null
+								}
+							]
+						},
+						"description": "return a user's nonce.\n\nReturn:\n\n``` json\n{\n\"nonce\":number,\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Add A Users",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "add a user.\n\nbody:\n\n``` json\n{\n\"wallet_address_id\":string,\n\"name\":string,\n\"role\":USER_ROLE\n}\n\n```\n\nUSER_ROLE can be one of these value:\n\n\\['USER', 'USER_WHITELIST', 'ADMIN'\\]"
+					},
+					"response": []
+				},
+				{
+					"name": "Update A Users",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/:wallet_address_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								":wallet_address_id"
+							],
+							"variable": [
+								{
+									"key": "wallet_address_id",
+									"value": null
+								}
+							]
+						},
+						"description": "update a user.\n\nbody:\n\n``` json\n{\n\"name\":string,\n\"role\":USER_ROLE\n}\n\n```\n\nUSER_ROLE can be one of these value:\n\n\\['USER', 'USER_WHITELIST', 'ADMIN'\\]"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete A User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/:wallet_address_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								":wallet_address_id"
+							],
+							"variable": [
+								{
+									"key": "wallet_address_id",
+									"value": null
+								}
+							]
+						},
+						"description": "delete a user."
+					},
+					"response": []
+				},
+				{
+					"name": "List All user's parameters values",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/:wallet_address_id/param",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								":wallet_address_id",
+								"param"
+							],
+							"variable": [
+								{
+									"key": "wallet_address_id",
+									"value": null
+								}
+							]
+						},
+						"description": "return a list of all the users's parameters values:\n\n``` json\n[{ \n\"wallet_address_id\": string, \n\"max_deposit\": number, \n\"max_borrow\": number,\n\"created_on\": timestamp \n},...]\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get latest Users's Params value",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/:wallet_address_id/param/last",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								":wallet_address_id",
+								"param",
+								"last"
+							],
+							"variable": [
+								{
+									"key": "wallet_address_id",
+									"value": null
+								}
+							]
+						},
+						"description": "return the latest users's parameters value.\n\nReturn:\n\n``` json\n{\n  \"wallet_address_id\": string,\n  \"max_deposit\": number,\n  \"max_borrow\": number,\n  \"created_on\": timestamp\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Add new Users's Param",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/:wallet_address_id/param",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								":wallet_address_id",
+								"param"
+							],
+							"variable": [
+								{
+									"key": "wallet_address_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Add new Users's Param value.\n\nthe body:\n\n``` json\n{\n\"max_deposit\": number,\n\"max_borrow\": number\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete all User's Param values",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/:wallet_address_id/params",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								":wallet_address_id",
+								"params"
+							],
+							"variable": [
+								{
+									"key": "wallet_address_id",
+									"value": null
+								}
+							]
+						},
+						"description": "Delete all the User's Params values\n\n."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Coin Gecko Prices",
+			"item": [
+				{
+					"name": "Get All the Prices",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{base_url}}/coingecko",
+							"protocol": "https",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"coingecko"
+							]
+						},
+						"description": "return:\n\n``` json\n{\n\"USDC\":number,\n\"UXD\":number,\n\"USDH\":number,\n\"USDT\":number,\n\"CASH\":number,\n\"UST\":number}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get the Price of specific token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{base_url}}/coingecko/:token",
+							"protocol": "https",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"coingecko",
+								":token"
+							],
+							"variable": [
+								{
+									"key": "token",
+									"value": null
+								}
+							]
+						},
+						"description": "return the price of a specific token,\n\n:token values:\n\n\\[\"usd-coin\",\"uxd-stablecoin\",\"usdh\",\"tether\",\"cashio-dollar\",\"terrausd-wormhole\"\\]"
+					},
+					"response": []
+				}
+			]
+		}
+	]
 }

@@ -4,7 +4,7 @@ import express from 'express';
 import cors from 'cors';
 
 import { cacheInit } from './api/cacheList'
-
+import {geckoPricesService} from './api/coingecko'
 let platforms = require('./routes/platforms');
 let lpairs = require('./routes/lpairs');
 let tokens = require('./routes/tokens');
@@ -42,6 +42,12 @@ app.use('/users', users);
 // Init the tokens and LPs cache list;
 cacheInit();
 console.log("Cache initialized");
+
+const ciongeckointerval =  process.env.COINGECKOINTERVAL || 30
+
+geckoPricesService(+ciongeckointerval);
+console.log("CionGecko service initialized");
+
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {

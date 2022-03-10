@@ -78,7 +78,8 @@ export interface Token {
     symbol: string,
     icon: string,
     created_on?: number,
-    updated_on?: number
+    updated_on?: number,
+    platforms?:Platform[]
 }
 
 export interface TRANSACTION {
