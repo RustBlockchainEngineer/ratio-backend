@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
-import { getAllTokens, getToken, addToken, addNewPriceToken, getLatestTokenPrice, updateToken, deleteToken } from '../api/tokens'
+import { getAllTokens, getToken, addToken, deleteToken } from '../api/tokens'
 import { isNotSafe } from '../utils/utils';
 import { authorize } from '../middlewares/auth';
-import { UserRole } from '../models/model';
-
+import { UserRole,CoinGeckoTokenList } from '../models/model';
+import { tokenPriceList,cacheList } from "../api/cacheList";
 let router = express.Router();
 
 router.get('/', async function (req: Request, res: Response) {
@@ -13,42 +13,49 @@ router.get('/', async function (req: Request, res: Response) {
     });
 })
 
+router.get('/prices', async function (req: Request, res: Response) {
+    res.send(JSON.stringify(tokenPriceList));
+})
+
 router.get('/:id', async function (req: Request, res: Response) {
     await getToken(req.params.id, function (result) {
         res.send(JSON.stringify(result));
     });
 })
+
 router.get('/:id/price', async function (req: Request, res: Response) {
-    await getLatestTokenPrice(req.params.id, function (result) {
-        res.send(JSON.stringify(result));
-    });
+    let token_symbol = undefined;
+    if(Object.keys(cacheList).includes("_"+req.params.id))
+        token_symbol = cacheList["_"+req.params.id];
+
+    if(Object.keys(CoinGeckoTokenList).includes(req.params.id))
+        token_symbol = req.params.id;
+        
+    if(token_symbol && Object.keys(CoinGeckoTokenList).includes(token_symbol)){
+        res.send(JSON.stringify(
+            tokenPriceList[token_symbol.toLocaleUpperCase()]
+            ));
+    }
+    else
+        res.status(404).send({ error: 'Token price not found' });
 })
 
 router.post('/', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
-    const keylist: string[] = ['address_id', 'symbol', 'icon'];
+    const keylist: string[] = ['address_id', 'symbol', 'icon','coin_id'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
     }
 
-    let result = await addToken(req.body);
-    res.send(JSON.stringify(result));
-})
-
-router.post('/:id/price', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
-    const keylist: string[] = ['price', 'confidence'];
-    if (isNotSafe(keylist, req.body)) {
-        return res.status(400).send({ error: 'Request body missing some parameters' });
-    }
-    let result = await addNewPriceToken(req.params.id, req.body);
+    let result = await addToken(req.body["address_id"],req.body);
     res.send(JSON.stringify(result));
 })
 
 router.put('/:id', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
-    const keylist: string[] = ['symbol', 'icon'];
+    const keylist: string[] = ['symbol', 'icon','coin_id'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
     }
-    let result = await updateToken(req.params.id, req.body);
+    let result = await addToken(req.params.id, req.body);
     res.send(JSON.stringify(result));
 })
 

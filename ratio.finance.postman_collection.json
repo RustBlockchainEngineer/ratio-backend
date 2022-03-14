@@ -455,7 +455,7 @@
 								"tokens"
 							]
 						},
-						"description": "Return a list of all the tokens.\n\nReturn:\n\n``` json\n[{\n\"address_id\": string,\n\"symbol\": string,\n\"icon\": string\n},...]\n\n```"
+						"description": "Return a list of all the tokens.\n\nReturn:\n\n``` json\n[{\n\"address_id\": string,\n\"symbol\": string,\n\"icon\": string,\n\"platforms\": [\n{\n\"id\":string,\n\"name\":string,\n\"site\":string,\n\"icon\":string\n},...\n]\n},...]\n\n```"
 					},
 					"response": []
 				},
@@ -473,7 +473,7 @@
 								"tokens"
 							]
 						},
-						"description": "Add new token.\n\nThe body:\n\n``` json\n{\n\"address_id\": string,\n\"symbol\": string,\n\"icon\": string\n}\n\n```"
+						"description": "Add new token.\n\nThe body:\n\n``` json\n{\n\"address_id\": string,\n\"symbol\": string,\n\"icon\": string,\n\"platforms\":[{\"id\":string},...]\n}\n\n```"
 					},
 					"response": []
 				},
@@ -498,7 +498,7 @@
 								}
 							]
 						},
-						"description": "Return a specific token.\n\nReturn:\n\n``` json\n{\n\"address_id\": string,\n\"symbol\": string,\n\"icon\": string\n}\n\n```"
+						"description": "Return a specific token.\n\nReturn:\n\n``` json\n{\n\"address_id\": string,\n\"symbol\": string,\n\"icon\": string,\n\"platforms\": [\n{\n\"id\":string,\n\"name\":string,\n\"site\":string,\n\"icon\":string\n},...\n]\n}\n\n```"
 					},
 					"response": []
 				},
@@ -523,7 +523,7 @@
 								}
 							]
 						},
-						"description": "Update a specific token.\n\nBody:\n\n``` json\n{\n\"symbol\": string,\n\"icon\": string\n}\n\n```"
+						"description": "Update a specific token.\n\nBody:\n\n``` json\n{\n\"symbol\": string,\n\"icon\": string,\n\"platforms\":[{\"id\":string},...]\n}\n\n```"
 					},
 					"response": []
 				},
@@ -1640,6 +1640,56 @@
 							]
 						},
 						"description": "Delete all the User's Params values\n\n."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Coin Gecko Prices",
+			"item": [
+				{
+					"name": "Get All the Prices",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{base_url}}/coingecko",
+							"protocol": "https",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"coingecko"
+							]
+						},
+						"description": "return:\n\n``` json\n{\n\"USDC\":number,\n\"UXD\":number,\n\"USDH\":number,\n\"USDT\":number,\n\"CASH\":number,\n\"UST\":number}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get the Price of specific token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{base_url}}/coingecko/:token",
+							"protocol": "https",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"coingecko",
+								":token"
+							],
+							"variable": [
+								{
+									"key": "token",
+									"value": null
+								}
+							]
+						},
+						"description": "return the price of a specific token,\n\n:token values:\n\n\\[\"usd-coin\",\"uxd-stablecoin\",\"usdh\",\"tether\",\"cashio-dollar\",\"terrausd-wormhole\"\\]"
 					},
 					"response": []
 				}

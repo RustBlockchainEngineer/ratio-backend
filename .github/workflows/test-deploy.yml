@@ -1,13 +1,13 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Deploy To Main
+name: Deploy To Test
 
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches:
-      - main
+      - prerelease
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -23,18 +23,19 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
 
+
       # Runs a single command using the runners shell
-      - name: Deploy to Main Server        
+      - name: Deploy to Prerelease Server        
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
+          host: ${{ secrets.TEST_SSH_HOST }}
+          username: ${{ secrets.TEST_SSH_USERNAME }}
+          key: ${{ secrets.TEST_SSH_KEY }}
           port: 22
           script: |
                 cd ~
                 rm -rf rf-engine
-                git clone --branch main git@github.com:RatioFinance/rf-engine.git
+                git clone --branch prerelease git@github.com:RatioFinance/rf-engine.git
                 cd rf-engine
                 yarn install
                 tsc
