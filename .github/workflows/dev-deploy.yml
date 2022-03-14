@@ -34,10 +34,10 @@ jobs:
           script: |
                 cd ~
                 rm -rf rf-engine-bk
-                mv rf-endine rf-engine-bk
+                mv rf-engine rf-engine-bk
                 git clone --branch dev git@github.com:RatioFinance/rf-engine.git
                 cd rf-engine
-                npm install
+                yarn install
                 tsc
                 cp ../ecosystem.config.js .
                 pm2 stop rf-engine
