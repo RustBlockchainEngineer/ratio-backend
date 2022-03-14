@@ -12,7 +12,6 @@ router.get('/', async function (req: Request, res: Response) {
         res.send(JSON.stringify(result));
     });
 })
-
 router.get('/:id', async function (req: Request, res: Response) {
     let result = await getLPair(req.params.id, function (result) {
         if (result)
