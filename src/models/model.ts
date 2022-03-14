@@ -26,6 +26,21 @@ export enum UserRole {
     'ADMIN' = 'ADMIN',
 }
 
+export enum WhitelistMode {
+    ADMIN_ONLY="ADMIN_ONLY",
+    REGISTERED_USERS="REGISTERED_USERS",
+    DISABLED="DISABLED",
+  }
+  
+export const CoinGeckoTokenList:{ [key: string]: string; } = {
+    "USDC": 'usd-coin',
+    "UXD": 'uxd-stablecoin',
+    "USDH": 'usdh',
+    "USDT": 'tether',
+    "CASH": 'cashio-dollar',
+    "UST": 'terrausd',
+};
+
 export interface Auth {
     name: string,
     publicAddress: string,

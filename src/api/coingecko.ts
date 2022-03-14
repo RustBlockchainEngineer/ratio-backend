@@ -1,51 +1,43 @@
 import axios from 'axios';
 
 import { dbcon } from "../models/db";
+import { tokenPriceList } from "./cacheList";
+import { CoinGeckoTokenList } from "../models/model";
+import { getSaberLpTokenPrices, NETWORK } from "./saber";
 const COINGECKO_API = 'https://api.coingecko.com/api/v3/';
 
-const CoinGeckoTokenList:{ [key: string]: string; } = {
-    "USDC": 'usd-coin',
-    "UXD": 'uxd-stablecoin',
-    "USDH": 'usdh',
-    "USDT": 'tether',
-    "CASH": 'cashio-dollar',
-    "UST": 'terrausd-wormhole',
-};
 
-
-export async function  getCoinGeckoPrice(coinId:string){
-  try {
-    const data = await (await axios.get(`${COINGECKO_API}simple/price?ids=${coinId}&vs_currencies=usd`));
-    const usdPrice = data.data[coinId]['usd'];
-    return usdPrice;
-  } catch (error) {
-    return error;
-  }
-};
-
-export async function getCoinGeckoPrices(){
-  const tokenPrices:{ [key: string]: string; } = {};
-  for (const token in CoinGeckoTokenList) {
-    tokenPrices[token] = await getCoinGeckoPrice(CoinGeckoTokenList[token]);
-  }
-  return tokenPrices;
-};
-
-async function saveCoinGeckoPrices(){
+export async function saveCoinGeckoPrices(){
   let ts = Date.now();
-  const tokenPrices = await getCoinGeckoPrices();
-
   for (const token in CoinGeckoTokenList) {
-    tokenPrices[token] = await getCoinGeckoPrice(CoinGeckoTokenList[token]);
+    const data = await (await axios.get(`${COINGECKO_API}simple/price?ids=${CoinGeckoTokenList[token]}&vs_currencies=usd`));
+    tokenPriceList[token] = data.data[CoinGeckoTokenList[token]]['usd'];
   }
-  for (const t of Object.keys(tokenPrices)){
+  const saberLPoolList = await getSaberLpTokenPrices(NETWORK.DEVNET)
+
+  for (const t of Object.keys(tokenPriceList)){
     dbcon.query(`INSERT INTO RFDATA.TOKENPRICES(
       token,
       price,
       created_on,
       source)
       VALUES (?,?,FROM_UNIXTIME(? * 0.001),?)`,
-      [t,tokenPrices[t],ts,"coingecko"]
+      [t,tokenPriceList[t],ts,"coingecko"]
+      );
+  }
+  for (const pool of saberLPoolList){
+    dbcon.query(`INSERT INTO RFDATA.SOURCELPPRICES(
+      pool_name,
+      lp_price,
+      tokenasize,
+      tokenbsize,
+      tokenaprice,
+      tokenbprice,
+      source,
+      created_on
+      )
+      VALUES (?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
+      [pool["poolName"],pool["lpPrice"],pool["tokenASize"],pool["tokenBSize"],pool["tokenAPrice"],pool["tokenBPrice"],"Saber",ts]
       );
   }
 };

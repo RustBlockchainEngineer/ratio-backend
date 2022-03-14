@@ -1,15 +1,18 @@
 import express, { Request, Response } from 'express';
-import * as coingeckoOps from '../api/coingecko';
+import { tokenPriceList } from "../api/cacheList";
+import { CoinGeckoTokenList } from "../models/model";
 let router = express.Router();
 
 router.get('/', async function (req: Request, res: Response) {
-    let result = await coingeckoOps.getCoinGeckoPrices();
-    res.send(JSON.stringify(result));
+    res.send(JSON.stringify(tokenPriceList));
 })
 
 router.get('/:id', async function (req: Request, res: Response) {
-    let result = await coingeckoOps.getCoinGeckoPrice(req.params.id.toString());
-    res.send(JSON.stringify(result));
+    
+    if(req.params.id in Object.values(CoinGeckoTokenList))
+        res.send(JSON.stringify(tokenPriceList[req.params.id]));
+    else
+        res.status(404).send({ error: 'Token not found' });
 })
 
 module.exports = router

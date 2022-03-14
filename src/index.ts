@@ -43,6 +43,7 @@ app.use('/users', users);
 cacheInit();
 console.log("Cache initialized");
 
+//COINGECKOINTERVAL Minutes for ingesting from Coingecko prices
 const ciongeckointerval =  process.env.COINGECKOINTERVAL || 30
 
 geckoPricesService(+ciongeckointerval);
