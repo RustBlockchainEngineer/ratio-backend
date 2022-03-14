@@ -1,4 +1,4 @@
-import { WhitelistMode } from "../config/types";
+import { WhitelistMode } from "../models/model";
 
 export function getWhiteListMode(): WhitelistMode {
   let result:WhitelistMode | undefined;

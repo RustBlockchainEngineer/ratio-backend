@@ -1,11 +1,10 @@
 import * as express from 'express';
 import { Request, Response, NextFunction } from 'express';
 import { authorize } from '../middlewares/auth';
-import { UserRole } from '../models/model';
+import { UserRole,WhitelistMode } from '../models/model';
 import { getAllUsers, getUserByPublicKey, addUser, updateUser, deleteUser, getUserNonce } from '../api/users'
 import { getAllUserParam, getlatestUserParam, addUserParam, deleteAllUserParam } from '../api/userparam';
 import { isNotSafe } from '../utils/utils';
-import { WhitelistMode } from '../config/types';
 import { getWhiteListMode } from '../utils/config';
 
 let router = express.Router();

@@ -1,5 +1,0 @@
-export enum WhitelistMode {
-  ADMIN_ONLY="ADMIN_ONLY",
-  REGISTERED_USERS="REGISTERED_USERS",
-  DISABLED="DISABLED",
-}

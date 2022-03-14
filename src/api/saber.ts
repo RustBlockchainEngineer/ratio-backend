@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import {getAccount} from "@solana/spl-token";
-import * as coingeckoOps from '../api/coingecko';
+import { tokenPriceList } from "./cacheList";
 import {clusterApiUrl, Connection, PublicKey} from "@solana/web3.js";
 import BigNumber from 'bignumber.js';
 
@@ -69,9 +69,8 @@ export const getSaberLpTokenPrice = async (env:NETWORK,poolName: string) => {
  */
 export const getSaberLpTokenPrices = async(env: NETWORK) => {
     const pools = await fetchSaberTokens(env);
-    const tokenPrices = await coingeckoOps.getCoinGeckoPrices();
+    const tokenPrices = tokenPriceList;
     const poolTokenSizes = await getPoolTokenSizes(pools,env);
-
     const lpPrices = await Promise.all(
         poolTokenSizes.map(async (pool:any) => {
           //@ts-ignore
@@ -92,7 +91,11 @@ export const getSaberLpTokenPrices = async(env: NETWORK) => {
          }
          return {
            poolName: pool.name,
-           lpPrice: pool.lpPrice
+           lpPrice: pool.lpPrice,
+           tokenASize: pool.tokenASize,
+           tokenBSize: pool.tokenBSize,
+           tokenAPrice:tokenPrices[pool.tokenAName],
+           tokenBPrice:tokenPrices[pool.tokenBName]
          };
        })
      );

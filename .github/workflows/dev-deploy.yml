@@ -33,7 +33,8 @@ jobs:
           port: 22
           script: |
                 cd ~
-                rm -rf rf-engine
+                rm -rf rf-engine-bk
+                mv rf-endine rf-engine-bk
                 git clone --branch dev git@github.com:RatioFinance/rf-engine.git
                 cd rf-engine
                 npm install
