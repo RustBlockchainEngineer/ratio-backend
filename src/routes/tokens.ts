@@ -41,7 +41,7 @@ router.get('/:id/price', async function (req: Request, res: Response) {
 })
 
 router.post('/', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
-    const keylist: string[] = ['address_id', 'symbol', 'icon','coin_id'];
+    const keylist: string[] = ['address_id', 'symbol', 'icon','token_ids'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
     }
@@ -51,7 +51,7 @@ router.post('/', authorize([UserRole.ADMIN]), async function (req: Request, res:
 })
 
 router.put('/:id', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
-    const keylist: string[] = ['symbol', 'icon','coin_id'];
+    const keylist: string[] = ['symbol', 'icon','token_ids'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
     }
