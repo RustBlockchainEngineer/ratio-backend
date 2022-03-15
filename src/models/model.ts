@@ -31,7 +31,11 @@ export enum WhitelistMode {
     REGISTERED_USERS="REGISTERED_USERS",
     DISABLED="DISABLED",
   }
-  
+
+  export enum TokenPriceSource{
+    "COINGECKO"='coingecko'
+}
+
 export const CoinGeckoTokenList:{ [key: string]: string; } = {
     "USDC": 'usd-coin',
     "UXD": 'uxd-stablecoin',
@@ -94,9 +98,14 @@ export interface Token {
     icon: string,
     created_on?: number,
     updated_on?: number,
-    platforms?:Platform[]
+    platforms?:Platform[],
+    token_ids?:TokenIDS[]
 }
 
+export interface TokenIDS {
+    source:TokenPriceSource,
+    token_id:string
+}
 export interface TRANSACTION {
     transaction_id: string,
     wallet_address_id: string,
@@ -150,6 +159,7 @@ export interface PARAM {
     created_on?: number
 }
 
+export const pricesSources: TokenPriceSource[] =[TokenPriceSource.COINGECKO];
 export const COLLATERALRATIO = ['cr_aaa_ratio', 'cr_aa_ratio', 'cr_a_ratio', 'cr_bbb_ratio', 'cr_bb_ratio', 'cr_b_ratio', 'cr_ccc_ratio', 'cr_cc_ratio', 'cr_c_ratio', 'cr_d_ratio'];
 export const MAXRISKRATING = ['max_usdr_aaa', 'max_usdr_aa', 'max_usdr_a', 'max_usdr_bbb', 'max_usdr_bb', 'max_usdr_b', 'max_usdr_ccc', 'max_usdr_cc', 'max_usdr_c', 'max_usdr_d'];
 export const GLABALPARAMS = ['global_max_usdr', 'user_max_usdr', 'global_max_deposit', 'price_interval'];

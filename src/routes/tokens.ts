@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { getAllTokens, getToken, addToken, deleteToken } from '../api/tokens'
 import { isNotSafe } from '../utils/utils';
 import { authorize } from '../middlewares/auth';
-import { UserRole,CoinGeckoTokenList } from '../models/model';
+import { UserRole,CoinGeckoTokenList,pricesSources } from '../models/model';
 import { tokenPriceList,cacheList } from "../api/cacheList";
 let router = express.Router();
 
@@ -15,6 +15,10 @@ router.get('/', async function (req: Request, res: Response) {
 
 router.get('/prices', async function (req: Request, res: Response) {
     res.send(JSON.stringify(tokenPriceList));
+})
+
+router.get('/pricessources', async function (req: Request, res: Response) {
+    res.send(JSON.stringify(pricesSources));
 })
 
 router.get('/:id', async function (req: Request, res: Response) {
@@ -41,7 +45,7 @@ router.get('/:id/price', async function (req: Request, res: Response) {
 })
 
 router.post('/', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
-    const keylist: string[] = ['address_id', 'symbol', 'icon','coin_id'];
+    const keylist: string[] = ['address_id', 'symbol', 'icon','token_ids'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
     }
@@ -51,7 +55,7 @@ router.post('/', authorize([UserRole.ADMIN]), async function (req: Request, res:
 })
 
 router.put('/:id', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
-    const keylist: string[] = ['symbol', 'icon','coin_id'];
+    const keylist: string[] = ['symbol', 'icon','token_ids'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
     }
