@@ -173,3 +173,10 @@ export const getSaberLpTokenPrices = async(env: NETWORK) => {
      );
     return lpPrices;
 };
+/**
+ * A * sum(x_i) * n**n + D = A * D * n**n + D**(n+1) / (n**n * prod(x_i))
+ */
+export const getUsdrPrice = async(env: NETWORK) => {
+  const poolData = await getSaberLpTokenPrice(env,'USD-USDR');
+  return poolData;
+};
