@@ -31,7 +31,11 @@ export enum WhitelistMode {
     REGISTERED_USERS="REGISTERED_USERS",
     DISABLED="DISABLED",
   }
-  
+
+  export enum TokenPriceSource{
+    "COINGECKO"='coingecko'
+}
+
 export const CoinGeckoTokenList:{ [key: string]: string; } = {
     "USDC": 'usd-coin',
     "UXD": 'uxd-stablecoin',
@@ -94,9 +98,14 @@ export interface Token {
     icon: string,
     created_on?: number,
     updated_on?: number,
-    platforms?:Platform[]
+    platforms?:Platform[],
+    token_ids?:TokenIDS[]
 }
 
+export interface TokenIDS {
+    source:TokenPriceSource,
+    token_id:string
+}
 export interface TRANSACTION {
     transaction_id: string,
     wallet_address_id: string,
