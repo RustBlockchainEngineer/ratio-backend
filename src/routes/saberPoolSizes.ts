@@ -1,14 +1,14 @@
 import express, { Request, Response } from 'express';
-import {getSaberLpTokenPrice, getSaberLpTokenPrices,getUsdrPrice,NETWORK} from '../api/saber';
+import {getSaberLpTokenPrice, getSaberLpTokenPrices,getUsdrPrice} from '../api/saber';
 let router = express.Router();
 
 router.get('/', async function (req: Request, res: Response) {
-    let result = await getSaberLpTokenPrices(NETWORK.DEVNET);
+    let result = await getSaberLpTokenPrices();
     res.send(JSON.stringify(result));
 })
 
 router.get('/:id', async function(req: Request, res: Response) {
-    let result = await getSaberLpTokenPrice(NETWORK.DEVNET,req.params.id);
+    let result = await getSaberLpTokenPrice(req.params.id);
     if(result){
         res.send(JSON.stringify(result))
     }else{
@@ -17,7 +17,7 @@ router.get('/:id', async function(req: Request, res: Response) {
 });
 
 router.get('/usdrprice',async function(req: Request, res: Response){
-    let result = await getUsdrPrice(NETWORK.DEVNET);
+    let result = await getUsdrPrice();
     res.send(JSON.stringify(result));
 });
 

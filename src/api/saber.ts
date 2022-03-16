@@ -1,29 +1,13 @@
 import Axios from 'axios';
 import {getAccount} from "@solana/spl-token";
 import { tokenPriceList } from "./cacheList";
-import {clusterApiUrl, Connection, PublicKey} from "@solana/web3.js";
+import { PublicKey} from "@solana/web3.js";
+import { getConnection,getClusterName } from "../utils/utils";
 import BigNumber from 'bignumber.js';
 
-export enum NETWORK {
-  MAINNET = "mainnet",
-  DEVNET = "devnet"
-};
 
-const getConnection = async(env:NETWORK) => {
-  if(env == 'mainnet'){
-    return new Connection(
-      clusterApiUrl('mainnet-beta'),
-      'confirmed'
-    );
-  }else{
-    return new Connection(
-      clusterApiUrl('devnet'),
-      'confirmed'
-    );
-  }
-}
-
-const fetchSaberPools = async (network:string) => {
+const fetchSaberPools = async () => {
+    const network = getClusterName()
     const poolsData = (await Axios.get(`https://registry.saber.so/data/pools-info.${network}.json`)).data.pools;
     return poolsData;
 }
@@ -49,8 +33,8 @@ const parsePoolData = (pool:any) => {
     }
 }
 
-export const fetchSaberPoolData = async (network: string, poolName: string) => {
-    const poolsData = await fetchSaberPools(network);
+export const fetchSaberPoolData = async (poolName: string) => {
+    const poolsData = await fetchSaberPools();
     const poolData = poolsData.find( (pool:any) => pool?.name == poolName);
     
     if(poolData){
@@ -60,8 +44,8 @@ export const fetchSaberPoolData = async (network: string, poolName: string) => {
     }
 }
 
-async function fetchSaberTokens(network: string) {
-    const poolsData = await fetchSaberPools(network);
+async function fetchSaberTokens() {
+    const poolsData = await fetchSaberPools();
     const swapPools = [];
     for (let i = 0; i < poolsData.length; i++) {
       const name = poolsData[i]?.name;
@@ -84,8 +68,8 @@ async function fetchSaberTokens(network: string) {
     return swapPools;
 }
 
-const getPoolsTokenSizes = async(pools:any, env:NETWORK) => {
-  const connection = await getConnection(env);
+const getPoolsTokenSizes = async(pools:any) => {
+  const connection = await getConnection();
   const poolsFormatted = await Promise.all(
     pools.map(async (pool:any) => {
       pool.tokenASize = (await getAccount(connection,new PublicKey(pool.tokenA))).amount.toString();
@@ -96,19 +80,19 @@ const getPoolsTokenSizes = async(pools:any, env:NETWORK) => {
   return poolsFormatted;
 }
 
-export const getPoolTokenSizes = async(pool:any, env:NETWORK) => {
-  const connection = await getConnection(env);
+export const getPoolTokenSizes = async(pool:any) => {
+  const connection = await getConnection();
   pool.tokenASize = (await getAccount(connection,new PublicKey(pool.tokenA))).amount.toString();
   pool.tokenBSize = (await getAccount(connection,new PublicKey(pool.tokenB))).amount.toString();
   return pool;
 }
 
-export const getSaberLpTokenPrice = async (env:NETWORK,poolName: string) => {
-  const pool = await fetchSaberPoolData(env,poolName);
+export const getSaberLpTokenPrice = async (poolName: string) => {
+  const pool = await fetchSaberPoolData(poolName);
   const tokenPrices = tokenPriceList;
   let poolPrice;
   if(pool){
-    const poolFormatted = await getPoolTokenSizes(pool,env);
+    const poolFormatted = await getPoolTokenSizes(pool);
     if(tokenPrices[poolFormatted.tokenAName] != undefined && tokenPrices[poolFormatted.tokenBName]!= undefined){
       //@ts-ignore
       const tokenAPriceSqrt = (new BigNumber(tokenPrices[poolFormatted.tokenAName])).sqrt();
@@ -140,10 +124,10 @@ export const getSaberLpTokenPrice = async (env:NETWORK,poolName: string) => {
   where a1, a2 are the prices of the assets and r1, r2 are the amount of each token in the pool
  * 
  */
-export const getSaberLpTokenPrices = async(env: NETWORK) => {
-    const pools = await fetchSaberTokens(env);
+export const getSaberLpTokenPrices = async() => {
+    const pools = await fetchSaberTokens();
     const tokenPrices = tokenPriceList;
-    const poolTokenSizes = await getPoolsTokenSizes(pools,env);
+    const poolTokenSizes = await getPoolsTokenSizes(pools);
 
     const lpPrices = await Promise.all(
         poolTokenSizes.map(async (pool:any) => {
@@ -179,8 +163,7 @@ export const getSaberLpTokenPrices = async(env: NETWORK) => {
  * A * sum(x_i) * n**n + D = A * D * n**n + D**(n+1) / (n**n * prod(x_i))
  */
 
-export const getUsdrPrice = async(env: NETWORK) => {
-  const poolData = await getSaberLpTokenPrice(env,'USD-USDR');
-
+export const getUsdrPrice = async() => {
+  const poolData = await getSaberLpTokenPrice('USD-USDR');
   return poolData;
 };

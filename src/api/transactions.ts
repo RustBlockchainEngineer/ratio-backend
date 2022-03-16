@@ -4,9 +4,7 @@ import { TRANSACTION } from '../models/model';
 import { cacheList } from '../api/cacheList';
 import BigNumber from "bignumber.js";
 import {
-    Cluster,
-    clusterApiUrl,
-    Connection,
+    Cluster,    
     Message,
     PublicKey,
     sendAndConfirmTransaction,
@@ -14,6 +12,7 @@ import {
     Transaction,
     TransactionError
 } from '@solana/web3.js';
+import { getConnection } from '../utils/utils';
 
 //import BigNumber from 'bignumber.js';
 //import { Console } from 'console';
@@ -79,7 +78,7 @@ export async function getVault(wallet_address_id: string, callback: (r: Object[]
 
 export async function getTxStatus(wallet_address_id: string, signature: string, callback: (r: Object) => void) {
 
-    const connection = new Connection(clusterApiUrl('devnet'));
+    const connection = await getConnection();
     const user = new PublicKey(wallet_address_id);
     const signatures = await connection.getConfirmedSignaturesForAddress2(user);
     console.log(signatures);
@@ -110,7 +109,7 @@ export async function getTxStatus(wallet_address_id: string, signature: string, 
 
 export async function getTxsignatures(wallet_address_id: string, callback: (r: string[]) => void) {
 
-    const connection = new Connection(clusterApiUrl('devnet'));
+    const connection = await getConnection();
     const user = new PublicKey(wallet_address_id);
     const data = await connection.getConfirmedSignaturesForAddress2(user);
 
@@ -132,7 +131,7 @@ export async function getTxsignatures(wallet_address_id: string, callback: (r: s
 
 export async function addTransaction(wallet_address_id: string, data: { "tx_type": string, "signature": string }): Promise<Object> {
 
-    const connection = new Connection(clusterApiUrl('devnet'));
+    const connection = await getConnection();
     //const user = new PublicKey(wallet_address_id);
     //const data = await connection.getConfirmedSignaturesForAddress2(user);
     // console.log('USER DATA TX');
