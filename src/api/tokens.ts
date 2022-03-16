@@ -20,7 +20,9 @@ export async function getAllTokens(callback: (r: Token[]) => void) {
                     tp.platform_address_id,
                     plt.name platform_name,
                     plt.site platform_site,
-                    plt.icon platform_icon
+                    plt.icon platform_icon,
+                    tknid.source,
+                    tknid.token_id
                 FROM RFDATA.TOKENS tkn
                 LEFT JOIN RFDATA.TOKENSPLATFORMS tp ON tkn.address_id = tp.token_address_id
                 LEFT JOIN RFDATA.PLATFORMS plt ON tp.platform_address_id = plt.id
@@ -73,7 +75,7 @@ export async function getToken(address_id: string, callback: (r: Token | undefin
                     plt.site platform_site,
                     plt.icon platform_icon,
                     tknid.source,
-                    tknid.token_id
+                    tknid.token_id                    
                 FROM RFDATA.TOKENS tkn
                 LEFT JOIN RFDATA.TOKENSPLATFORMS tp ON tkn.address_id = tp.token_address_id
                 LEFT JOIN RFDATA.PLATFORMS plt ON tp.platform_address_id = plt.id
