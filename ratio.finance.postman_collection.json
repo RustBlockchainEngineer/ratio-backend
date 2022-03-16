@@ -479,6 +479,15 @@
 					"response": []
 				},
 				{
+					"name": "Get all the prices sources",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "return a list of all the prices sources as a list:\n\n\\['coingecko',...\\]"
+					},
+					"response": []
+				},
+				{
 					"name": "Add a Token",
 					"request": {
 						"method": "POST",
