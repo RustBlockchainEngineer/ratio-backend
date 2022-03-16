@@ -52,6 +52,7 @@ const parsePoolData = (pool:any) => {
 export const fetchSaberPoolData = async (network: string, poolName: string) => {
     const poolsData = await fetchSaberPools(network);
     const poolData = poolsData.find( (pool:any) => pool?.name == poolName);
+    
     if(poolData){
       return parsePoolData(poolData);
     }else{
@@ -143,6 +144,7 @@ export const getSaberLpTokenPrices = async(env: NETWORK) => {
     const pools = await fetchSaberTokens(env);
     const tokenPrices = tokenPriceList;
     const poolTokenSizes = await getPoolsTokenSizes(pools,env);
+
     const lpPrices = await Promise.all(
         poolTokenSizes.map(async (pool:any) => {
           //@ts-ignore
@@ -176,7 +178,9 @@ export const getSaberLpTokenPrices = async(env: NETWORK) => {
 /**
  * A * sum(x_i) * n**n + D = A * D * n**n + D**(n+1) / (n**n * prod(x_i))
  */
+
 export const getUsdrPrice = async(env: NETWORK) => {
   const poolData = await getSaberLpTokenPrice(env,'USD-USDR');
+
   return poolData;
 };
