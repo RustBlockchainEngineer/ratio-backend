@@ -3,17 +3,21 @@ import axios from 'axios';
 import { dbcon } from "../models/db";
 import { tokenPriceList } from "./cacheList";
 import { CoinGeckoTokenList } from "../models/model";
-import { getSaberLpTokenPrices, NETWORK } from "./saber";
+import { getSaberLpTokenPrices } from "./saber";
 const COINGECKO_API = 'https://api.coingecko.com/api/v3/';
 
+export async function getSaberPrice(){
+  const price = await axios.get(`${COINGECKO_API}simple/price?ids=saber&vs_currencies=usd`);
+  return price.data;
+}
 
 export async function saveCoinGeckoPrices(){
   let ts = Date.now();
   for (const token in CoinGeckoTokenList) {
-    const data = await (await axios.get(`${COINGECKO_API}simple/price?ids=${CoinGeckoTokenList[token]}&vs_currencies=usd`));
+    const data = (await axios.get(`${COINGECKO_API}simple/price?ids=${CoinGeckoTokenList[token]}&vs_currencies=usd`));
     tokenPriceList[token] = data.data[CoinGeckoTokenList[token]]['usd'];
   }
-  const saberLPoolList = await getSaberLpTokenPrices(NETWORK.DEVNET)
+  const saberLPoolList = await getSaberLpTokenPrices()
 
   for (const t of Object.keys(tokenPriceList)){
     dbcon.query(`INSERT INTO RFDATA.TOKENPRICES(

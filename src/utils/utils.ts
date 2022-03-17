@@ -1,4 +1,5 @@
 import { PARAM } from "../models/model";
+import {Cluster, clusterApiUrl, Connection} from "@solana/web3.js";
 
 export function isNotSafe(keyList: string[], obj: Object): boolean {
 
@@ -8,3 +9,20 @@ export function isNotSafe(keyList: string[], obj: Object): boolean {
     }
     return false;
 }
+
+export const getConnection = async() => {
+  return new Connection(
+    clusterApiUrl(getClusterName()),
+    'confirmed'
+  );
+  }
+  
+export const getClusterName = () => {
+    const env = process.env.SOLANACLUSTER || "devnet"
+    if(env == 'devnet' || env =='mainnet-beta'){
+      return env;
+    }else{
+      return 'devnet'
+    }
+  }
+  
