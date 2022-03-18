@@ -8,7 +8,7 @@ const COINGECKO_API = 'https://api.coingecko.com/api/v3/';
 
 export async function getSaberPrice(){
   const price = await axios.get(`${COINGECKO_API}simple/price?ids=saber&vs_currencies=usd`);
-  return price.data;
+  return price.data.saber.usd;
 }
 
 export async function saveCoinGeckoPrices(){
