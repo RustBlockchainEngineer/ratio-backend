@@ -33,7 +33,8 @@ jobs:
           port: 22
           script: |
                 cd ~
-                rm -rf rf-engine
+                rm -rf rf-engine-bk
+                mv rf-engine rf-engine-bk
                 git clone --branch main git@github.com:RatioFinance/rf-engine.git
                 cd rf-engine
                 yarn install
