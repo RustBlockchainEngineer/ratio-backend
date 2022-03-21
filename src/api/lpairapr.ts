@@ -22,15 +22,14 @@ export async function getlatestLPairAPRS(lpair_address_id: string, callback: (r:
         if (err)
             throw err;
         const rows = <RowDataPacket[]>result;
-        let record: LPairAPR | undefined;
-        if (rows)
+        let record: LPairAPR | undefined = undefined;
+        for (let row of rows) {
             record = {
                 "lpair_address_id": lpair_address_id,
-                "apr": rows[0]["apr"],
-                "created_on": rows[0]["created_on"]
+                "apr": row["apr"],
+                "created_on": row["created_on"]
             }
-        else
-            record = undefined;
+        }
         callback(record);
     });
 }

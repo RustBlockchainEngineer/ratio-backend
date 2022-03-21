@@ -12,14 +12,16 @@ router.get('/', async function (req: Request, res: Response) {
         res.send(JSON.stringify(result));
     });
 })
-
 router.get('/:id', async function (req: Request, res: Response) {
     let result = await getLPair(req.params.id, function (result) {
-        res.send(JSON.stringify(result));
+        if (result)
+            res.send(JSON.stringify(result));
+        else
+            res.status(404).send({ error: 'LPair not found' });
     });
 })
 
-router.post('/:id',/* authorize([UserRole.ADMIN]),*/ async function (req: Request, res: Response) {
+router.post('/:id',authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     const keylist: string[] = ['address_id', 'symbol', 'page_url', 'pool_size', 'platform_id', 'icon', 'vault_address_id', 'platform_symbol', 'collateralization_ratio', 'liquidation_ratio', 'risk_rating'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
@@ -44,7 +46,12 @@ router.get('/:id/apr', async function (req: Request, res: Response) {
 
 router.get('/:id/apr/last', async function (req: Request, res: Response) {
     let result = await getlatestLPairAPRS(req.params.id, function (result) {
-        res.send(JSON.stringify(result));
+        if (result)
+            res.send(JSON.stringify(result));
+        else
+            res.status(404).send({ error: 'No APR value for that LPair' });
+
+        
     });
 })
 
