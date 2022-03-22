@@ -79,7 +79,7 @@ export async function getToken(address_id: string, callback: (r: Token | undefin
                 FROM RFDATA.TOKENS tkn
                 LEFT JOIN RFDATA.TOKENSPLATFORMS tp ON tkn.address_id = tp.token_address_id
                 LEFT JOIN RFDATA.PLATFORMS plt ON tp.platform_address_id = plt.id
-                LEFT JOIN RFDATA.TONEKIDS tknid ON tknid.token = tkn.symbol
+                LEFT JOIN RFDATA.TOKENIDS tknid ON tknid.token = tkn.symbol
                 WHERE tkn.address_id = "${address_id}"`, function (err, result) {
         if (err)
             throw err;
