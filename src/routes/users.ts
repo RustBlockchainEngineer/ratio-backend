@@ -22,11 +22,13 @@ router.get('/auth/:wallet_address_id', async function (req: Request, res: Respon
         if(whitelistMode === WhitelistMode.DISABLED){
             res.send(true);
         }
-        const user = await getUserByPublicKey(req.params.wallet_address_id);
-        if (!user)
-            res.send(false)
-        else
-            res.send(whitelistMode === WhitelistMode.ADMIN_ONLY? user.role === UserRole.ADMIN : true);
+        else{
+            const user = await getUserByPublicKey(req.params.wallet_address_id);
+            if (!user)
+                res.send(false)
+            else
+                res.send(whitelistMode === WhitelistMode.ADMIN_ONLY? user.role === UserRole.ADMIN : true);
+        }
     }
     catch(error) {
         console.error("There was an error when checking authorization: ", error);
