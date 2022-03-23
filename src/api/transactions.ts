@@ -161,14 +161,12 @@ export async function addTransaction(wallet_address_id: string, data: { "tx_type
 
         if(tk_post_balance){
             const post = tk_post_balance.filter((ele) => {return ele.owner == wallet_address_id && ele.mint == address_id}); 
-            console.log("post:",post);
             if (post)
                 posttx = post[0];
             if(posttx)
                 if (posttx.uiTokenAmount.uiAmount)
                     post_amount = new BigNumber(posttx.uiTokenAmount.uiAmount);
         }
-        console.log(posttx)
         if(tk_pre_balance){
             const pre = tk_pre_balance.filter((ele) => {return ele.owner == wallet_address_id && ele.mint == address_id});   
             if(pre)
@@ -177,7 +175,6 @@ export async function addTransaction(wallet_address_id: string, data: { "tx_type
                 if (pretx.uiTokenAmount.uiAmount)
                     pre_amount = new BigNumber(pretx.uiTokenAmount.uiAmount);
         }
-        console.log(pretx)
     }
     else if (data.tx_type == TRANSACTION_TYPE.borrow){
         if(tk_post_balance){
