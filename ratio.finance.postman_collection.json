@@ -699,45 +699,19 @@
 					"response": []
 				},
 				{
-					"name": "Get The Vault",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/transaction/:wallet_id/vault",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"transaction",
-								":wallet_id",
-								"vault"
-							],
-							"variable": [
-								{
-									"key": "wallet_id",
-									"value": null
-								}
-							]
-						},
-						"description": "Return the balance of all the crypto.\n\nReturn:\n\n``` json\n[\n{\n\"address_id\": string,\n\"amount\": number\n},...\n]\n\n```"
-					},
-					"response": []
-				},
-				{
 					"name": "Add Transaction",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/transaction/:wallet_id/deposit",
+							"raw": "{{base_url}}/transaction/:wallet_id/new",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"transaction",
 								":wallet_id",
-								"deposit"
+								"new"
 							],
 							"variable": [
 								{
@@ -746,7 +720,7 @@
 								}
 							]
 						},
-						"description": "Add new Transaction.\n\nBody:\n\n``` json\n{\n\"tx_type\": string,\n\"signature\": string\n}\n```"
+						"description": "Add new Transaction.\n\nBody:\n\n``` json\n{\n\"tx_type\": string,\n\"address_id\": string,\n\"signature\": string\n}\n\n```"
 					},
 					"response": []
 				}
