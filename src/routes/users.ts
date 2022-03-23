@@ -1,11 +1,12 @@
 import * as express from 'express';
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { authorize } from '../middlewares/auth';
 import { UserRole, Users, WhitelistMode } from '../models/model';
 import { getAllUsers, getUserByPublicKey, addUser, updateUser, deleteUser, getUserNonce } from '../api/users'
 import { getAllUserParam, getlatestUserParam, addUserParam, deleteAllUserParam } from '../api/userparam';
 import { isNotSafe } from '../utils/utils';
 import { getWhiteListMode } from '../utils/config';
+import { hasRatioNFT } from '../utils/nft-utils';
 
 let router = express.Router();
 
@@ -19,16 +20,27 @@ router.get('/', authorize([UserRole.ADMIN]), async function (req: Request, res: 
 router.get('/auth/:wallet_address_id', async function (req: Request, res: Response) {
     try{
         const whitelistMode = getWhiteListMode();
-        if(whitelistMode === WhitelistMode.DISABLED){
-            res.send(true);
+        let authorized = false;
+        const wallet_address_id = req.params.wallet_address_id;
+        const user = await getUserByPublicKey(wallet_address_id);
+        switch (whitelistMode) {
+            case WhitelistMode.DISABLED:
+                authorized = true;
+                break;
+            case WhitelistMode.ADMIN_ONLY:
+                authorized = user !== undefined && user.role === UserRole.ADMIN;
+                break;
+            case WhitelistMode.REGISTERED_USERS:
+                authorized = user !== undefined;
+                break;
+            case WhitelistMode.REGISTERED_USERS_AND_NFT:
+                authorized = user !== undefined || await hasRatioNFT(wallet_address_id);
+                break;
         }
-        else{
-            const user = await getUserByPublicKey(req.params.wallet_address_id);
-            if (!user)
-                res.send(false)
-            else
-                res.send(whitelistMode === WhitelistMode.ADMIN_ONLY? user.role === UserRole.ADMIN : true);
+        if (authorized && !user){
+            await _register(wallet_address_id);
         }
+        res.send(authorized);
     }
     catch(error) {
         console.error("There was an error when checking authorization: ", error);
