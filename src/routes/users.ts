@@ -1,7 +1,7 @@
 import * as express from 'express';
 import { Request, Response, NextFunction } from 'express';
 import { authorize } from '../middlewares/auth';
-import { UserRole,WhitelistMode } from '../models/model';
+import { UserRole, Users, WhitelistMode } from '../models/model';
 import { getAllUsers, getUserByPublicKey, addUser, updateUser, deleteUser, getUserNonce } from '../api/users'
 import { getAllUserParam, getlatestUserParam, addUserParam, deleteAllUserParam } from '../api/userparam';
 import { isNotSafe } from '../utils/utils';
@@ -74,9 +74,7 @@ router.post("/register", async function (req: Request, res: Response) {
       .status(400)
       .send({ error: "Request body missing some parameters" });
   }
-  req.body["name"] = "Automatically registered user";
-  req.body["role"] = UserRole.USER;
-  let result = await addUser(req.body);
+  let result = await _register(req.body["wallet_address_id"]);
   res.send(JSON.stringify(result));
 });
 
@@ -120,5 +118,15 @@ router.delete('/:wallet_address_id/params', authorize([UserRole.ADMIN]), async f
     let result = await deleteAllUserParam(req.params.wallet_address_id);
     res.send(JSON.stringify(result));
 })
+
+async function _register(address: string) {
+    const newUser: Users = {
+        name: "Automatically registered user",
+        role: UserRole.USER,
+        wallet_address_id: address
+    };
+    let result = await addUser(newUser);
+    return result;
+}
 
 module.exports = router
