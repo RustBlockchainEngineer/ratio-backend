@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import { RowDataPacket } from 'mysql2';
 import { dbcon } from "../models/db";
 import { tokenPriceList } from "./cacheList";
 import { CoinGeckoTokenList } from "../models/model";
@@ -48,4 +48,24 @@ export async function saveCoinGeckoPrices(){
 
 export function geckoPricesService(interval:number){
   setInterval(saveCoinGeckoPrices,interval * 60 * 1000)
+}
+
+interface MedianPrice {
+  token: string;
+  price: number;
+}
+
+export function getMedianCoingeckoPrices(callback: (r: MedianPrice[]) => void){
+  let ts = Date.now();
+  const query = `SELECT token,price from RFDATA.TOKENPRICES 
+                    WHERE created_on <= ${(ts * 0.001) - (60 * 25)} 
+                    order by id desc limit ${Object.keys(CoinGeckoTokenList).length}`;
+  dbcon.query(query,function(err,result){
+    if (err) {console.log('ERROR'); throw err};
+    const rows = <RowDataPacket[]>result;
+    let records: MedianPrice[] = rows.map((row: RowDataPacket) => {
+        return { "token": row.token, "price": row.price};
+    });
+    callback(records);
+  });
 }

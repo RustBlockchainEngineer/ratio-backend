@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { tokenPriceList } from "../api/cacheList";
 import { CoinGeckoTokenList } from "../models/model";
-import { getSaberPrice } from '../api/coingecko';
+import { getSaberPrice, getMedianCoingeckoPrices } from '../api/coingecko';
 let router = express.Router();
 
 router.get('/', async function (req: Request, res: Response) {
@@ -11,6 +11,12 @@ router.get('/', async function (req: Request, res: Response) {
 router.get('/saberprice',async function(req: Request, res: Response){
     const price = await getSaberPrice();
     res.send(JSON.stringify(price));
+});
+
+router.get('/medianprices',async function(req: Request, res: Response){
+    const result = await getMedianCoingeckoPrices(function (result) {
+        res.send(JSON.stringify(result));
+    });
 });
 
 router.get('/:id', async function (req: Request, res: Response) {
