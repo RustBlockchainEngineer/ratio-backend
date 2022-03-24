@@ -36,7 +36,7 @@ router.get('/:wallet_id/:signature', async function (req: Request, res: Response
 })
 
 router.post('/:wallet_id/new', async function (req: Request, res: Response) {
-    const keylist: string[] = ['tx_type', 'signature','address_id'];
+    const keylist: string[] = ['tx_type', 'signature'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
     }
