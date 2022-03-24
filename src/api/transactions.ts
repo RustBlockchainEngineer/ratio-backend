@@ -118,6 +118,8 @@ export async function getTxsignatures(wallet_address_id: string, callback: (r: s
 
 
 export async function addTransaction(wallet_address_id: string, data: { "tx_type": string, "signature": string,"address_id":string }): Promise<Boolean> {
+    if (!('address_id' in data))
+        return false
 
     const connection = await getConnection();
     const txInfo = await connection.getTransaction(data["signature"]);
