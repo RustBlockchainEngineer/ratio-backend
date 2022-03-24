@@ -1,11 +1,11 @@
 export enum TRANSACTION_TYPE {
-    'deposit', // 
-    'payback',
-    'reward',  // 
-    'swap',
-    'withdraw', // 
-    'borrow',
-    'stake'
+    'deposit' = 'deposit', // 
+    'payback' = 'payback',
+    'reward' = 'reward',  // 
+    'swap' = 'swap',
+    'withdraw' = 'withdraw', // 
+    'borrow' = 'borrow',
+    'stake' = 'stake'
 }
 
 export enum RISK_RATING {
@@ -29,6 +29,7 @@ export enum UserRole {
 export enum WhitelistMode {
     ADMIN_ONLY="ADMIN_ONLY",
     REGISTERED_USERS="REGISTERED_USERS",
+    REGISTERED_USERS_AND_NFT="REGISTERED_USERS_AND_NFT",
     DISABLED="DISABLED",
   }
 
@@ -111,9 +112,9 @@ export interface TRANSACTION {
     wallet_address_id: string,
     address_id?: string,
     symbol?: string,
-    amount: number,
+    amount: string,
     transaction_type: TRANSACTION_TYPE
-    slot: number
+    created_on: number
     sawp_group: string,
     conversion_rate: number,
     base_address_id: string,
