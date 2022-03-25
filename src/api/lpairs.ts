@@ -47,9 +47,9 @@ export async function getAllLPairs(callback: (r: LPair[] | undefined) => void) {
                     lpa.token_address_id,
                     lpa.pool_size token_pool_size
                 FROM RFDATA.LPAIRS lp
-                JOIN RFDATA.PLATFORMS plt ON plt.id = lp.platform_id
+                LEFT JOIN RFDATA.PLATFORMS plt ON plt.id = lp.platform_id
                 LEFT JOIN RFDATA.LPASSETS lpa ON lp.address_id = lpa.lpair_address_id
-                JOIN RFDATA.TOKENS tkn ON lpa.token_address_id = tkn.address_id`
+                LEFT JOIN RFDATA.TOKENS tkn ON lpa.token_address_id = tkn.address_id`
         , function (err, result) {
             if (err)
                 throw err;
@@ -103,9 +103,9 @@ export async function getLPair(address_id: string, callback: (r: LPair | undefin
                     lpa.token_address_id,
                     lpa.pool_size token_pool_size
                 FROM RFDATA.LPAIRS lp
-                JOIN RFDATA.PLATFORMS plt ON plt.id = lp.platform_id
+                LEFT JOIN RFDATA.PLATFORMS plt ON plt.id = lp.platform_id
                 LEFT JOIN RFDATA.LPASSETS lpa ON lp.address_id = lpa.lpair_address_id
-                JOIN RFDATA.TOKENS tkn ON lpa.token_address_id = tkn.address_id
+                LEFT JOIN RFDATA.TOKENS tkn ON lpa.token_address_id = tkn.address_id
                 WHERE lp.address_id = "${address_id}"`, function (err, result) {
         const rows = <RowDataPacket[]>result;
         let record: LPair | undefined = undefined;
