@@ -29,6 +29,7 @@ export enum UserRole {
 export enum WhitelistMode {
     ADMIN_ONLY="ADMIN_ONLY",
     REGISTERED_USERS="REGISTERED_USERS",
+    REGISTERED_USERS_AND_NFT="REGISTERED_USERS_AND_NFT",
     DISABLED="DISABLED",
   }
 
