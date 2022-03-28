@@ -55,17 +55,53 @@ interface MedianPrice {
   price: number;
 }
 
-export function getMedianCoingeckoPrices(callback: (r: MedianPrice[]) => void){
-  let ts = Date.now();
-  const query = `SELECT token,price from RFDATA.TOKENPRICES 
-                    WHERE created_on <= ${(ts * 0.001) - (60 * 25)} 
-                    order by id desc limit ${Object.keys(CoinGeckoTokenList).length}`;
-  dbcon.query(query,function(err,result){
-    if (err) {console.log('ERROR'); throw err};
-    const rows = <RowDataPacket[]>result;
-    let records: MedianPrice[] = rows.map((row: RowDataPacket) => {
-        return { "token": row.token, "price": row.price};
-    });
-    callback(records);
+
+/**
+  * QUERY 1 
+  SELECT token from RFDATA.TOKENPRICES;
+
+ *  QUERY 2
+
+ SELECT price
+		FROM RFDATA.TOKENPRICES
+		WHERE token = 'CASH'
+		AND   created_on >= TIMESTAMP('2022-03-28','14:40:00') - INTERVAL 120 MINUTE
+		AND   created_on <= CURRENT_TIMESTAMP
+		ORDER BY created_on
+;
+
+ */
+ async function getTokens2(){
+  const query = 'SELECT DISTINCT ? from RFDATA.TOKENPRICES';
+  const res: Promise<any[]> = dbcon.promise().query(query,['token'])
+  .then(([ rows, fields])=> {
+    return rows as any;
+  })
+  .catch((error)=>{
+    console.log(error);
   });
+  const tokens = [];
+  for (let obj of await res){
+    tokens.push(obj.token);
+  }
+  return tokens;
+}
+
+export async function getMedianCoingeckoPrices(callback: (r: MedianPrice[]) => void){
+  let ts = Date.now();
+  const tokens = await getTokens2();
+  let medianPrices: any;
+  tokens.map((token)=>{
+    let query = 
+  })
+
+  // dbcon.query(query,function(err,result){
+  //   if (err) {console.log('ERROR'); throw err};
+  //   const rows = <RowDataPacket[]>result;
+  //   let records: MedianPrice[] = rows.map((row: RowDataPacket) => {
+  //       return { "token": row.token, "price": row.price};
+  //   });
+  //   callback(records);
+  // });
+
 }

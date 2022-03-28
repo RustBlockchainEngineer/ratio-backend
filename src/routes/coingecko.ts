@@ -20,7 +20,6 @@ router.get('/medianprices',async function(req: Request, res: Response){
 });
 
 router.get('/:id', async function (req: Request, res: Response) {
-    
     if(req.params.id in Object.values(CoinGeckoTokenList))
         res.send(JSON.stringify(tokenPriceList[req.params.id]));
     else
