@@ -123,11 +123,6 @@ export async function addTransaction(wallet_address_id: string, data: { "tx_type
 
     const connection = await getConnection();
     const txInfo = await connection.getTransaction(data["signature"]);
-    //console.log('txInfo:',txInfo);
-    // console.log('tk_post_balance');
-    // console.log(txInfo?.meta?.postTokenBalances);
-    // console.log('tk_pre_balance');
-    // console.log(txInfo?.meta?.preTokenBalances);
 
     const tk_post_balance = txInfo?.meta?.postTokenBalances;
     const tk_pre_balance = txInfo?.meta?.preTokenBalances;
@@ -257,7 +252,7 @@ export async function addTransaction(wallet_address_id: string, data: { "tx_type
         amount.toString(),
         data.tx_type,
         "",
-        "",
+        txInfo?.meta?.err?"failed":"confirmed",
         ts]
     );
     return true;
