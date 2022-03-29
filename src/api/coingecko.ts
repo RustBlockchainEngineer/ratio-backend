@@ -76,17 +76,17 @@ function getMedianPrice(prices:number[]):number{
   }
 }
 
-export async function getMedianCoingeckoPrices(){
+export async function getMedianCoingeckoPrices(priceFrequency = 25){
   const tokens = await getTokens();
   let medianPrices: {[k: string]: any} = {};
   await Promise.all(tokens.map(async (token) =>{
 
     let query = `SELECT price FROM RFDATA.TOKENPRICES WHERE token = ?
-		AND   created_on >= CURRENT_TIMESTAMP - INTERVAL 25 MINUTE
+		AND   created_on >= CURRENT_TIMESTAMP - INTERVAL ? MINUTE
 		AND   created_on <= CURRENT_TIMESTAMP
 		ORDER BY price ASC`;
 
-    const result:Promise<any> = dbcon.promise().query(query,[token])
+    const result:Promise<any> = dbcon.promise().query(query,[token,priceFrequency])
     .then(([rows,fields])=> {
         return rows as any;
     })
