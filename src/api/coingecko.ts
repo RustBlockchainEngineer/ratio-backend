@@ -50,30 +50,9 @@ export function geckoPricesService(interval:number){
   setInterval(saveCoinGeckoPrices,interval * 60 * 1000)
 }
 
-interface MedianPrice {
-  token: string;
-  price: number;
-}
-
-
-/**
-  * QUERY 1 
-  SELECT token from RFDATA.TOKENPRICES;
-
- *  QUERY 2
-
- SELECT price
-		FROM RFDATA.TOKENPRICES
-		WHERE token = 'CASH'
-		AND   created_on >= TIMESTAMP('2022-03-28','14:40:00') - INTERVAL 120 MINUTE
-		AND   created_on <= CURRENT_TIMESTAMP
-		ORDER BY created_on
-;
-
- */
- async function getTokens2(){
-  const query = 'SELECT DISTINCT ? from RFDATA.TOKENPRICES';
-  const res: Promise<any[]> = dbcon.promise().query(query,['token'])
+async function getTokens(){
+  const query = 'SELECT DISTINCT token from RFDATA.TOKENPRICES';
+  const res: Promise<any[]> = dbcon.promise().query(query)
   .then(([ rows, fields])=> {
     return rows as any;
   })
@@ -87,21 +66,43 @@ interface MedianPrice {
   return tokens;
 }
 
-export async function getMedianCoingeckoPrices(callback: (r: MedianPrice[]) => void){
-  let ts = Date.now();
-  const tokens = await getTokens2();
-  let medianPrices: any;
-  tokens.map((token)=>{
-    let query = 
-  })
+/**The list is already sorted by the query*/
+function getMedianPrice(prices:number[]):number{
+  const half: number =  (prices.length / 2) | 0; 
+  if(!(half%2)){
+    return (prices[half-1] + prices[half]) / 2.0;
+  }else{
+    return prices[half];
+  }
+}
 
-  // dbcon.query(query,function(err,result){
-  //   if (err) {console.log('ERROR'); throw err};
-  //   const rows = <RowDataPacket[]>result;
-  //   let records: MedianPrice[] = rows.map((row: RowDataPacket) => {
-  //       return { "token": row.token, "price": row.price};
-  //   });
-  //   callback(records);
-  // });
+export async function getMedianCoingeckoPrices(){
+  const tokens = await getTokens();
+  let medianPrices: {[k: string]: any} = {};
+  await Promise.all(tokens.map(async (token) =>{
 
+    let query = `SELECT price FROM RFDATA.TOKENPRICES WHERE token = ?
+		AND   created_on >= CURRENT_TIMESTAMP - INTERVAL 25 MINUTE
+		AND   created_on <= CURRENT_TIMESTAMP
+		ORDER BY price ASC`;
+
+    const result:Promise<any> = dbcon.promise().query(query,[token])
+    .then(([rows,fields])=> {
+        return rows as any;
+    })
+    .catch((error)=>{
+      console.log(error);
+      throw error;
+    });
+
+    const lastPrices = await result;
+    
+    const parsedPrices = lastPrices.map((price:any)=>{
+       return parseFloat(price.price);
+    });
+
+    medianPrices[token] = getMedianPrice(parsedPrices);
+  }));
+
+  return medianPrices;
 }

@@ -14,9 +14,8 @@ router.get('/saberprice',async function(req: Request, res: Response){
 });
 
 router.get('/medianprices',async function(req: Request, res: Response){
-    const result = await getMedianCoingeckoPrices(function (result) {
-        res.send(JSON.stringify(result));
-    });
+    const result = await getMedianCoingeckoPrices();
+    res.send(JSON.stringify(result));
 });
 
 router.get('/:id', async function (req: Request, res: Response) {
