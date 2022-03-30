@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import {getAccount} from "@solana/spl-token";
+import { getAccount, getMint } from "@solana/spl-token";
 import { tokenPriceList } from "./cacheList";
 import { PublicKey} from "@solana/web3.js";
 import { getConnection,getClusterName } from "../utils/utils";
@@ -20,6 +20,7 @@ const parsePoolData = (pool:any) => {
     const tokenACoinGeckoId = pool?.tokens[0]?.extensions?.coingeckoId;
     const tokenB = pool?.swap?.state?.tokenB?.reserve;
     const tokenBCoinGeckoId = pool?.tokens[1]?.extensions?.coingeckoId;
+    const poolTokenMint = pool?.swap?.state?.poolTokenMint;
     return{
       name,
       tokenA,
@@ -28,6 +29,7 @@ const parsePoolData = (pool:any) => {
       tokenBName,
       tokenB,
       tokenBCoinGeckoId,
+      poolTokenMint,
       tokenASize: '',
       tokenBSize: ''
     }
@@ -54,6 +56,7 @@ async function fetchSaberTokens() {
       const tokenA = poolsData[i]?.swap?.state?.tokenA?.reserve;
       const tokenACoinGeckoId = poolsData[i]?.tokens[0]?.extensions?.coingeckoId;
       const tokenB = poolsData[i]?.swap?.state?.tokenB?.reserve;
+      const poolTokenMint = poolsData[i]?.swap?.state?.poolTokenMint;
       const tokenBCoinGeckoId = poolsData[i]?.tokens[1]?.extensions?.coingeckoId;
       swapPools.push({
         name,
@@ -62,6 +65,7 @@ async function fetchSaberTokens() {
         tokenACoinGeckoId,
         tokenBName,
         tokenB,
+        poolTokenMint,
         tokenBCoinGeckoId,
       });
     }
@@ -125,6 +129,7 @@ export const getSaberLpTokenPrice = async (poolName: string) => {
  * 
  */
 export const getSaberLpTokenPrices = async() => {
+    const connection = await getConnection();
     const pools = await fetchSaberTokens();
     const tokenPrices = tokenPriceList;
     const poolTokenSizes = await getPoolsTokenSizes(pools);
@@ -134,18 +139,21 @@ export const getSaberLpTokenPrices = async() => {
           //@ts-ignore
          if(tokenPrices[pool.tokenAName] != undefined && tokenPrices[pool.tokenBName]!= undefined){
            //@ts-ignore
-           const tokenAPriceSqrt = (new BigNumber(tokenPrices[pool.tokenAName])).sqrt();
+          const tokenAPriceSqrt = (new BigNumber(tokenPrices[pool.tokenAName])).sqrt();
            //@ts-ignore
-           const tokenBPriceSqrt = (new BigNumber(tokenPrices[pool.tokenBName])).sqrt();
-           const tokenASizeSqrt =  (new BigNumber(pool.tokenASize)).sqrt();
-           const tokenBSizeSqrt =  (new BigNumber(pool.tokenBSize)).sqrt();
-           const totalReserveTokens = (new BigNumber(pool.tokenASize)).plus(pool.tokenBSize);
+          const tokenBPriceSqrt = (new BigNumber(tokenPrices[pool.tokenBName])).sqrt();
+          const tokenASizeSqrt =  (new BigNumber(pool.tokenASize)).sqrt();
+          const tokenBSizeSqrt =  (new BigNumber(pool.tokenBSize)).sqrt();
+           // const totalReserveTokens = (new BigNumber(pool.tokenASize)).plus(pool.tokenBSize);
+          const poolTokenMintPublicKey = new PublicKey(pool.poolTokenMint);
+          const poolTokenInfo = await getMint(connection,poolTokenMintPublicKey);
+          const poolTokenTotalSupply = (new BigNumber(poolTokenInfo.supply.toString()));
 
            pool.lpPrice = ( (tokenAPriceSqrt
                             .multipliedBy(tokenBPriceSqrt)
                             .multipliedBy(tokenASizeSqrt)
                             .multipliedBy(tokenBSizeSqrt)
-                          ).multipliedBy(2) ).dividedBy(totalReserveTokens).toString();
+                          ).multipliedBy(2) ).dividedBy(poolTokenTotalSupply).toString();
          }
          return {
            poolName: pool.name,
@@ -159,10 +167,11 @@ export const getSaberLpTokenPrices = async() => {
      );
     return lpPrices;
 };
+
+
 /**
  * A * sum(x_i) * n**n + D = A * D * n**n + D**(n+1) / (n**n * prod(x_i))
  */
-
 export const getUsdrPrice = async() => {
   const poolData = await getSaberLpTokenPrice('USD-USDR');
   return poolData;
