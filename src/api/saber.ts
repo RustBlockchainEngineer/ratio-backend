@@ -2,12 +2,12 @@ import Axios from 'axios';
 import { getAccount, getMint } from "@solana/spl-token";
 import { tokenPriceList } from "./cacheList";
 import { PublicKey} from "@solana/web3.js";
-import { getConnection,getClusterName } from "../utils/utils";
+import { getConnection,getClusterName,mapClusterToNetworkName } from "../utils/utils";
 import BigNumber from 'bignumber.js';
 
 
 const fetchSaberPools = async () => {
-    const network = getClusterName()
+    const network = mapClusterToNetworkName(getClusterName());
     const poolsData = (await Axios.get(`https://registry.saber.so/data/pools-info.${network}.json`)).data.pools;
     return poolsData;
 }
