@@ -81,6 +81,7 @@ export interface LPair {
     updated_on: number,
     icon: string,
     vault_address_id: string,
+    usdr_ceiling:number,
     lpasset?: LPAsset[]
 }
 
