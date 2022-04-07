@@ -82,7 +82,8 @@ export interface LPair {
     icon: string,
     vault_address_id: string,
     usdr_ceiling:number,
-    lpasset?: LPAsset[]
+    lpasset?: LPAsset[],
+    lprewardtokens?:string[]
 }
 
 export interface Users {
