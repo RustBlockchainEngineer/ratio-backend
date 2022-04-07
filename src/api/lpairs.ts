@@ -47,11 +47,13 @@ export async function getAllLPairs(callback: (r: LPair[] | undefined) => void) {
                     tkn.symbol tkn_symbol,
                     tkn.icon tkn_icon,
                     lpa.token_address_id,
-                    lpa.pool_size token_pool_size
+                    lpa.pool_size token_pool_size,
+                    lpr.reward_address_id
                 FROM RFDATA.LPAIRS lp
                 LEFT JOIN RFDATA.PLATFORMS plt ON plt.id = lp.platform_id
                 LEFT JOIN RFDATA.LPASSETS lpa ON lp.address_id = lpa.lpair_address_id
-                LEFT JOIN RFDATA.TOKENS tkn ON lpa.token_address_id = tkn.address_id`
+                LEFT JOIN RFDATA.TOKENS tkn ON lpa.token_address_id = tkn.address_id
+                LEFT JOIN RFDATA.LPAIRREWARD lpr ON lp.address_id = lpr.address_id`
         , function (err, result) {
             if (err)
                 throw err;
@@ -75,6 +77,13 @@ export async function getAllLPairs(callback: (r: LPair[] | undefined) => void) {
                             "token_icon": row.tkn_icon
                         })
                     record["lpasset"] = lpasset;
+
+                    let lprewardtoken: string[] | undefined = record.lprewardtokens;
+                    if (lprewardtoken == undefined)
+                        lprewardtoken = [];
+                    if (row.reward_address_id)
+                        lprewardtoken.push(row.reward_address_id)
+                    record["lprewardtokens"] = lprewardtoken;
                     result_obj[row.lp_address_id] = record;
                 }
             }
@@ -104,11 +113,13 @@ export async function getLPair(address_id: string, callback: (r: LPair | undefin
                     tkn.symbol tkn_symbol,
                     tkn.icon tkn_icon,
                     lpa.token_address_id,
-                    lpa.pool_size token_pool_size
+                    lpa.pool_size token_pool_size,
+                    lpr.reward_address_id
                 FROM RFDATA.LPAIRS lp
                 LEFT JOIN RFDATA.PLATFORMS plt ON plt.id = lp.platform_id
                 LEFT JOIN RFDATA.LPASSETS lpa ON lp.address_id = lpa.lpair_address_id
                 LEFT JOIN RFDATA.TOKENS tkn ON lpa.token_address_id = tkn.address_id
+                LEFT JOIN RFDATA.LPAIRREWARD lpr ON lp.address_id = lpr.address_id
                 WHERE lp.address_id = "${address_id}"`, function (err, result) {
         const rows = <RowDataPacket[]>result;
         let record: LPair | undefined = undefined;
@@ -125,6 +136,13 @@ export async function getLPair(address_id: string, callback: (r: LPair | undefin
                     })
             }
             record["lpasset"] = lpasset;
+
+            let lprewardtoken: string[] = [];
+            for (let row of rows) {
+                if (row.reward_address_id)
+                    lprewardtoken.push(row.reward_address_id)
+            }
+            record["lprewardtokens"] = lprewardtoken;
         }
         callback(record);
     });
@@ -139,6 +157,10 @@ export async function saveLPair(address_id: string, data: LPair): Promise<boolea
     const ret1 = dbcon.query(
         `DELETE FROM RFDATA.LPAIRS WHERE address_id = "${address_id}"`
     );
+    const ret2 = dbcon.query(
+        `DELETE FROM RFDATA.LPAIRREWARD WHERE address_id = "${address_id}"`
+    );
+    
     dbcon.query(
         `INSERT INTO RFDATA.LPAIRS(
             address_id, 
@@ -177,9 +199,36 @@ export async function saveLPair(address_id: string, data: LPair): Promise<boolea
                 [address_id, row["token_address_id"], row["token_pool_size"]]
             );
         }
+    if (data["lprewardtokens"])
+        for (let reward_address_id of data["lprewardtokens"]) {
+            dbcon.query(
+                `INSERT INTO RFDATA.LPAIRREWARD(address_id,reward_address_id,created_on) VALUES (?,?,?)`,
+                [address_id, reward_address_id,ts]
+            );
+        }
+
     return true;
 }
 
+export async function addLPairRewardToken(address_id: string,reward_address_id: string){
+    let ts = Date.now();
+    dbcon.query(
+        `INSERT INTO RFDATA.LPAIRREWARD(address_id,reward_address_id,created_on) VALUES (?,?,?)`,
+                [address_id, reward_address_id,ts]
+    );
+    return { 
+        "address_id": address_id,
+        "reward_address_id":reward_address_id,
+        "created_on":ts 
+    }
+}
+
+export async function deleteRewardToken(id: string,rewardtoken_address: string){
+    dbcon.query(
+        `DELETE FROM RFDATA.LPAIRREWARD WHERE address_id = "${id} AND reward_address_id= ${rewardtoken_address}"`
+    );
+    return { "address_id": id }
+}
 
 export async function deleteLPair(id: string) {
     delete cacheList["_" + id];
@@ -191,6 +240,9 @@ export async function deleteLPair(id: string) {
     );
     dbcon.query(
         `DELETE FROM RFDATA.LPASSETS WHERE lpair_address_id = "${id}"`
+    );
+    dbcon.query(
+        `DELETE FROM RFDATA.LPAIRREWARD WHERE address_id = "${id}"`
     );
     dbcon.query(
         `DELETE FROM RFDATA.LPAIRS WHERE address_id = "${id}"`

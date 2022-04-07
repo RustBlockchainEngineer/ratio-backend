@@ -147,7 +147,7 @@
 								"lpairs"
 							]
 						},
-						"description": "return a list of all Liquid Pairs we have in the system.\n\nReturn:\n\n``` json\n[{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"platform_name\": string,\n        \"platform_site\": string,\n        \"platform_icon\": string,        \n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n        \"icon\": stirng,\n        \"lp_mint_address\": string,\n        \"lpasset\":[\n        {\n        \"token_address_id\":string,\n        \"token_symbole\":string,\n        \"token_pool_size\":string,\n        \"token_icon\":string\n        },...]\n}\n,...]\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
+						"description": "return a list of all Liquid Pairs we have in the system.\n\nReturn:\n\n``` json\n[{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"platform_name\": string,\n        \"platform_site\": string,\n        \"platform_icon\": string,        \n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n        \"icon\": stirng,\n        \"lp_mint_address\": string,\n        \"lprewardtokens\":string[],\n        \"lpasset\":[\n        {\n        \"token_address_id\":string,\n        \"token_symbole\":string,\n        \"token_pool_size\":string,\n        \"token_icon\":string\n        },...]\n}\n,...]\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
 					},
 					"response": []
 				},
@@ -172,7 +172,7 @@
 								}
 							]
 						},
-						"description": "return a specific Liquid Pair:\n\nReturn:\n\n``` json\n{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"platform_name\": string,\n        \"platform_site\": string,\n        \"platform_icon\": string,        \n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n        \"icon\": stirng,\n        \"lp_mint_address\": string,\n        \"lpasset\":[\n        {\n        \"token_address_id\":string,\n        \"token_symbole\":string,\n        \"token_pool_size\":string,\n        \"token_icon\":string\n        },...]\n}\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
+						"description": "return a specific Liquid Pair:\n\nReturn:\n\n``` json\n{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"platform_name\": string,\n        \"platform_site\": string,\n        \"platform_icon\": string,        \n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"created_on\": timestamp,\n        \"updated_on\": timestamp,\n        \"icon\": stirng,\n        \"lp_mint_address\": string,\n        \"lprewardtokens\":string[],\n        \"lpasset\":[\n        {\n        \"token_address_id\":string,\n        \"token_symbole\":string,\n        \"token_pool_size\":string,\n        \"token_icon\":string\n        },...]\n}\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
 					},
 					"response": []
 				},
@@ -197,7 +197,7 @@
 								}
 							]
 						},
-						"description": "add and update liquid pair:\n\nThe body should be as:\n\n``` json\n{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"icon\": stirng,\n        \"lp_mint_address\": string,\n        \"lpasset\": [{\n            \"token_address_id\": string,\n            \"token_pool_size\"\n          },...]\n}\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
+						"description": "add and update liquid pair:\n\nThe body should be as:\n\n``` json\n{\n        \"address_id\": string,\n        \"symbol\": string,\n        \"page_url\": string,\n        \"pool_size\": number,\n        \"platform_id\": string,\n        \"platform_symbol\":string,\n        \"collateralization_ratio\": number,\n        \"liquidation_ratio\": number,\n        \"risk_rating\": RISK_RATING,\n        \"icon\": stirng,\n        \"lp_mint_address\": string,\n        \"lprewardtokens\":string[],\n        \"lpasset\": [{\n            \"token_address_id\": string,\n            \"token_pool_size\"\n          },...]\n}\nRISK_RATING = ['aaa','aa','a','bbb','bb','b''ccc','cc','c','d']\n\n```"
 					},
 					"response": []
 				},
@@ -328,6 +328,68 @@
 							]
 						},
 						"description": "Delete all the APRs value for a specific liquid pair."
+					},
+					"response": []
+				},
+				{
+					"name": "Add Reward Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lpairs/:address_id/rewardtoken/:rewardtoken_address",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lpairs",
+								":address_id",
+								"rewardtoken",
+								":rewardtoken_address"
+							],
+							"variable": [
+								{
+									"key": "address_id",
+									"value": null
+								},
+								{
+									"key": "rewardtoken_address",
+									"value": null
+								}
+							]
+						},
+						"description": "Add new reward token to specific liquid pair."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Reward Token",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lpairs/:address_id/rewardtoken/:rewardtoken_address",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lpairs",
+								":address_id",
+								"rewardtoken",
+								":rewardtoken_address"
+							],
+							"variable": [
+								{
+									"key": "address_id",
+									"value": null
+								},
+								{
+									"key": "rewardtoken_address",
+									"value": null
+								}
+							]
+						},
+						"description": "Delete reward token for a specific liquid pair."
 					},
 					"response": []
 				},
