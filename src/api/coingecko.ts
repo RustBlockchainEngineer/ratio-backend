@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import { setPriceOnOracle, testSetPrice } from "./contracts/ratio"
 import { dbcon } from "../models/db";
 import { tokenPriceList } from "./cacheList";
 import { CoinGeckoTokenList } from "../models/model";
@@ -11,6 +11,9 @@ export async function getSaberPrice(){
   return price.data.saber.usd;
 }
 
+
+//query in pool account from contract and get the address of the mint
+//check that oracle exists
 export async function saveCoinGeckoPrices(){
   let ts = Date.now();
   for (const token in CoinGeckoTokenList) {
@@ -47,5 +50,7 @@ export async function saveCoinGeckoPrices(){
 };
 
 export function geckoPricesService(interval:number){
+  //this should be removed later, i just put it here so it runs when i run yarn dev
+  testSetPrice();
   setInterval(saveCoinGeckoPrices,interval * 60 * 1000)
 }
