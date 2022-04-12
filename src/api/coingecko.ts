@@ -73,6 +73,63 @@ export async function saveCoinGeckoPrices() {
   }
 }
 
-export function geckoPricesService(interval: number) {
-  setInterval(saveCoinGeckoPrices, interval * 60 * 1000);
+export function geckoPricesService(interval:number){
+  setInterval(saveCoinGeckoPrices,interval * 60 * 1000)
+}
+
+async function getTokens(){
+  const query = 'SELECT DISTINCT token from RFDATA.TOKENPRICES';
+  const res: Promise<any[]> = dbcon.promise().query(query)
+  .then(([ rows, fields])=> {
+    return rows as any;
+  })
+  .catch((error)=>{
+    console.log(error);
+  });
+  const tokens = [];
+  for (let obj of await res){
+    tokens.push(obj.token);
+  }
+  return tokens;
+}
+
+/**The list is already sorted by the query*/
+function getMedianPrice(prices:number[]):number{
+  const half: number =  (prices.length / 2) | 0; 
+  if(!(half%2)){
+    return (prices[half-1] + prices[half]) / 2.0;
+  }else{
+    return prices[half];
+  }
+}
+
+export async function getMedianCoingeckoPrices(priceFrequency = 25){
+  const tokens = await getTokens();
+  let medianPrices: {[k: string]: any} = {};
+  await Promise.all(tokens.map(async (token) =>{
+
+    let query = `SELECT price FROM RFDATA.TOKENPRICES WHERE token = ?
+		AND   created_on >= CURRENT_TIMESTAMP - INTERVAL ? MINUTE
+		AND   created_on <= CURRENT_TIMESTAMP
+		ORDER BY price ASC`;
+
+    const result:Promise<any> = dbcon.promise().query(query,[token,priceFrequency])
+    .then(([rows,fields])=> {
+        return rows as any;
+    })
+    .catch((error)=>{
+      console.log(error);
+      throw error;
+    });
+
+    const lastPrices = await result;
+    
+    const parsedPrices = lastPrices.map((price:any)=>{
+       return parseFloat(price.price);
+    });
+
+    medianPrices[token] = getMedianPrice(parsedPrices);
+  }));
+
+  return medianPrices;
 }

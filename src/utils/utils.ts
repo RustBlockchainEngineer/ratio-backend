@@ -25,4 +25,11 @@ export const getClusterName = () => {
       return 'devnet'
     }
   }
-  
+
+export const mapClusterToNetworkName = (clusterName:string) => {
+  switch(clusterName){
+    case 'mainnet-beta': return 'mainnet';
+    case 'devnet': return clusterName;
+    default: return 'devnet';
+  }
+}
