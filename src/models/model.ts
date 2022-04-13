@@ -37,22 +37,15 @@ export enum WhitelistMode {
     "COINGECKO"='coingecko'
 }
 
-export const MainnetCoinGeckoTokenMints:{ [key: string]: string; } = {
-    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": 'usd-coin',
-    "7kbnvuGBxxj8AG9qp8Scn56muWGaRaFqxg1FsRp3PaFT": 'uxd-stablecoin',
-    "USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX": 'usdh',
-    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB": 'tether',
-    "CASHVDm2wsJXfhj6VWxb7GiMdoLc17Du7paH4bNr5woT": 'cashio-dollar',
-    "9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i": 'terrausd',
+export const CoinGeckoTokenList:{ [key: string]: string; } = {
+    "USDC": 'usd-coin',
+    "UXD": 'uxd-stablecoin',
+    "USDH": 'usdh',
+    "USDT": 'tether',
+    "CASH": 'cashio-dollar',
+    "UST": 'terrausd',
 };
-export const DevnetCoinGeckoTokenMints:{ [key: string]: string; } = {
-    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": 'usd-coin',
-    "7kbnvuGBxxj8AG9qp8Scn56muWGaRaFqxg1FsRp3PaFT": 'uxd-stablecoin',
-    "USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX": 'usdh',
-    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB": 'tether',
-    "CASHVDm2wsJXfhj6VWxb7GiMdoLc17Du7paH4bNr5woT": 'cashio-dollar',
-    "9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i": 'terrausd',
-};
+
 export interface Auth {
     name: string,
     publicAddress: string,
@@ -139,11 +132,6 @@ export interface Price {
     token_address_id: string,
     price: number,
     confidence: number,
-    created_on: number
-}
-export interface TokenPrice {
-    token: string,
-    price: number,
     created_on: number
 }
 export interface LPairParam {
