@@ -13,13 +13,6 @@ router.get('/:wallet_id/detail/:address_id', async function (req: Request, res: 
     });
 })
 
-// router.get('/:wallet_id/vault', async function (req: Request, res: Response) {
-
-//     await getVault(req.params.wallet_id, function (result) {
-//         res.send(JSON.stringify(result));
-//     });
-// })
-//working
 router.get('/:wallet_id/signatures', async function (req: Request, res: Response) {
 
     let result = await getTxsignatures(req.params.wallet_id, function (result) {
