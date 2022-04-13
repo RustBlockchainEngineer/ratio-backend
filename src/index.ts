@@ -14,7 +14,6 @@ let users = require('./routes/users');
 let authRouter = require('./routes/auth');
 let coingecko = require('./routes/coingecko');
 let saber = require('./routes/saberPoolSizes');
-let oracle = require('./routes/oracle');
 
 const app = express();
 
@@ -39,7 +38,6 @@ app.use('/saberlpprices',saber);;
 
 app.use('/auth', authRouter);
 app.use('/users', users);
-app.use('/oracle', oracle);
 
 // Init the tokens and LPs cache list;
 cacheInit();
