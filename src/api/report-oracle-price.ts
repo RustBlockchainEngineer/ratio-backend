@@ -12,18 +12,16 @@ import { StablePool, IDL } from "./ratio-lending";
 import { bs58 } from "@project-serum/anchor/dist/cjs/utils/bytes";
 import NodeWallet from "@project-serum/anchor/dist/cjs/nodewallet";
 import { dbcon } from "../models/db";
-import { DevnetCoinGeckoTokenMints, MainnetCoinGeckoTokenMints, TokenPrice } from "../models/model";
+import { TokenPrice } from "../models/model";
 import { RowDataPacket } from "mysql2";
+import { RPC_ENDPOINT } from "../utils/config";
 
 export const GLOBAL_STATE_SEED = "GLOBAL_STATE_SEED";
 export const ORACLE_SEED = "ORACLE_SEED";
 export const POOL_SEED = "POOL_SEED";
 // init
 let programStablePool: Program<StablePool> = null as any;
-const RPC_ENDPOINT = process.env.SOLANACLUSTER
-  ? process.env.SOLANACLUSTER
-  : "https://api.devnet.solana.com";
-const DEVNET = RPC_ENDPOINT == "https://api.devnet.solana.com"
+
 const REPORTER_PRIVATE_KEY = process.env.REPORTER_PRIVATE_KEY
   ? process.env.REPORTER_PRIVATE_KEY
   : "4gsjHRSaAbxxKW5jvSFeg692Lxfdu7x2vLUBFYWjMWmvV9dvD1BdKHB8d3PtSsyF8VGbrVDKNUYkMeN5f4hpb1M2";
@@ -86,6 +84,11 @@ export async function getTokenPrice(tokenMint: string) {
 export const reportPriceToOracle = async (
   mint: PublicKey,
 ) => {
+  // const all = await programStablePool.account.oracle.all()
+  //       console.log("len=", all.length)
+  //       for(let i=0;i<all.length;i++){
+  //         console.log(all[i].account.mint.toBase58())
+  //       }
    const newPrice = await getTokenPrice(mint.toBase58())
   const globalStateKey = await pda(
     [Buffer.from(GLOBAL_STATE_SEED)],
@@ -114,6 +117,11 @@ export const reportPriceToOracleByLp = async (
     mint: PublicKey,
   ) => {
       try{
+        // const all = await programStablePool.account.pool.all()
+        // console.log("len=", all.length)
+        // for(let i=0;i<all.length;i++){
+        //   console.log(all[i].publicKey.toBase58())
+        // }
         const poolKey = await pda(
             [Buffer.from(POOL_SEED), mint.toBuffer()],
             programStablePool.programId

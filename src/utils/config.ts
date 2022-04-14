@@ -14,3 +14,7 @@ export function getWhiteListMode(): WhitelistMode {
   }
   return result;
 }
+export const RPC_ENDPOINT = process.env.SOLANACLUSTER
+  ? process.env.SOLANACLUSTER
+  : "https://api.devnet.solana.com";
+export const DEVNET = RPC_ENDPOINT == "https://api.devnet.solana.com"

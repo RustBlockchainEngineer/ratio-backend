@@ -1,3 +1,5 @@
+import { DEVNET } from "../utils/config";
+
 export enum TRANSACTION_TYPE {
     'deposit' = 'deposit', // 
     'payback' = 'payback',
@@ -53,6 +55,7 @@ export const DevnetCoinGeckoTokenMints:{ [key: string]: string; } = {
     "CASHVDm2wsJXfhj6VWxb7GiMdoLc17Du7paH4bNr5woT": 'cashio-dollar',
     "9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i": 'terrausd',
 };
+export const CoinGeckoTokenList = DEVNET ? DevnetCoinGeckoTokenMints : MainnetCoinGeckoTokenMints
 export interface Auth {
     name: string,
     publicAddress: string,
