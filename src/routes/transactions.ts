@@ -6,9 +6,9 @@ import { authorize } from '../middlewares/auth';
 
 let router = express.Router();
 
-router.get('/:wallet_id/detail/:address_id', async function (req: Request, res: Response) {
+router.get('/:wallet_id/detail/:vault_address', async function (req: Request, res: Response) {
 
-    await getDetailTransactions(req.params.wallet_id, req.params.address_id, function (result) {
+    await getDetailTransactions(req.params.wallet_id, req.params.vault_address, function (result) {
         res.send(JSON.stringify(result));
     });
 })
@@ -36,7 +36,7 @@ router.get('/:wallet_id/:signature', async function (req: Request, res: Response
 })
 
 router.post('/:wallet_id/new', async function (req: Request, res: Response) {
-    const keylist: string[] = ['tx_type', 'signature'];
+    const keylist: string[] = ['tx_type', 'signature','address_id','vault_address'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
     }
