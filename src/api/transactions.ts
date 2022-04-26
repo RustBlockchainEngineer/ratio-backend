@@ -6,6 +6,7 @@ import BigNumber from "bignumber.js";
 
 import {
     PublicKey,
+    TransactionResponse
 } from '@solana/web3.js';
 
 import { getConnection } from '../utils/utils';
@@ -26,7 +27,7 @@ function map_row_vault(row: RowDataPacket): TRANSACTION {
         "status": row.status
     }
 }
-export async function getDetailTransactions(wallet_address_id: string, address_id: string, callback: (r: TRANSACTION[]) => void) {
+export async function getDetailTransactions(wallet_address_id: string, vault_address: string, callback: (r: TRANSACTION[]) => void) {
     dbcon.query(`SELECT
                     transaction_id,
                     address_id,
@@ -37,7 +38,7 @@ export async function getDetailTransactions(wallet_address_id: string, address_i
                     conversion_rate,
                     base_address_id,
                     status
-                FROM RFDATA.TRANSACTIONS WHERE wallet_address_id = "${wallet_address_id}" AND address_id = "${address_id}"`, function (err, result) {
+                FROM RFDATA.TRANSACTIONS WHERE wallet_address_id = "${wallet_address_id}" AND vault_address_id = "${vault_address}"`, function (err, result) {
         if (err)
             throw err;
         const rows = <RowDataPacket[]>result;
@@ -47,26 +48,6 @@ export async function getDetailTransactions(wallet_address_id: string, address_i
         callback(records);
     });
 }
-
-
-// export async function getVault(wallet_address_id: string, callback: (r: Object[]) => void) {
-//     dbcon.query(`SELECT 
-//             address_id,
-//             sum(amount)
-//         FROM RFDATA.TRANSACTIONS WHERE wallet_address_id = "${wallet_address_id}" GROUP BY address_id`, function (err, result) {
-//         if (err)
-//             throw err;
-//         const rows = <RowDataPacket[]>result;
-//         let records: Object[] = rows.map((row: RowDataPacket) => {
-//             return {
-//                 "address_id": row.address_id,
-//                 "symbol": cacheList["_" + row.address_id],
-//                 "amount": row.amount
-//             };
-//         });
-//         callback(records);
-//     });
-// }
 
 
 export async function getTxStatus(wallet_address_id: string, signature: string, callback: (r: Object) => void) {
@@ -92,7 +73,6 @@ export async function getTxStatus(wallet_address_id: string, signature: string, 
         callback({ "status": `Failed to get transaction ${signature}` });
     }
 
-
 }
 
 export async function getTxsignatures(wallet_address_id: string, callback: (r: string[]) => void) {
@@ -116,139 +96,65 @@ export async function getTxsignatures(wallet_address_id: string, callback: (r: s
     callback(signatures);
 }
 
-
-export async function addTransaction(wallet_address_id: string, data: { "tx_type": string, "signature": string,"address_id":string }): Promise<Boolean> {
-    if (!('address_id' in data))
-        return false
-
-    const connection = await getConnection();
-    const txInfo = await connection.getTransaction(data["signature"]);
-
-    const tk_post_balance = txInfo?.meta?.postTokenBalances;
+const checkTransaction = (txInfo:TransactionResponse | null,wallet_address_id: string,address_id: string): BigNumber | undefined => {
+    
     const tk_pre_balance = txInfo?.meta?.preTokenBalances;
-    const address_id = data.address_id;
+    const tk_post_balance = txInfo?.meta?.postTokenBalances;
     let pretx = undefined;
     let posttx = undefined;
-    let amount = new BigNumber("0");
     let post_amount = new BigNumber("0");
     let pre_amount = new BigNumber("0");
 
-    if(data.tx_type == TRANSACTION_TYPE.deposit){
-        
-        if(tk_post_balance){
-            const post = tk_post_balance.filter((ele) => {return ele.owner == wallet_address_id && ele.mint == address_id}); 
-            if (post)
-                posttx = post[0];
-            if(posttx)
-                if (posttx.uiTokenAmount.uiAmount)
-                    post_amount = new BigNumber(posttx.uiTokenAmount.uiAmount);
-        }
-
-        if(tk_pre_balance){
-            const pre = tk_pre_balance.filter((ele) => {return ele.owner == wallet_address_id && ele.mint == address_id});   
-            if(pre)
-                pretx = pre[0];
-            if(pretx)
-                if (pretx.uiTokenAmount.uiAmount)
-                    pre_amount = new BigNumber(pretx.uiTokenAmount.uiAmount);
-        }
-
-    }
-    else if (data.tx_type == TRANSACTION_TYPE.withdraw){
-
-        if(tk_post_balance){
-            const post = tk_post_balance.filter((ele) => {return ele.owner == wallet_address_id && ele.mint == address_id}); 
-            if (post)
-                posttx = post[0];
-            if(posttx)
-                if (posttx.uiTokenAmount.uiAmount)
-                    post_amount = new BigNumber(posttx.uiTokenAmount.uiAmount);
-        }
-        if(tk_pre_balance){
-            const pre = tk_pre_balance.filter((ele) => {return ele.owner == wallet_address_id && ele.mint == address_id});   
-            if(pre)
-                pretx = pre[0];
-            if(pretx)
-                if (pretx.uiTokenAmount.uiAmount)
-                    pre_amount = new BigNumber(pretx.uiTokenAmount.uiAmount);
-        }
-    }
-    else if (data.tx_type == TRANSACTION_TYPE.borrow){
-        if(tk_post_balance){
-            const post = tk_post_balance.filter((ele) => {return ele.owner == wallet_address_id && ele.mint == address_id}); 
-            if (post)
-                posttx = post[0];
-            if(posttx)
-                if (posttx.uiTokenAmount.uiAmount)
-                    post_amount = new BigNumber(posttx.uiTokenAmount.uiAmount);
-        }
-
-        if(tk_pre_balance){
-            const pre = tk_pre_balance.filter((ele) => {return ele.owner == wallet_address_id && ele.mint == address_id});   
-            if(pre)
-                pretx = pre[0];
-            if(pretx)
-                if (pretx.uiTokenAmount.uiAmount)
-                    pre_amount = new BigNumber(pretx.uiTokenAmount.uiAmount);
-        }
-    }
-    else if (data.tx_type == TRANSACTION_TYPE.payback){
-        if(tk_post_balance){
-            const post = tk_post_balance.filter((ele) => {return ele.owner == wallet_address_id && ele.mint == address_id}); 
-            if (post)
-                posttx = post[0];
-            if(posttx)
-                if (posttx.uiTokenAmount.uiAmount)
-                    post_amount = new BigNumber(posttx.uiTokenAmount.uiAmount);
-        }
-
-        if(tk_pre_balance){
-            const pre = tk_pre_balance.filter((ele) => {return ele.owner == wallet_address_id && ele.mint == address_id});   
-            if(pre)
-                pretx = pre[0];
-            if(pretx)
-                if (pretx.uiTokenAmount.uiAmount)
-                    pre_amount = new BigNumber(pretx.uiTokenAmount.uiAmount);
-        }
-    }
-    else if (data.tx_type == TRANSACTION_TYPE.reward){
-
-        if(tk_post_balance){
-            const post = tk_post_balance.filter((ele) => {return ele.owner == wallet_address_id && ele.mint == address_id}); 
-            if (post)
-                posttx = post[0];
-            if(posttx)
-                if (posttx.uiTokenAmount.uiAmount)
-                    post_amount = new BigNumber(posttx.uiTokenAmount.uiAmount);
-        }
-
-        if(tk_pre_balance){
-            const pre = tk_pre_balance.filter((ele) => {return ele.owner == wallet_address_id && ele.mint == address_id});   
-            if(pre)
-                pretx = pre[0];
-            if(pretx)
-                if (pretx.uiTokenAmount.uiAmount)
-                    pre_amount = new BigNumber(pretx.uiTokenAmount.uiAmount);
-        }
+    if(tk_post_balance){
+        const post = tk_post_balance.filter((ele) => {return ele.owner == wallet_address_id && ele.mint == address_id}); 
+        if (post)
+            posttx = post[0];
+        if(posttx)
+            if (posttx.uiTokenAmount.uiAmount)
+                post_amount = new BigNumber(posttx.uiTokenAmount.uiAmount);
     }
 
-    amount = pre_amount.minus(post_amount);
-    if(posttx && pretx){
+    if(tk_pre_balance){
+        const pre = tk_pre_balance.filter((ele) => {return ele.owner == wallet_address_id && ele.mint == address_id});   
+        if(pre)
+            pretx = pre[0];
+        if(pretx)
+            if (pretx.uiTokenAmount.uiAmount)
+                pre_amount = new BigNumber(pretx.uiTokenAmount.uiAmount);
+    }
+    if(posttx && pretx)
+        return pre_amount.minus(post_amount);
+    else 
+    return undefined;
+
+}
+
+export async function addTransaction(wallet_address_id: string, data: { "tx_type": string, "signature": string,"address_id":string,"vault_address":string }): Promise<Boolean> {
+    
+    const connection = await getConnection();
+    const txInfo = await connection.getTransaction(data["signature"]);
+    const address_id = data.address_id;
+    
+    const amount = checkTransaction(txInfo,wallet_address_id,address_id);
+    
+    if(amount){
     let ts = Date.now();
     dbcon.query(
         `INSERT INTO RFDATA.TRANSACTIONS(
             transaction_id, 
             wallet_address_id,
+            vault_address_id,
             address_id,
-            amount,         
+            amount,
             transaction_type,
             description,
             status,
-            created_on) 
-        VALUES (?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
+            created_on)
+        VALUES (?,?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
         [data.signature,
         wallet_address_id,
-        posttx.mint,
+        data.vault_address,
+        address_id,
         amount.toString(),
         data.tx_type,
         "",
