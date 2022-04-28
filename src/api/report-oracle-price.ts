@@ -127,8 +127,8 @@ export const reportPriceToOracleByLp = async (
             programStablePool.programId
           );
           const poolData = await programStablePool.account.pool.fetch(poolKey)
-          const mintA = poolData.mintTokenA
-          const mintB = poolData.mintTokenB
+          const mintA = poolData.swapMintA
+          const mintB = poolData.swapMintB
           await reportPriceToOracle(mintA)
           await reportPriceToOracle(mintB)
       }
