@@ -79,6 +79,21 @@ export type StablePool = {
           "isSigner": false
         },
         {
+          "name": "swapTokenA",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "swapTokenB",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mintReward",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
@@ -109,26 +124,6 @@ export type StablePool = {
         },
         {
           "name": "platformType",
-          "type": "u8"
-        },
-        {
-          "name": "mintTokenA",
-          "type": "publicKey"
-        },
-        {
-          "name": "mintTokenB",
-          "type": "publicKey"
-        },
-        {
-          "name": "mintReward",
-          "type": "publicKey"
-        },
-        {
-          "name": "tokenADecimals",
-          "type": "u8"
-        },
-        {
-          "name": "tokenBDecimals",
           "type": "u8"
         }
       ]
@@ -212,10 +207,6 @@ export type StablePool = {
         {
           "name": "vaultBump",
           "type": "u8"
-        },
-        {
-          "name": "ataCollatVaultBump",
-          "type": "u8"
         }
       ]
     },
@@ -258,11 +249,6 @@ export type StablePool = {
           "isSigner": false
         },
         {
-          "name": "ataCollatMiner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "mintCollat",
           "isMut": false,
           "isSigner": false
@@ -278,22 +264,17 @@ export type StablePool = {
           "isSigner": false
         },
         {
-          "name": "ataMarketA",
+          "name": "swapTokenA",
           "isMut": false,
           "isSigner": false
         },
         {
-          "name": "ataMarketB",
+          "name": "swapTokenB",
           "isMut": false,
           "isSigner": false
         },
         {
           "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
           "isMut": false,
           "isSigner": false
         }
@@ -344,31 +325,6 @@ export type StablePool = {
           "isSigner": false
         },
         {
-          "name": "ataCollatMiner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "ataMarketA",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "ataMarketB",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mintMktA",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mintMktB",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "mintCollat",
           "isMut": false,
           "isSigner": false
@@ -380,6 +336,16 @@ export type StablePool = {
         },
         {
           "name": "oracleB",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "swapTokenA",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "swapTokenB",
           "isMut": false,
           "isSigner": false
         },
@@ -400,6 +366,67 @@ export type StablePool = {
           "type": "u64"
         }
       ]
+    },
+    {
+      "name": "distributeReward",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "globalState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ataRewardVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ataRewardUser",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "ataRatioTreasury",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mintReward",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
     },
     {
       "name": "borrowUsdr",
@@ -435,26 +462,6 @@ export type StablePool = {
           "isSigner": false
         },
         {
-          "name": "ataCollatVault",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "ataCollatMiner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "ataMarketA",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "ataMarketB",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "mintCollat",
           "isMut": false,
           "isSigner": false
@@ -471,6 +478,16 @@ export type StablePool = {
         },
         {
           "name": "oracleB",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "swapTokenA",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "swapTokenB",
           "isMut": false,
           "isSigner": false
         },
@@ -507,6 +524,11 @@ export type StablePool = {
         },
         {
           "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userState",
           "isMut": true,
           "isSigner": false
         },
@@ -587,7 +609,12 @@ export type StablePool = {
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "initPrice",
+          "type": "u64"
+        }
+      ]
     },
     {
       "name": "reportPriceToOracle",
@@ -964,11 +991,6 @@ export type StablePool = {
           "isSigner": false
         },
         {
-          "name": "mintCollat",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "quarry",
           "isMut": true,
           "isSigner": false
@@ -1037,13 +1059,8 @@ export type StablePool = {
           "isSigner": false
         },
         {
-          "name": "ataCollatUser",
+          "name": "ataCollatMiner",
           "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mint",
-          "isMut": false,
           "isSigner": false
         },
         {
@@ -1153,16 +1170,6 @@ export type StablePool = {
           "isSigner": false
         },
         {
-          "name": "ataRewardRatioTreasury",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ataRewardUser",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "ataRewardVault",
           "isMut": true,
           "isSigner": false
@@ -1180,11 +1187,6 @@ export type StablePool = {
         {
           "name": "mintReward",
           "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mintCollat",
-          "isMut": false,
           "isSigner": false
         },
         {
@@ -1268,7 +1270,7 @@ export type StablePool = {
             "type": "u8"
           },
           {
-            "name": "totalDebtUsdr",
+            "name": "totalDebt",
             "type": "u64"
           },
           {
@@ -1407,14 +1409,6 @@ export type StablePool = {
             "type": "publicKey"
           },
           {
-            "name": "tokenADecimals",
-            "type": "u8"
-          },
-          {
-            "name": "tokenBDecimals",
-            "type": "u8"
-          },
-          {
             "name": "tvlUsd",
             "type": "u64"
           },
@@ -1443,11 +1437,19 @@ export type StablePool = {
             "type": "publicKey"
           },
           {
-            "name": "mintTokenA",
+            "name": "swapTokenA",
             "type": "publicKey"
           },
           {
-            "name": "mintTokenB",
+            "name": "swapTokenB",
+            "type": "publicKey"
+          },
+          {
+            "name": "swapMintA",
+            "type": "publicKey"
+          },
+          {
+            "name": "swapMintB",
             "type": "publicKey"
           },
           {
@@ -1495,19 +1497,19 @@ export type StablePool = {
         "kind": "struct",
         "fields": [
           {
-            "name": "bump",
-            "type": "u8"
-          },
-          {
             "name": "owner",
             "type": "publicKey"
           },
           {
-            "name": "totalDebtUsdr",
+            "name": "totalDebt",
             "type": "u64"
           },
           {
-            "name": "tvlCollatUsd",
+            "name": "tvlUsd",
+            "type": "u64"
+          },
+          {
+            "name": "activeVaults",
             "type": "u64"
           },
           {
@@ -1559,7 +1561,7 @@ export type StablePool = {
             "type": "u8"
           },
           {
-            "name": "owner",
+            "name": "authority",
             "type": "publicKey"
           },
           {
@@ -1579,27 +1581,23 @@ export type StablePool = {
             "type": "publicKey"
           },
           {
-            "name": "ataCollatVaultBump",
-            "type": "u8"
-          },
-          {
             "name": "ataCollatMiner",
             "type": "publicKey"
           },
           {
-            "name": "debt",
+            "name": "ataRewardVault",
+            "type": "publicKey"
+          },
+          {
+            "name": "totalColl",
             "type": "u64"
           },
           {
-            "name": "vaultRewardTokenANonce",
-            "type": "u8"
+            "name": "tvlUsd",
+            "type": "u64"
           },
           {
-            "name": "vaultRewardTokenBNonce",
-            "type": "u8"
-          },
-          {
-            "name": "depositedCollatUsd",
+            "name": "debt",
             "type": "u64"
           },
           {
@@ -1856,6 +1854,21 @@ export const IDL: StablePool = {
           "isSigner": false
         },
         {
+          "name": "swapTokenA",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "swapTokenB",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mintReward",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
@@ -1886,26 +1899,6 @@ export const IDL: StablePool = {
         },
         {
           "name": "platformType",
-          "type": "u8"
-        },
-        {
-          "name": "mintTokenA",
-          "type": "publicKey"
-        },
-        {
-          "name": "mintTokenB",
-          "type": "publicKey"
-        },
-        {
-          "name": "mintReward",
-          "type": "publicKey"
-        },
-        {
-          "name": "tokenADecimals",
-          "type": "u8"
-        },
-        {
-          "name": "tokenBDecimals",
           "type": "u8"
         }
       ]
@@ -1989,10 +1982,6 @@ export const IDL: StablePool = {
         {
           "name": "vaultBump",
           "type": "u8"
-        },
-        {
-          "name": "ataCollatVaultBump",
-          "type": "u8"
         }
       ]
     },
@@ -2035,11 +2024,6 @@ export const IDL: StablePool = {
           "isSigner": false
         },
         {
-          "name": "ataCollatMiner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "mintCollat",
           "isMut": false,
           "isSigner": false
@@ -2055,22 +2039,17 @@ export const IDL: StablePool = {
           "isSigner": false
         },
         {
-          "name": "ataMarketA",
+          "name": "swapTokenA",
           "isMut": false,
           "isSigner": false
         },
         {
-          "name": "ataMarketB",
+          "name": "swapTokenB",
           "isMut": false,
           "isSigner": false
         },
         {
           "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
           "isMut": false,
           "isSigner": false
         }
@@ -2121,31 +2100,6 @@ export const IDL: StablePool = {
           "isSigner": false
         },
         {
-          "name": "ataCollatMiner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "ataMarketA",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "ataMarketB",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mintMktA",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "mintMktB",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "mintCollat",
           "isMut": false,
           "isSigner": false
@@ -2157,6 +2111,16 @@ export const IDL: StablePool = {
         },
         {
           "name": "oracleB",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "swapTokenA",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "swapTokenB",
           "isMut": false,
           "isSigner": false
         },
@@ -2177,6 +2141,67 @@ export const IDL: StablePool = {
           "type": "u64"
         }
       ]
+    },
+    {
+      "name": "distributeReward",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "globalState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ataRewardVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ataRewardUser",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "ataRatioTreasury",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mintReward",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
     },
     {
       "name": "borrowUsdr",
@@ -2212,26 +2237,6 @@ export const IDL: StablePool = {
           "isSigner": false
         },
         {
-          "name": "ataCollatVault",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "ataCollatMiner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "ataMarketA",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "ataMarketB",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "mintCollat",
           "isMut": false,
           "isSigner": false
@@ -2248,6 +2253,16 @@ export const IDL: StablePool = {
         },
         {
           "name": "oracleB",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "swapTokenA",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "swapTokenB",
           "isMut": false,
           "isSigner": false
         },
@@ -2284,6 +2299,11 @@ export const IDL: StablePool = {
         },
         {
           "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userState",
           "isMut": true,
           "isSigner": false
         },
@@ -2364,7 +2384,12 @@ export const IDL: StablePool = {
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "initPrice",
+          "type": "u64"
+        }
+      ]
     },
     {
       "name": "reportPriceToOracle",
@@ -2741,11 +2766,6 @@ export const IDL: StablePool = {
           "isSigner": false
         },
         {
-          "name": "mintCollat",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "quarry",
           "isMut": true,
           "isSigner": false
@@ -2814,13 +2834,8 @@ export const IDL: StablePool = {
           "isSigner": false
         },
         {
-          "name": "ataCollatUser",
+          "name": "ataCollatMiner",
           "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mint",
-          "isMut": false,
           "isSigner": false
         },
         {
@@ -2930,16 +2945,6 @@ export const IDL: StablePool = {
           "isSigner": false
         },
         {
-          "name": "ataRewardRatioTreasury",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ataRewardUser",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "ataRewardVault",
           "isMut": true,
           "isSigner": false
@@ -2957,11 +2962,6 @@ export const IDL: StablePool = {
         {
           "name": "mintReward",
           "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mintCollat",
-          "isMut": false,
           "isSigner": false
         },
         {
@@ -3045,7 +3045,7 @@ export const IDL: StablePool = {
             "type": "u8"
           },
           {
-            "name": "totalDebtUsdr",
+            "name": "totalDebt",
             "type": "u64"
           },
           {
@@ -3184,14 +3184,6 @@ export const IDL: StablePool = {
             "type": "publicKey"
           },
           {
-            "name": "tokenADecimals",
-            "type": "u8"
-          },
-          {
-            "name": "tokenBDecimals",
-            "type": "u8"
-          },
-          {
             "name": "tvlUsd",
             "type": "u64"
           },
@@ -3220,11 +3212,19 @@ export const IDL: StablePool = {
             "type": "publicKey"
           },
           {
-            "name": "mintTokenA",
+            "name": "swapTokenA",
             "type": "publicKey"
           },
           {
-            "name": "mintTokenB",
+            "name": "swapTokenB",
+            "type": "publicKey"
+          },
+          {
+            "name": "swapMintA",
+            "type": "publicKey"
+          },
+          {
+            "name": "swapMintB",
             "type": "publicKey"
           },
           {
@@ -3272,19 +3272,19 @@ export const IDL: StablePool = {
         "kind": "struct",
         "fields": [
           {
-            "name": "bump",
-            "type": "u8"
-          },
-          {
             "name": "owner",
             "type": "publicKey"
           },
           {
-            "name": "totalDebtUsdr",
+            "name": "totalDebt",
             "type": "u64"
           },
           {
-            "name": "tvlCollatUsd",
+            "name": "tvlUsd",
+            "type": "u64"
+          },
+          {
+            "name": "activeVaults",
             "type": "u64"
           },
           {
@@ -3336,7 +3336,7 @@ export const IDL: StablePool = {
             "type": "u8"
           },
           {
-            "name": "owner",
+            "name": "authority",
             "type": "publicKey"
           },
           {
@@ -3356,27 +3356,23 @@ export const IDL: StablePool = {
             "type": "publicKey"
           },
           {
-            "name": "ataCollatVaultBump",
-            "type": "u8"
-          },
-          {
             "name": "ataCollatMiner",
             "type": "publicKey"
           },
           {
-            "name": "debt",
+            "name": "ataRewardVault",
+            "type": "publicKey"
+          },
+          {
+            "name": "totalColl",
             "type": "u64"
           },
           {
-            "name": "vaultRewardTokenANonce",
-            "type": "u8"
+            "name": "tvlUsd",
+            "type": "u64"
           },
           {
-            "name": "vaultRewardTokenBNonce",
-            "type": "u8"
-          },
-          {
-            "name": "depositedCollatUsd",
+            "name": "debt",
             "type": "u64"
           },
           {
