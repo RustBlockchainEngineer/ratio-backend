@@ -48,10 +48,10 @@ export const MainnetCoinGeckoTokenMints:{ [key: string]: string; } = {
     "9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i": 'terrausd',
 };
 export const DevnetCoinGeckoTokenMints:{ [key: string]: string; } = {
-    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": 'usd-coin',
+    "GvTDRBWa3ez5J2XGv4gjK3b4rMWSX6znaUjDfJKWcTUC": 'usd-coin',
     "7kbnvuGBxxj8AG9qp8Scn56muWGaRaFqxg1FsRp3PaFT": 'uxd-stablecoin',
     "USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX": 'usdh',
-    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB": 'tether',
+    "8sp7AZmDZk7aEB8s6xZtNWEhiRDLdcNqRWd3HLx3QBQS": 'tether',
     "CASHVDm2wsJXfhj6VWxb7GiMdoLc17Du7paH4bNr5woT": 'cashio-dollar',
     "9vMJfxuKxXBoEa7rM12mYLMwTacLMLDJqHozw96WQL8i": 'terrausd',
 };
