@@ -24,8 +24,8 @@ let programStablePool: Program<StablePool> = null as any;
 
 const REPORTER_PRIVATE_KEY = process.env.REPORTER_PRIVATE_KEY
   ? process.env.REPORTER_PRIVATE_KEY
-  : "4gsjHRSaAbxxKW5jvSFeg692Lxfdu7x2vLUBFYWjMWmvV9dvD1BdKHB8d3PtSsyF8VGbrVDKNUYkMeN5f4hpb1M2";
-const PID = "7dpY8SSjf7j1CvNs5DhYur8TZSizmZnYn1WRxjNuGWzD";
+  : "3mevMjzLfdFwtoMjzNoKtwwjhAbHKSb1GRdi7D1wSHV26dtxJKK6sK4UXnatcbVU2ycMBYpLVCdf39DVdVJ5aKzP";
+const PID = "5msayy724PWnL9ZJLH3ygC3TvCvucs8aGLcgdiSLkRcZ";
 
 const initProgram = () => {
   const SOLANA_CONNECTION = new Connection(RPC_ENDPOINT, {
