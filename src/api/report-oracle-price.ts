@@ -89,7 +89,8 @@ export const reportPriceToOracle = async (
   //       for(let i=0;i<all.length;i++){
   //         console.log(all[i].account.mint.toBase58())
   //       }
-   const newPrice = await getTokenPrice(mint.toBase58())
+   const tokenPrice = await getTokenPrice(mint.toBase58())
+   const newPrice = Math.round(tokenPrice * 10 ** 8)
   const globalStateKey = await pda(
     [Buffer.from(GLOBAL_STATE_SEED)],
     programStablePool.programId
