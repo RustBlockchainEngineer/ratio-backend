@@ -30,4 +30,12 @@ export const requireEnv = (name: string, defaultVal?: string): string => {
     throw new Error(`Required env variable not set: ${name}`);
   }
   return envValue;
+
+
+export const mapClusterToNetworkName = (clusterName:string) => {
+  switch(clusterName){
+    case 'mainnet-beta': return 'mainnet';
+    case 'devnet': return clusterName;
+    default: return 'devnet';
+  }
 }

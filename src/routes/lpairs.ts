@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { getAllLPairs, getLPair, saveLPair, deleteLPair } from '../api/lpairs'
+import { getAllLPairs, getLPair, saveLPair, deleteLPair,deleteRewardToken,addLPairRewardToken } from '../api/lpairs'
 import { getAllLPairAPRS, getlatestLPairAPRS, addLPairAPR, deleteAllLPairAPR } from '../api/lpairapr';
 import { getAllLPairParam, getlatestLPairParam, addLPairParam, deleteAllLPairParam } from '../api/lpairparam';
 import { isNotSafe } from '../utils/utils';
@@ -22,7 +22,7 @@ router.get('/:id', async function (req: Request, res: Response) {
 })
 
 router.post('/:id',authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
-    const keylist: string[] = ['address_id', 'symbol', 'page_url', 'pool_size', 'platform_id', 'icon', 'vault_address_id', 'platform_symbol', 'collateralization_ratio', 'liquidation_ratio', 'risk_rating'];
+    const keylist: string[] = ['address_id', 'symbol', 'page_url', 'pool_size', 'platform_id', 'icon', 'vault_address_id', 'platform_symbol', 'collateralization_ratio', 'liquidation_ratio', 'risk_rating','usdr_ceiling'];
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
     }
@@ -64,6 +64,7 @@ router.post('/:id/apr/', authorize([UserRole.ADMIN]), async function (req: Reque
     res.send(JSON.stringify(result));
 })
 
+
 router.delete('/:id/aprs', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     let result = await deleteAllLPairAPR(req.params.id);
     res.send(JSON.stringify(result));
@@ -92,6 +93,16 @@ router.post('/:id/param/', authorize([UserRole.ADMIN]), async function (req: Req
 
 router.delete('/:id/params', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
     let result = await deleteAllLPairParam(req.params.id);
+    res.send(JSON.stringify(result));
+})
+
+router.post('/:id/rewardtoken/:rewardtoken_address', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
+    let result = await addLPairRewardToken(req.params.id, req.params.rewardtoken_address);
+    res.send(JSON.stringify(result));
+})
+
+router.delete('/:address_id/rewardtoken/:rewardtoken_address', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
+    let result = await deleteRewardToken(req.params.address_id,req.params.rewardtoken_address);
     res.send(JSON.stringify(result));
 })
 
