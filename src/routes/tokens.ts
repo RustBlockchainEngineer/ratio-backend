@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { getAllTokens, getToken, addToken, deleteToken } from '../api/tokens'
 import { isNotSafe } from '../utils/utils';
 import { authorize } from '../middlewares/auth';
-import { UserRole,CoinGeckoTokenList,pricesSources } from '../models/model';
+import { UserRole,CoinGeckoTokenList,pricesSources, MainToken } from '../models/model';
 import { tokenPriceList,cacheList } from "../api/cacheList";
 let router = express.Router();
 
@@ -15,6 +15,11 @@ router.get('/', async function (req: Request, res: Response) {
 
 router.get('/prices', async function (req: Request, res: Response) {
     res.send(JSON.stringify(tokenPriceList));
+})
+
+router.get('/main', async function (req: Request, res: Response) {
+    const main_tokens = [MainToken.USDC,MainToken.USDH,MainToken.USDT,MainToken.UST,MainToken.UXD];
+    res.send(JSON.stringify(main_tokens));
 })
 
 router.get('/pricessources', async function (req: Request, res: Response) {

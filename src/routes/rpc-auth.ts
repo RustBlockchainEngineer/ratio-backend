@@ -10,6 +10,7 @@ const genesysClientSecret = requireEnv("GENESYS_CLIENT_SECRET");
 const genesysIssuer = requireEnv("GENESYS_ISSUER");
 
 router.post('/get-token', async function (_req: Request, res: Response) {
+    console.log(`${genesysClientId}:${genesysClientSecret}`);
     try {
         const token = Base64.encode(`${genesysClientId}:${genesysClientSecret}`);
         const { access_token } = (
