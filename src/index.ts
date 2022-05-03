@@ -4,7 +4,7 @@ import express from 'express';
 import cors from 'cors';
 
 import { cacheInit } from './api/cacheList'
-import {geckoPricesService} from './api/coingecko'
+import { geckoPricesService } from './api/coingecko'
 let platforms = require('./routes/platforms');
 let lpairs = require('./routes/lpairs');
 let tokens = require('./routes/tokens');
@@ -12,6 +12,7 @@ let ratioconfig = require('./routes/ratioconf');
 let transactions = require('./routes/transactions');
 let users = require('./routes/users');
 let authRouter = require('./routes/auth');
+let rpcAuthRouter = require('./routes/rpc-auth');
 let coingecko = require('./routes/coingecko');
 let saber = require('./routes/saberPoolSizes');
 
@@ -33,10 +34,11 @@ app.use('/lpairs', lpairs);
 app.use('/tokens', tokens);
 app.use('/ratioconfig', ratioconfig);
 app.use('/transaction', transactions);
-app.use('/coingecko',coingecko);
-app.use('/saberlpprices',saber);;
+app.use('/coingecko', coingecko);
+app.use('/saberlpprices', saber);;
 
 app.use('/auth', authRouter);
+app.use('/rpcauth', rpcAuthRouter);
 app.use('/users', users);
 
 // Init the tokens and LPs cache list;
@@ -44,7 +46,7 @@ cacheInit();
 console.log("Cache initialized");
 
 //COINGECKOINTERVAL Minutes for ingesting from Coingecko prices
-const ciongeckointerval =  process.env.COINGECKOINTERVAL || 30
+const ciongeckointerval = process.env.COINGECKOINTERVAL || 30
 
 geckoPricesService(+ciongeckointerval);
 console.log("CionGecko service initialized");
