@@ -26,6 +26,14 @@ export enum UserRole {
     'ADMIN' = 'ADMIN',
 }
 
+export enum MainToken {
+    'USDC'='USDC',
+    'USDT'='USDT',
+    'USDH'='USDH',
+    'UXD'='UXD',
+    'UST'='UST'
+}
+
 export enum WhitelistMode {
     ADMIN_ONLY="ADMIN_ONLY",
     REGISTERED_USERS="REGISTERED_USERS",
