@@ -49,9 +49,7 @@ router.get('/:id/apr/last', async function (req: Request, res: Response) {
         if (result)
             res.send(JSON.stringify(result));
         else
-            res.status(404).send({ error: 'No APR value for that LPair' });
-
-        
+            res.send(JSON.stringify({ message: 'No APR value for that LPair' }));        
     });
 })
 
