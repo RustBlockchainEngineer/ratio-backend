@@ -91,7 +91,8 @@ export interface LPair {
     vault_address_id: string,
     usdr_ceiling:number,
     lpasset?: LPAsset[],
-    lprewardtokens?:string[]
+    lprewardtokens?:string[],
+    status?:string
 }
 
 export interface Users {
