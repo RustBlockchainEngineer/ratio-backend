@@ -8,12 +8,12 @@ import { authorize } from '../middlewares/auth';
 let router = express.Router();
 
 router.get('/', async function (req: Request, res: Response) {
-    let result = await getAllLPairs(function (result) {
+    let result = await getAllLPairs(res.locals.user.role,function (result) {
         res.send(JSON.stringify(result));
     });
 })
 router.get('/:id', async function (req: Request, res: Response) {
-    let result = await getLPair(req.params.id, function (result) {
+    let result = await getLPair(res.locals.user.role,req.params.id, function (result) {
         if (result)
             res.send(JSON.stringify(result));
         else
