@@ -1,6 +1,6 @@
 import { RowDataPacket } from 'mysql2'
 import { dbcon } from "../models/db";
-import { LPair, LPAsset } from '../models/model'
+import { LPair, LPAsset, UserRole } from '../models/model'
 import { cacheList } from '../api/cacheList'
 
 function map_row_lpair(row: RowDataPacket): LPair {
@@ -21,11 +21,15 @@ function map_row_lpair(row: RowDataPacket): LPair {
         "updated_on": row.lp_updated_on,
         "icon": row.icon,
         "vault_address_id": row.vault_address_id,
-        "usdr_ceiling":row.usdr_ceiling
+        "usdr_ceiling":row.usdr_ceiling,
+        "status":row.status
     }
 }
 
-export async function getAllLPairs(callback: (r: LPair[] | undefined) => void) {
+export async function getAllLPairs(role:UserRole,callback: (r: LPair[] | undefined) => void) {
+    let where_str = "";
+    if(role == UserRole.USER)
+        where_str = ` WHERE lp.status="true"`;
     dbcon.query(`SELECT
                     lp.address_id lp_address_id,
                     lp.symbol lp_symbol,
@@ -36,6 +40,7 @@ export async function getAllLPairs(callback: (r: LPair[] | undefined) => void) {
                     lp.icon icon,
                     lp.vault_address_id vault_address_id,
                     lp.usdr_ceiling,
+                    lp.status,
                     plt.name lp_platform_name,
                     plt.site lp_platform_site,
                     plt.icon lp_platform_icon,
@@ -53,7 +58,7 @@ export async function getAllLPairs(callback: (r: LPair[] | undefined) => void) {
                 LEFT JOIN RFDATA.PLATFORMS plt ON plt.id = lp.platform_id
                 LEFT JOIN RFDATA.LPASSETS lpa ON lp.address_id = lpa.lpair_address_id
                 LEFT JOIN RFDATA.TOKENS tkn ON lpa.token_address_id = tkn.address_id
-                LEFT JOIN RFDATA.LPAIRREWARD lpr ON lp.address_id = lpr.address_id`
+                LEFT JOIN RFDATA.LPAIRREWARD lpr ON lp.address_id = lpr.address_id${where_str}`
         , function (err, result) {
             if (err)
                 throw err;
@@ -91,7 +96,10 @@ export async function getAllLPairs(callback: (r: LPair[] | undefined) => void) {
         });
 }
 
-export async function getLPair(address_id: string, callback: (r: LPair | undefined) => void) {
+export async function getLPair(role: UserRole,address_id: string, callback: (r: LPair | undefined) => void) {
+    let where_str = "";
+    if(role == UserRole.USER)
+        where_str = ` AND lp.status="true"`;
     dbcon.query(`SELECT
                     lp.address_id lp_address_id,
                     lp.symbol lp_symbol,
@@ -102,6 +110,7 @@ export async function getLPair(address_id: string, callback: (r: LPair | undefin
                     lp.icon icon,
                     lp.vault_address_id vault_address_id,
                     lp.usdr_ceiling,
+                    lp.status,
                     plt.name lp_platform_name,
                     plt.site lp_platform_site,
                     plt.icon lp_platform_icon,
@@ -120,7 +129,7 @@ export async function getLPair(address_id: string, callback: (r: LPair | undefin
                 LEFT JOIN RFDATA.LPASSETS lpa ON lp.address_id = lpa.lpair_address_id
                 LEFT JOIN RFDATA.TOKENS tkn ON lpa.token_address_id = tkn.address_id
                 LEFT JOIN RFDATA.LPAIRREWARD lpr ON lp.address_id = lpr.address_id
-                WHERE lp.address_id = "${address_id}"`, function (err, result) {
+                WHERE lp.address_id = "${address_id}"${where_str}`, function (err, result) {
         const rows = <RowDataPacket[]>result;
         let record: LPair | undefined = undefined;
         if (rows.length > 0) {
@@ -150,6 +159,9 @@ export async function getLPair(address_id: string, callback: (r: LPair | undefin
 
 export async function saveLPair(address_id: string, data: LPair): Promise<boolean> {
     let ts = Date.now();
+    if(!("status" in data))
+        data["status"] = 'true';
+    
     cacheList["_" + address_id] = data["symbol"];
     const ret = dbcon.query(
         `DELETE FROM RFDATA.LPASSETS WHERE lpair_address_id = "${address_id}"`
@@ -175,9 +187,10 @@ export async function saveLPair(address_id: string, data: LPair): Promise<boolea
             icon,
             vault_address_id,
             usdr_ceiling,
+            status,
             created_on,
             updated_on) 
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001),FROM_UNIXTIME(? * 0.001))`,
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001),FROM_UNIXTIME(? * 0.001))`,
         [data["address_id"],
         data["symbol"],
         data["page_url"],
@@ -190,6 +203,7 @@ export async function saveLPair(address_id: string, data: LPair): Promise<boolea
         data["icon"],
         data["vault_address_id"],
         data["usdr_ceiling"],
+        data["status"],
             ts, ts]
     );
     if (data["lpasset"])
