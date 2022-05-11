@@ -8,7 +8,7 @@ import { authorize } from '../middlewares/auth';
 let router = express.Router();
 
 router.get('/',async function (req: Request, res: Response) {
-    let role = UserRole.USER;
+    let role = UserRole.ADMIN;
     if ("user" in res.locals)
         role = res.locals.user.role;
 
@@ -17,7 +17,7 @@ router.get('/',async function (req: Request, res: Response) {
     });
 })
 router.get('/:id', async function (req: Request, res: Response) {
-    let role = UserRole.USER;
+    let role = UserRole.ADMIN;
     if ("user" in res.locals)
         role = res.locals.user.role;
 
