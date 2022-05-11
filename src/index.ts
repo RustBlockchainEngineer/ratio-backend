@@ -7,6 +7,7 @@ import { cacheInit } from './api/cacheList'
 import { geckoPricesService } from './api/coingecko'
 let platforms = require('./routes/platforms');
 let lpairs = require('./routes/lpairs');
+let pools = require('./routes/pools');
 let tokens = require('./routes/tokens');
 let ratioconfig = require('./routes/ratioconf');
 let transactions = require('./routes/transactions');
@@ -31,6 +32,7 @@ app.use(express.json());
 
 app.use('/platforms', platforms);
 app.use('/lpairs', lpairs);
+app.use('/pools', pools);
 app.use('/tokens', tokens);
 app.use('/ratioconfig', ratioconfig);
 app.use('/transaction', transactions);
