@@ -140,7 +140,7 @@ export async function saveTransaction(wallet_address_id: string, data: { "tx_typ
             vault_address_id,
             transaction_type,
             created_on)
-        VALUES (?,?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
+        VALUES (?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
         [data.signature,
         wallet_address_id,
         data.vault_address,

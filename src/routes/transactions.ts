@@ -40,8 +40,8 @@ router.post('/:wallet_id/new', async function (req: Request, res: Response) {
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
     }
-    let result = await saveTransaction(req.params.wallet_id, req.body);
-    res.send(JSON.stringify(result));
+    await saveTransaction(req.params.wallet_id, req.body);
+    res.send(JSON.stringify({"status":"Scheduled"}));
 })
 
 module.exports = router
