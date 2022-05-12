@@ -19,8 +19,11 @@ let saber = require('./routes/saberPoolSizes');
 
 const app = express();
 
-const allowedOrigins: Array<string | RegExp> = process.env.API_CORS_ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'];
-allowedOrigins.push(/\.netlify.app$/);
+const allowedOrigins = ['https://demo.ratio.finance','https://dev.ratio.finance','http://localhost:3000'];
+
+//const allowedOrigins: Array<string | RegExp> = process.env.API_CORS_ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'];
+
+//allowedOrigins.push(/\.netlify.app$/);
 
 const options: cors.CorsOptions = {
     origin: allowedOrigins
