@@ -129,7 +129,28 @@ const checkTransaction = (txInfo:TransactionResponse | null,wallet_address_id: s
 
 }
 
-export async function addTransaction(wallet_address_id: string, data: { "tx_type": string, "signature": string,"address_id":string,"vault_address":string }): Promise<Boolean> {
+export async function saveTransaction(wallet_address_id: string, data: { "tx_type": string, "signature": string,"address_id":string,"vault_address":string }){
+
+    setInterval(addTransaction,30 * 1000,wallet_address_id, data);
+    let ts = Date.now();
+    dbcon.query(
+        `INSERT INTO RFDATA.TRANSACTIONS(
+            transaction_id, 
+            wallet_address_id,
+            vault_address_id,
+            transaction_type,
+            created_on)
+        VALUES (?,?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
+        [data.signature,
+        wallet_address_id,
+        data.vault_address,
+        "confirmation waiting...",
+        ts]
+    );
+
+}
+
+async function addTransaction(wallet_address_id: string, data: { "tx_type": string, "signature": string,"address_id":string,"vault_address":string }) {
     
     const connection = await getConnection();
     const txInfo = await connection.getTransaction(data["signature"]);
@@ -138,32 +159,11 @@ export async function addTransaction(wallet_address_id: string, data: { "tx_type
     const amount = checkTransaction(txInfo,wallet_address_id,address_id);
     
     if(amount){
-    let ts = Date.now();
-    dbcon.query(
-        `INSERT INTO RFDATA.TRANSACTIONS(
-            transaction_id, 
-            wallet_address_id,
-            vault_address_id,
-            address_id,
-            amount,
-            transaction_type,
-            description,
-            status,
-            created_on)
-        VALUES (?,?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
-        [data.signature,
-        wallet_address_id,
-        data.vault_address,
-        address_id,
-        amount.toString(),
-        data.tx_type,
-        "",
-        txInfo?.meta?.err?"failed":"confirmed",
-        ts]
-    );
-    return true;
+        dbcon.query(
+            `UPDATE RFDATA.TRANSACTIONS SET address_id = ?,amount = ?,transaction_type = ?,description = ?,status = ? WHERE transaction_id='${data.signature}'`,
+            [address_id,amount.toString(),data.tx_type,"",txInfo?.meta?.err?"failed":"confirmed"]
+        );
     }
-    return false;
     }
 
 
