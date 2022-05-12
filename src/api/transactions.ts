@@ -96,7 +96,7 @@ export async function getTxsignatures(wallet_address_id: string, callback: (r: s
     callback(signatures);
 }
 
-const checkTransaction = (txInfo:TransactionResponse | null,wallet_address_id: string,address_id: string): BigNumber | undefined => {
+const checkTransaction = (txInfo:TransactionResponse | null,wallet_address_id: string,address_id: string): BigNumber => {
     
     const tk_pre_balance = txInfo?.meta?.preTokenBalances;
     const tk_post_balance = txInfo?.meta?.postTokenBalances;
@@ -125,55 +125,50 @@ const checkTransaction = (txInfo:TransactionResponse | null,wallet_address_id: s
     if(posttx && pretx)
         return pre_amount.minus(post_amount);
     else 
-    return undefined;
+    return new BigNumber("0");
 
 }
 
-export async function saveTransaction(wallet_address_id: string, data: { "tx_type": string, "signature": string,"address_id":string,"vault_address":string }){
 
-    setInterval(addTransaction,30 * 1000,wallet_address_id, data);
+export async function addTransaction(wallet_address_id: string, data: { "tx_type": string, "signature": string,"address_id":string,"vault_address":string,"status": string }) {
+    
+    const connection = await getConnection();
+    const txInfo = await connection.getTransaction(data["signature"]);
+    const address_id = data.address_id;
+    
+    const amount = checkTransaction(txInfo,wallet_address_id,address_id);
+    
+    if(!("status" in data))
+        data["status"]=txInfo?.meta?.err?"failed":"confirmed";
+
+
+    if(amount){
     let ts = Date.now();
     dbcon.query(
         `INSERT INTO RFDATA.TRANSACTIONS(
             transaction_id, 
             wallet_address_id,
             vault_address_id,
+            address_id,
+            amount,
             transaction_type,
+            description,
+            status,
             created_on)
-        VALUES (?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
+        VALUES (?,?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
         [data.signature,
         wallet_address_id,
         data.vault_address,
-        "waiting for confirmation",
+        address_id,
+        amount.toString(),
+        data.tx_type,
+        "",
+        data.status,
         ts]
     );
-
-}
-
-export function clean_all_waiting_transactions(){
-    dbcon.query(`DELETE FROM RFDATA.TRANSACTIONS WHERE transaction_type='confirmation waiting...'`);
-}
-
-//"confirmation waiting...",
-async function addTransaction(wallet_address_id: string, data: { "tx_type": string, "signature": string,"address_id":string,"vault_address":string }) {
-    
-    const connection = await getConnection();
-    const txInfo = await connection.getTransaction(data["signature"]);
-    const address_id = data.address_id;
-
-    const amount = checkTransaction(txInfo,wallet_address_id,address_id);
-    
-    if(amount){
-        dbcon.query(
-            `UPDATE RFDATA.TRANSACTIONS SET address_id = ?,amount = ?,transaction_type = ?,description = ?,status = ? WHERE transaction_id='${data.signature}'`,
-            [address_id,amount.toString(),data.tx_type,"",txInfo?.meta?.err?"failed":"confirmed"]
-        );
+    return true;
     }
-    else{
-        dbcon.query(
-            `DELETE FROM RFDATA.TRANSACTIONS WHERE transaction_id='${data.signature}'`
-        );
-    }
+    return false;
 }
 
 

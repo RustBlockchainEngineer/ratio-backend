@@ -2,7 +2,6 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import {clean_all_waiting_transactions} from './api/transactions';
 
 import { cacheInit } from './api/cacheList'
 import { geckoPricesService } from './api/coingecko'
@@ -48,7 +47,6 @@ app.use('/rpcauth', rpcAuthRouter);
 app.use('/users', users);
 
 // Init the tokens and LPs cache list;
-clean_all_waiting_transactions();
 cacheInit();
 console.log("Cache initialized");
 
