@@ -144,18 +144,23 @@ export async function saveTransaction(wallet_address_id: string, data: { "tx_typ
         [data.signature,
         wallet_address_id,
         data.vault_address,
-        "confirmation waiting...",
+        "waiting for confirmation",
         ts]
     );
 
 }
 
+export function clean_all_waiting_transactions(){
+    dbcon.query(`DELETE FROM RFDATA.TRANSACTIONS WHERE transaction_type='confirmation waiting...'`);
+}
+
+//"confirmation waiting...",
 async function addTransaction(wallet_address_id: string, data: { "tx_type": string, "signature": string,"address_id":string,"vault_address":string }) {
     
     const connection = await getConnection();
     const txInfo = await connection.getTransaction(data["signature"]);
     const address_id = data.address_id;
-    
+
     const amount = checkTransaction(txInfo,wallet_address_id,address_id);
     
     if(amount){
@@ -164,6 +169,11 @@ async function addTransaction(wallet_address_id: string, data: { "tx_type": stri
             [address_id,amount.toString(),data.tx_type,"",txInfo?.meta?.err?"failed":"confirmed"]
         );
     }
+    else{
+        dbcon.query(
+            `DELETE FROM RFDATA.TRANSACTIONS WHERE transaction_id='${data.signature}'`
+        );
     }
+}
 
 
