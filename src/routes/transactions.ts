@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { getDetailTransactions, getTxStatus, getTxsignatures, addTransaction } from '../api/transactions'
+import { getDetailTransactions, getTxStatus, getTxsignatures, saveTransaction } from '../api/transactions'
 import { UserRole } from '../models/model';
 import { isNotSafe } from '../utils/utils';
 import { authorize } from '../middlewares/auth';
@@ -40,7 +40,7 @@ router.post('/:wallet_id/new', async function (req: Request, res: Response) {
     if (isNotSafe(keylist, req.body)) {
         return res.status(400).send({ error: 'Request body missing some parameters' });
     }
-    let result = await addTransaction(req.params.wallet_id, req.body);
+    let result = await saveTransaction(req.params.wallet_id, req.body);
     res.send(JSON.stringify(result));
 })
 
