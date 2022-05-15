@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
-import { getDetailTransactions, getTxStatus, getTxsignatures, addTransaction } from '../api/transactions'
+import { getDetailTransactions, getTxStatus, getTxsignatures, addTransaction, updateTxStatus } from '../api/transactions'
 import { UserRole } from '../models/model';
-import { isNotSafe } from '../utils/utils';
+import { findMissedFields, isNotSafe } from '../utils/utils';
 import { authorize } from '../middlewares/auth';
 
 let router = express.Router();
@@ -36,12 +36,24 @@ router.get('/:wallet_id/:signature', async function (req: Request, res: Response
 })
 
 router.post('/:wallet_id/new', async function (req: Request, res: Response) {
-    const keylist: string[] = ['tx_type', 'signature','address_id','vault_address'];
-    if (isNotSafe(keylist, req.body)) {
-        return res.status(400).send({ error: 'Request body missing some parameters' });
+    const keylist: string[] = ['tx_type', 'signature','address_id','vault_address', 'amount'];
+    const missdedKeys = findMissedFields(keylist, req.body);
+    if (missdedKeys.length) {
+        return res.status(400).send({ error: 'Request body missing some parameters', keys: missdedKeys});
     }
     await addTransaction(req.params.wallet_id, req.body);
     res.send(JSON.stringify({"status":"Scheduled"}));
+})
+
+router.post('/:wallet_id/update', async function (req: Request, res: Response) {
+    const keylist: string[] = ['signature', 'status', 'amount'];
+    const missdedKeys = findMissedFields(keylist, req.body);
+    if (missdedKeys.length) {
+        return res.status(400).send({ error: 'Request body missing some parameters', keys: missdedKeys});
+    }
+    await updateTxStatus(req.params.wallet_id, req.body, function (result) {
+        res.send(JSON.stringify(result));
+    });
 })
 
 module.exports = router

@@ -30,6 +30,7 @@ function map_row_vault(row: RowDataPacket): TRANSACTION {
 export async function getDetailTransactions(wallet_address_id: string, vault_address: string, callback: (r: TRANSACTION[]) => void) {
     dbcon.query(`SELECT
                     transaction_id,
+                    wallet_address_id,
                     address_id,
                     amount,
                     transaction_type,
@@ -38,13 +39,39 @@ export async function getDetailTransactions(wallet_address_id: string, vault_add
                     conversion_rate,
                     base_address_id,
                     status
-                FROM RFDATA.TRANSACTIONS WHERE wallet_address_id = "${wallet_address_id}" AND vault_address_id = "${vault_address}"`, function (err, result) {
+                FROM RFDATA.TRANSACTIONS 
+                WHERE wallet_address_id = "${wallet_address_id}" 
+                        AND vault_address_id = "${vault_address}"
+                ORDER BY created_on DESC`, async function  (err, result) {
         if (err)
             throw err;
         const rows = <RowDataPacket[]>result;
         let records: TRANSACTION[] = rows.map((row: RowDataPacket) => {
             return map_row_vault(row);
         });
+
+        const connection = await getConnection();
+
+        for(let i = 0;i < records.length; i ++) {
+            const record = records[i];
+            if (!record.status || 
+                record.status == 'Waiting Confirmation ...' || 
+                record.transaction_type !='Harvest' && record.status == 'Success' && record.amount == '0') 
+            {
+                const txInfo = await connection.getTransaction(record.transaction_id, {commitment: 'confirmed'});
+                const newStatus = !txInfo ? 'Not Confirmed' : !txInfo.meta || txInfo.meta.err ? 'Failed' : 'Success'
+                let newAmount = record.amount;
+                if (newStatus == 'Success') newAmount = checkTransaction(txInfo, record.wallet_address_id, record.address_id).toString() ;
+                
+                dbcon.query(
+                    `UPDATE RFDATA.TRANSACTIONS
+                    SET status = "${newStatus}", amount = "${newAmount.toString()}"
+                    WHERE transaction_id = "${record.transaction_id}"`)
+                record.status = newStatus;
+                record.amount = newAmount.toString();
+            }
+        }
+
         callback(records);
     });
 }
@@ -123,26 +150,15 @@ const checkTransaction = (txInfo:TransactionResponse | null,wallet_address_id: s
                 pre_amount = new BigNumber(pretx.uiTokenAmount.uiAmount);
     }
     if(posttx && pretx)
-        return pre_amount.minus(post_amount);
+        return post_amount.minus(pre_amount);
     else 
     return new BigNumber("0");
 
 }
 
 
-export async function addTransaction(wallet_address_id: string, data: { "tx_type": string, "signature": string,"address_id":string,"vault_address":string,"status": string }) {
+export async function addTransaction(wallet_address_id: string, data: { "tx_type": string, "signature": string,"address_id":string,"vault_address":string, "amount": number }) {
     
-    const connection = await getConnection();
-    const txInfo = await connection.getTransaction(data["signature"]);
-    const address_id = data.address_id;
-    
-    const amount = checkTransaction(txInfo,wallet_address_id,address_id);
-    
-    if(!("status" in data))
-        data["status"]=txInfo?.meta?.err?"failed":"confirmed";
-
-
-    if(amount){
     let ts = Date.now();
     dbcon.query(
         `INSERT INTO RFDATA.TRANSACTIONS(
@@ -159,16 +175,35 @@ export async function addTransaction(wallet_address_id: string, data: { "tx_type
         [data.signature,
         wallet_address_id,
         data.vault_address,
-        address_id,
-        amount.toString(),
+        data.address_id,
+        data.amount,
         data.tx_type,
         "",
-        data.status,
+        'Waiting Confirmation ...',
         ts]
     );
     return true;
-    }
-    return false;
 }
 
+
+export async function updateTxStatus(wallet_id: string, data: { "signature": string, "status": string, 'amount': string}, callback: (r: Object) => void) {
+    dbcon.query(
+        `UPDATE RFDATA.TRANSACTIONS
+        SET status = "${data.status}", amount = ${data.amount}
+        WHERE wallet_address_id = "${wallet_id}" and transaction_id = "${data.signature}"`,
+        function (err, result) {
+            if (callback) {
+                if (err)
+                callback({
+                    status: 'failed',
+                    msg: err
+                });
+            else
+                callback({
+                    status: 'updated'
+                });
+            }
+        });
+    return true;
+}
 
