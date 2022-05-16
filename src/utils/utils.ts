@@ -7,10 +7,19 @@ export const isNotSafe = (keyList: string[], obj: Object): boolean => {
   }
   return false;
 }
-
+export const findMissedFields = (keyList: string[], obj: Object): string[] => {
+  const missingKeys = []
+  for (let key of keyList) {
+    if (!(key in obj)){
+      missingKeys.push(key);
+    }
+  }
+  return missingKeys;
+}
 export const getConnection = async () =>
   new Connection(
-    clusterApiUrl(getClusterName()),
+    // clusterApiUrl(getClusterName()),
+    'https://stableswap.rpcpool.com/',
     'confirmed'
   );
 

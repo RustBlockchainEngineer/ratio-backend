@@ -1,11 +1,11 @@
 export enum TRANSACTION_TYPE {
-    'deposit' = 'deposit', // 
-    'payback' = 'payback',
-    'reward' = 'reward',  // 
-    'swap' = 'swap',
-    'withdraw' = 'withdraw', // 
-    'borrow' = 'borrow',
-    'stake' = 'stake'
+    'deposit' = 'Deposit', // 
+    'payback' = 'Payback',
+    'harvest' = 'Harvest',  // 
+    'swap' = 'Swap',
+    'withdraw' = 'Withdraw', // 
+    'borrow' = 'Borrow',
+    'stake' = 'Stake'
 }
 
 export enum RISK_RATING {
@@ -121,7 +121,7 @@ export interface TokenIDS {
 export interface TRANSACTION {
     transaction_id: string,
     wallet_address_id: string,
-    address_id?: string,
+    address_id: string,
     symbol?: string,
     amount: string,
     transaction_type: TRANSACTION_TYPE
