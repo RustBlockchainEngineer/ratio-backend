@@ -56,12 +56,12 @@ export async function getDetailTransactions(wallet_address_id: string, vault_add
             const record = records[i];
             if (!record.status || 
                 record.status == 'Waiting Confirmation ...' || 
-                record.transaction_type !='Harvest' && record.status == 'Success' && record.amount == '0') 
+                record.status == 'Not Confirmed') 
             {
                 const txInfo = await connection.getTransaction(record.transaction_id, {commitment: 'confirmed'});
                 const newStatus = !txInfo ? 'Not Confirmed' : !txInfo.meta || txInfo.meta.err ? 'Failed' : 'Success'
                 let newAmount = record.amount;
-                if (newStatus == 'Success') newAmount = checkTransaction(txInfo, record.wallet_address_id, record.address_id).toString() ;
+                if (newStatus == 'Success') newAmount = checkTransaction(txInfo, record.wallet_address_id, record.address_id).toString();
                 
                 dbcon.query(
                     `UPDATE RFDATA.TRANSACTIONS
@@ -127,33 +127,27 @@ const checkTransaction = (txInfo:TransactionResponse | null,wallet_address_id: s
     
     const tk_pre_balance = txInfo?.meta?.preTokenBalances;
     const tk_post_balance = txInfo?.meta?.postTokenBalances;
-    let pretx = undefined;
-    let posttx = undefined;
     let post_amount = new BigNumber("0");
     let pre_amount = new BigNumber("0");
 
     if(tk_post_balance){
         const post = tk_post_balance.filter((ele) => {return ele.owner == wallet_address_id && ele.mint == address_id}); 
-        if (post)
-            posttx = post[0];
-        if(posttx)
+        if (post.length > 0) {
+            const posttx = post[0];
             if (posttx.uiTokenAmount.uiAmount)
                 post_amount = new BigNumber(posttx.uiTokenAmount.uiAmount);
+        }
     }
 
     if(tk_pre_balance){
         const pre = tk_pre_balance.filter((ele) => {return ele.owner == wallet_address_id && ele.mint == address_id});   
-        if(pre)
-            pretx = pre[0];
-        if(pretx)
+        if(pre.length > 0) {
+            const pretx = pre[0];
             if (pretx.uiTokenAmount.uiAmount)
-                pre_amount = new BigNumber(pretx.uiTokenAmount.uiAmount);
+            pre_amount = new BigNumber(pretx.uiTokenAmount.uiAmount);
+        }       
     }
-    if(posttx && pretx)
-        return post_amount.minus(pre_amount);
-    else 
-    return new BigNumber("0");
-
+    return post_amount.minus(pre_amount);
 }
 
 
