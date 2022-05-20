@@ -9,6 +9,13 @@ import { UserRole } from '../models/model';
 import { authorize } from '../middlewares/auth';
 let router = express.Router();
 
+router.get('/',async function (req: Request, res: Response) {
+    
+    let result = await getAllLPairs(UserRole.USER,function (result) {
+        res.send(JSON.stringify(result));
+    });
+    
+})
 
 router.get('/:id/param', async function (req: Request, res: Response) {
     let result = await getAllLPairParam(req.params.id, function (result) {
@@ -49,6 +56,7 @@ router.get('/:wallet_address',async function (req: Request, res: Response) {
     else
         res.status(404).send({ error: 'user not found' });
 })
+
 router.get('/:wallet_address/:id', async function (req: Request, res: Response) {
     const user = await getUserByPublicKey(req.params.wallet_address);
     if(user){
