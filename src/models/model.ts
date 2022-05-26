@@ -49,9 +49,7 @@ export const CoinGeckoTokenList:{ [key: string]: string; } = {
     "USDC": 'usd-coin',
     "UXD": 'uxd-stablecoin',
     "USDH": 'usdh',
-    "USDT": 'tether',
-    "CASH": 'cashio-dollar',
-    "UST": 'terrausd',
+    "USDT": 'tether'
 };
 
 export interface Auth {
