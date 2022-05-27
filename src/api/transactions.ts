@@ -200,4 +200,3 @@ export async function updateTxStatus(wallet_id: string, data: { "signature": str
         });
     return true;
 }
-
