@@ -151,7 +151,7 @@ const checkTransaction = (txInfo:TransactionResponse | null,wallet_address_id: s
 }
 
 
-export async function addTransaction(wallet_address_id: string, data: { "tx_type": string, "signature": string,"address_id":string,"vault_address":string, "amount": number }) {
+export async function addTransaction(wallet_address_id: string, data: { "tx_type": string, "signature": string,"address_id":string,"vault_address":string, "amount": number , "price":number}) {
     
     let ts = Date.now();
     dbcon.query(
@@ -161,16 +161,18 @@ export async function addTransaction(wallet_address_id: string, data: { "tx_type
             vault_address_id,
             address_id,
             amount,
+            fair_price,
             transaction_type,
             description,
             status,
             created_on)
-        VALUES (?,?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
+        VALUES (?,?,?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
         [data.signature,
         wallet_address_id,
         data.vault_address,
         data.address_id,
         data.amount,
+        data.price,
         data.tx_type,
         "",
         'Waiting Confirmation ...',
@@ -180,10 +182,10 @@ export async function addTransaction(wallet_address_id: string, data: { "tx_type
 }
 
 
-export async function updateTxStatus(wallet_id: string, data: { "signature": string, "status": string, 'amount': string}, callback: (r: Object) => void) {
+export async function updateTxStatus(wallet_id: string, data: { "signature": string, "status": string, 'amount': string,'price':string}, callback: (r: Object) => void) {
     dbcon.query(
         `UPDATE RFDATA.TRANSACTIONS
-        SET status = "${data.status}", amount = ${data.amount}
+        SET status = "${data.status}", amount = ${data.amount}, fair_price = ${data.price} 
         WHERE wallet_address_id = "${wallet_id}" and transaction_id = "${data.signature}"`,
         function (err, result) {
             if (callback) {
