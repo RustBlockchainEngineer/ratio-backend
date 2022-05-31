@@ -19,6 +19,7 @@ function map_row_vault(row: RowDataPacket): TRANSACTION {
         "address_id": row.address_id,
         "symbol": cacheList["_" + row.address_id],
         "amount": row.amount,
+        "fair_price":row.fair_price,
         "transaction_type": row.transaction_type,
         "created_on": row.created_on,
         "sawp_group": row.sawp_group,
@@ -33,6 +34,7 @@ export async function getDetailTransactions(wallet_address_id: string, vault_add
                     wallet_address_id,
                     address_id,
                     amount,
+                    fair_price,
                     transaction_type,
                     created_on,
                     sawp_group,
@@ -151,8 +153,10 @@ const checkTransaction = (txInfo:TransactionResponse | null,wallet_address_id: s
 }
 
 
-export async function addTransaction(wallet_address_id: string, data: { "tx_type": string, "signature": string,"address_id":string,"vault_address":string, "amount": number }) {
-    
+export async function addTransaction(wallet_address_id: string, data: { "tx_type": string, "signature": string,"address_id":string,"vault_address":string, "amount": number , "fair_price":number}) {
+    if(!("fair_price" in data))
+        data["fair_price"] = 0;
+
     let ts = Date.now();
     dbcon.query(
         `INSERT INTO RFDATA.TRANSACTIONS(
@@ -161,16 +165,18 @@ export async function addTransaction(wallet_address_id: string, data: { "tx_type
             vault_address_id,
             address_id,
             amount,
+            fair_price,
             transaction_type,
             description,
             status,
             created_on)
-        VALUES (?,?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
+        VALUES (?,?,?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
         [data.signature,
         wallet_address_id,
         data.vault_address,
         data.address_id,
         data.amount,
+        data.fair_price,
         data.tx_type,
         "",
         'Waiting Confirmation ...',
@@ -180,10 +186,12 @@ export async function addTransaction(wallet_address_id: string, data: { "tx_type
 }
 
 
-export async function updateTxStatus(wallet_id: string, data: { "signature": string, "status": string, 'amount': string}, callback: (r: Object) => void) {
+export async function updateTxStatus(wallet_id: string, data: { "signature": string, "status": string, 'amount': string,'fair_price':string}, callback: (r: Object) => void) {
+    if(!("fair_price" in data))
+        data["fair_price"] = "0";
     dbcon.query(
         `UPDATE RFDATA.TRANSACTIONS
-        SET status = "${data.status}", amount = ${data.amount}
+        SET status = "${data.status}", amount = ${data.amount}, fair_price = ${data.fair_price} 
         WHERE wallet_address_id = "${wallet_id}" and transaction_id = "${data.signature}"`,
         function (err, result) {
             if (callback) {
@@ -200,4 +208,3 @@ export async function updateTxStatus(wallet_id: string, data: { "signature": str
         });
     return true;
 }
-
