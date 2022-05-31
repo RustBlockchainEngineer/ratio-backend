@@ -122,6 +122,7 @@ export interface TRANSACTION {
     address_id: string,
     symbol?: string,
     amount: string,
+    fair_price:string,
     transaction_type: TRANSACTION_TYPE
     created_on: number
     sawp_group: string,
