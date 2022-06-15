@@ -186,7 +186,7 @@ export async function addTransaction(
             description,
             status,
             created_on)
-        VALUES (?,?,?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
+        VALUES (?,?,?,?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
         [data.signature,
         wallet_address_id,
         data.vault_address,
