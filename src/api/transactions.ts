@@ -216,6 +216,8 @@ export async function updateTxStatus(
 {
     if(!("fair_price" in data))
         data["fair_price"] = "0";
+    if(!("market_price" in data))
+        data["market_price"] = "0";
     dbcon.query(
         `UPDATE RFDATA.TRANSACTIONS
         SET status = "${data.status}", amount = ${data.amount}, fair_price = ${data.fair_price}, market_price = ${data.market_price} 
