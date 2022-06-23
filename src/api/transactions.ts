@@ -229,8 +229,8 @@ export async function addTransaction(
       data.tx_type,
       "",
       "Waiting Confirmation ...",
-      ts,
       data.borrow_fee,
+      ts,
     ]
   );
   return true;
