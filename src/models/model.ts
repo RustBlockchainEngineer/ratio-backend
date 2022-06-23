@@ -128,8 +128,8 @@ export interface TRANSACTION {
   sawp_group: string;
   conversion_rate: number;
   base_address_id: string;
-  borrow_fee: number;
   status?: string;
+  fee?: string;
 }
 export interface LPAsset {
   token_address_id: string;

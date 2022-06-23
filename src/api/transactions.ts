@@ -23,7 +23,7 @@ function map_row_vault(row: RowDataPacket): TRANSACTION {
     conversion_rate: row.conversion_rate,
     base_address_id: cacheList["_" + row.base_address_id] || "",
     status: row.status,
-    borrow_fee: row.borrow_fee,
+    fee: row.fee,
   };
 }
 export async function getDetailTransactions(
@@ -45,7 +45,7 @@ export async function getDetailTransactions(
                     conversion_rate,
                     base_address_id,
                     status,
-                    borrow_fee
+                    fee
                 FROM RFDATA.TRANSACTIONS 
                 WHERE wallet_address_id = "${wallet_address_id}" 
                         AND vault_address_id = "${vault_address}"
@@ -196,7 +196,7 @@ export async function addTransaction(
     amount: number;
     fair_price: number;
     market_price: number;
-    borrow_fee: number;
+    fee: number;
   }
 ) {
   if (!("fair_price" in data)) data["fair_price"] = 0;
@@ -215,9 +215,9 @@ export async function addTransaction(
             transaction_type,
             description,
             status,
-            borrow_fee,
+            fee,
             created_on)
-        VALUES (?,?,?,?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
     [
       data.signature,
       wallet_address_id,
@@ -229,7 +229,7 @@ export async function addTransaction(
       data.tx_type,
       "",
       "Waiting Confirmation ...",
-      data.borrow_fee,
+      data.fee,
       ts,
     ]
   );
