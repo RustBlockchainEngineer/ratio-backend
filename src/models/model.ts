@@ -128,7 +128,7 @@ export interface TRANSACTION {
   sawp_group: string;
   conversion_rate: number;
   base_address_id: string;
-  borrow_fees: number;
+  borrow_fee: number;
   status?: string;
 }
 export interface LPAsset {
