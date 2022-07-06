@@ -39,6 +39,7 @@ export async function reportAllPriceOracle(
   const connection = await getConnection();
   const reporter_pk = Keypair.fromSecretKey(base58.decode(process.env.REPORTER_PK))
   const wallet = new NodeWallet(reporter_pk)
+
   const program = getProgramInstance(connection, wallet);
 
   const globalStateKey = getGlobalStatePDA();
@@ -70,7 +71,7 @@ export async function reportAllPriceOracle(
       ix_count ++;
       if (ix_count === MAX_IX_COUNT) {
         const txHash = await sendTransaction(connection, wallet, tx);
-        console.log('Updated price of Oracle account  tx = ', txHash);
+        console.log('Reporting price  tx = ', txHash);
         
         tx = null;
         ix_count = 0;
@@ -81,7 +82,7 @@ export async function reportAllPriceOracle(
   };
   if (tx) {
     const txHash = await sendTransaction(connection, wallet, tx);
-    console.log('Updated price of Oracle account  tx = ', txHash);
+    console.log('Reporting Price  tx = ', txHash);
   }
 }
 
