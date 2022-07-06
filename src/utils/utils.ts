@@ -19,13 +19,13 @@ export const findMissedFields = (keyList: string[], obj: Object): string[] => {
 export const getConnection = async () =>
   new Connection(
     // clusterApiUrl(getClusterName()),
-    'https://stableswap.rpcpool.com/',
+    'https://solana-mainnet.phantom.app',
     'confirmed'
   );
 
 export const getClusterName = () => {
   const env = requireEnv("SOLANACLUSTER", "devnet")
-  if (env == 'devnet' || env == 'mainnet-beta') {
+  if (env == 'mainnet' || env == 'mainnet-beta') {
     return env;
   } else {
     return 'devnet'

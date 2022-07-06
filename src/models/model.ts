@@ -24,6 +24,7 @@ export enum RISK_RATING {
 export enum UserRole {
   "USER" = "USER",
   "ADMIN" = "ADMIN",
+  "DEVELOPER" = "DEVELOPER"
 }
 
 export enum MainToken {
@@ -44,13 +45,6 @@ export enum WhitelistMode {
 export enum TokenPriceSource {
   "COINGECKO" = "coingecko",
 }
-
-export const CoinGeckoTokenList: { [key: string]: string } = {
-  USDC: "usd-coin",
-  UXD: "uxd-stablecoin",
-  USDH: "usdh",
-  USDT: "tether",
-};
 
 export interface Auth {
   name: string;

@@ -4,12 +4,17 @@ import { tokenPriceList } from "./cacheList";
 import { PublicKey} from "@solana/web3.js";
 import { getConnection,getClusterName,mapClusterToNetworkName } from "../utils/utils";
 import BigNumber from 'bignumber.js';
+import { dbcon } from '../models/db';
 
 
 const fetchSaberPools = async () => {
     const network = mapClusterToNetworkName(getClusterName());
     const poolsData = (await Axios.get(`https://registry.saber.so/data/pools-info.${network}.json`)).data.pools;
-    return poolsData;
+
+    const [registeredPools, fields] = await dbcon.promise().query(`SELECT address_id FROM RFDATA.LPAIRS WHERE platform_symbol = 'Saber'`);
+
+    const saberLPTokens = (registeredPools as any).map((item: { address_id: any; }) => item.address_id);
+    return poolsData.filter((pool: { lpToken: { address: any; }; }) => saberLPTokens.includes(pool.lpToken.address));
 }
 
 const parsePoolData = (pool:any) => {
@@ -48,6 +53,7 @@ export const fetchSaberPoolData = async (poolName: string) => {
 
 async function fetchSaberTokens() {
     const poolsData = await fetchSaberPools();
+
     const swapPools = [];
     for (let i = 0; i < poolsData.length; i++) {
       const name = poolsData[i]?.name;
