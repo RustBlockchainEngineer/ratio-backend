@@ -2,25 +2,32 @@ import axios from 'axios';
 import { RowDataPacket } from 'mysql2';
 import { dbcon } from "../models/db";
 import { tokenPriceList } from "./cacheList";
-import { CoinGeckoTokenList } from "../models/model";
+import { Token, TokenIDS, TokenPriceSource } from "../models/model";
 import { getSaberLpTokenPrices } from "./saber";
+import { getAllTokensInSimple } from './tokens';
+import { reportAllPriceOracle } from '../utils/ratio-lending-admin';
 const COINGECKO_API = 'https://api.coingecko.com/api/v3/';
-
-export async function getSaberPrice(){
-  const price = await axios.get(`${COINGECKO_API}simple/price?ids=saber&vs_currencies=usd`);
-  return price.data.saber.usd;
-}
 
 export async function saveCoinGeckoPrices(){
   let ts = Date.now();
-  for (const token in CoinGeckoTokenList) {
-    const data = (await axios.get(`${COINGECKO_API}simple/price?ids=${CoinGeckoTokenList[token]}&vs_currencies=usd`));
-    tokenPriceList[token] = data.data[CoinGeckoTokenList[token]]['usd'];
+  const tokens = await getAllTokensInSimple();
+
+  const recentPrices:{[key: string]: number} = {};
+  for (const mint in tokens) {
+    const geckoSymbol = tokens[mint].token_id;
+    const tokenSymbol = tokens[mint].symbol;
+    const data = (await axios.get(`${COINGECKO_API}simple/price?ids=${geckoSymbol}&vs_currencies=usd`));
+    
+    tokenPriceList[tokenSymbol] = (data.data[geckoSymbol]?? {usd: 0})['usd'];
+    recentPrices[mint] = tokenPriceList[tokenSymbol];
   }
+
+  // reportAllPriceOracle(recentPrices);
+
   const saberLPoolList = await getSaberLpTokenPrices()
 
   for (const t of Object.keys(tokenPriceList)){
-    dbcon.query(`INSERT INTO RFDATA.TOKENPRICES(
+    await dbcon.promise().query(`INSERT INTO RFDATA.TOKENPRICES(
       token,
       price,
       created_on,
@@ -30,7 +37,7 @@ export async function saveCoinGeckoPrices(){
       );
   }
   for (const pool of saberLPoolList){
-    dbcon.query(`INSERT INTO RFDATA.SOURCELPPRICES(
+    await dbcon.promise().query(`INSERT INTO RFDATA.SOURCELPPRICES(
       pool_name,
       lp_price,
       tokenasize,
@@ -44,26 +51,20 @@ export async function saveCoinGeckoPrices(){
       [pool["poolName"],pool["lpPrice"],pool["tokenASize"],pool["tokenBSize"],pool["tokenAPrice"],pool["tokenBPrice"],"Saber",ts]
       );
   }
+
+  const medianPrices = await getMedianCoingeckoPrices();
+  const reportPrices:{[key: string]: number} = {};
+  for (const mint in tokens) {
+    const tokenSymbol = tokens[mint].symbol;
+    if (medianPrices[tokenSymbol]) {
+      reportPrices[mint] = medianPrices[tokenSymbol];
+    }
+  }
+  reportAllPriceOracle(reportPrices);
 };
 
 export function geckoPricesService(interval:number){
   setInterval(saveCoinGeckoPrices,interval * 60 * 1000)
-}
-
-async function getTokens(){
-  const query = 'SELECT DISTINCT token from RFDATA.TOKENPRICES';
-  const res: Promise<any[]> = dbcon.promise().query(query)
-  .then(([ rows, fields])=> {
-    return rows as any;
-  })
-  .catch((error)=>{
-    console.log(error);
-  });
-  const tokens = [];
-  for (let obj of await res){
-    tokens.push(obj.token);
-  }
-  return tokens;
 }
 
 /**The list is already sorted by the query*/
@@ -77,16 +78,16 @@ function getMedianPrice(prices:number[]):number{
 }
 
 export async function getMedianCoingeckoPrices(priceFrequency = 25){
-  const tokens = await getTokens();
+  const tokens = await getAllTokensInSimple();
   let medianPrices: {[k: string]: any} = {};
-  await Promise.all(tokens.map(async (token) =>{
+  await Promise.all(Object.values(tokens).map(async (token : any) =>{
 
     let query = `SELECT price FROM RFDATA.TOKENPRICES WHERE token = ?
-		AND   created_on >= CURRENT_TIMESTAMP - INTERVAL ? MINUTE
-		AND   created_on <= CURRENT_TIMESTAMP
-		ORDER BY price ASC`;
+                AND   created_on >= CURRENT_TIMESTAMP - INTERVAL ? MINUTE
+                AND   created_on <= CURRENT_TIMESTAMP
+                ORDER BY price ASC`;
 
-    const result:Promise<any> = dbcon.promise().query(query,[token,priceFrequency])
+    const result:Promise<any> = dbcon.promise().query(query,[token.symbol,priceFrequency])
     .then(([rows,fields])=> {
         return rows as any;
     })
@@ -100,8 +101,8 @@ export async function getMedianCoingeckoPrices(priceFrequency = 25){
     const parsedPrices = lastPrices.map((price:any)=>{
        return parseFloat(price.price);
     });
-
-    medianPrices[token] = getMedianPrice(parsedPrices);
+    medianPrices[token.symbol] = getMedianPrice(parsedPrices);
+    console.log(token.symbol, parsedPrices, medianPrices[token.symbol]);
   }));
 
   return medianPrices;

@@ -10,7 +10,7 @@ import { hasRatioNFT } from '../utils/nft-utils';
 
 let router = express.Router();
 
-router.get('/', authorize([UserRole.ADMIN]), async function (req: Request, res: Response) {
+router.get('/', authorize([UserRole.ADMIN, UserRole.DEVELOPER]), async function (req: Request, res: Response) {
 
     await getAllUsers(function (result) {
         res.send(JSON.stringify(result));

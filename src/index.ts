@@ -54,7 +54,7 @@ console.log("Cache initialized");
 const ciongeckointerval = process.env.COINGECKOINTERVAL || 30
 
 geckoPricesService(+ciongeckointerval);
-console.log("CionGecko service initialized");
+console.log("CoinGecko service initialized");
 
 const port = process.env.PORT || 3000;
 

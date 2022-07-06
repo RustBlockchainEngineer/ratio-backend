@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { getAllTokens, getToken, addToken, deleteToken } from '../api/tokens'
 import { isNotSafe } from '../utils/utils';
 import { authorize } from '../middlewares/auth';
-import { UserRole,CoinGeckoTokenList,pricesSources, MainToken } from '../models/model';
+import { UserRole, pricesSources, MainToken } from '../models/model';
 import { tokenPriceList,cacheList } from "../api/cacheList";
 let router = express.Router();
 
@@ -36,14 +36,11 @@ router.get('/:id/price', async function (req: Request, res: Response) {
     let token_symbol = undefined;
     if(Object.keys(cacheList).includes("_"+req.params.id))
         token_symbol = cacheList["_"+req.params.id];
-
-    if(Object.keys(CoinGeckoTokenList).includes(req.params.id))
+    else
         token_symbol = req.params.id;
         
-    if(token_symbol && Object.keys(CoinGeckoTokenList).includes(token_symbol)){
-        res.send(JSON.stringify(
-            tokenPriceList[token_symbol.toLocaleUpperCase()]
-            ));
+    if(tokenPriceList[token_symbol]){
+        res.send(JSON.stringify(tokenPriceList[token_symbol]));
     }
     else
         res.status(404).send({ error: 'Token price not found' });

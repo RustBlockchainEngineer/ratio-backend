@@ -1,16 +1,40 @@
 import { RowDataPacket } from 'mysql2'
 import { dbcon } from "../models/db";
-import { Platform, Price, Token, TokenIDS } from '../models/model'
+import { Platform, Price, Token, TokenIDS, TokenPriceSource } from '../models/model'
 import { cacheList } from '../api/cacheList'
+import { saveCoinGeckoPrices } from './coingecko';
 
-function map_row_token(row: RowDataPacket): Token {
+export function map_row_token(row: RowDataPacket): Token {
     return {
         "address_id": row.address_id,
         "symbol": row.symbol,
         "icon": row.icon
     }
 }
+export async function getAllTokensInSimple() {
+    const query = `SELECT tkn.address_id,
+                        tkn.symbol, 
+                        tkn.icon, 
+                        tknid.source,
+                        tknid.token_id
+                    FROM RFDATA.TOKENS tkn 
+                    LEFT JOIN RFDATA.TOKENIDS tknid ON tknid.token = tkn.symbol`;
+    const [rows, fields] = await dbcon.promise().query(query);
+    let tokens:any = {};
 
+    if ((rows as any).length > 0) {
+        for (let row of (rows as any)){
+            let record = tokens[row.address_id];
+            if (record == undefined)
+            record = map_row_token(row);
+
+            if(row.token_id && row.source == TokenPriceSource.COINGECKO)
+            record["token_id"] = row.token_id;
+            tokens[row.address_id] = record;
+        }
+    }
+    return tokens;
+}
 export async function getAllTokens(callback: (r: Token[]) => void) {
     dbcon.query(`SELECT 
                     tkn.address_id,
@@ -114,24 +138,24 @@ export async function addToken(address_id: string,data: Token) {
     let ts = Date.now();
     cacheList["_" + address_id] = data["symbol"];
 
-    dbcon.query(
+    await dbcon.promise().query(
         `DELETE FROM RFDATA.TOKENIDS WHERE token = "${data["symbol"]}"`
     );
 
-    dbcon.query(
+    await dbcon.promise().query(
         `DELETE FROM RFDATA.TOKENSPLATFORMS WHERE token_address_id = "${address_id}"`
     );
-    dbcon.query(
+    await dbcon.promise().query(
         `DELETE FROM RFDATA.TOKENS WHERE address_id = "${address_id}"`
     );
 
-    dbcon.query(
+    await dbcon.promise().query(
         `INSERT INTO RFDATA.TOKENS(address_id,symbol,icon,created_on,updated_on) VALUES (?,?,?,FROM_UNIXTIME(? * 0.001),FROM_UNIXTIME(? * 0.001))`,
         [address_id, data["symbol"], data["icon"], ts, ts]
     );
     if (data["token_ids"])
         for (let row of data["token_ids"]) {
-            dbcon.query(
+            await dbcon.promise().query(
                 `INSERT INTO RFDATA.TOKENIDS(token,source,token_id) VALUES (?,?,?)`,
                 [data["symbol"], row["source"],row["token_id"] ]
             );
@@ -139,11 +163,12 @@ export async function addToken(address_id: string,data: Token) {
 
     if (data["platforms"])
         for (let row of data["platforms"]) {
-            dbcon.query(
+            await dbcon.promise().query(
                 `INSERT INTO RFDATA.TOKENSPLATFORMS(token_address_id,platform_address_id) VALUES (?,?)`,
                 [address_id, row["id"], ]
             );
         }
+    await saveCoinGeckoPrices();
     return data;
 }
 

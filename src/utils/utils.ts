@@ -19,7 +19,7 @@ export const findMissedFields = (keyList: string[], obj: Object): string[] => {
 export const getConnection = async () =>
   new Connection(
     // clusterApiUrl(getClusterName()),
-    'https://stableswap.rpcpool.com/',
+    'https://solana-mainnet.phantom.app',
     'confirmed'
   );
 
