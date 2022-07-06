@@ -24,8 +24,6 @@ export async function saveCoinGeckoPrices(){
 
   // reportAllPriceOracle(recentPrices);
 
-  const saberLPoolList = await getSaberLpTokenPrices()
-
   for (const t of Object.keys(tokenPriceList)){
     await dbcon.promise().query(`INSERT INTO RFDATA.TOKENPRICES(
       token,
@@ -36,6 +34,8 @@ export async function saveCoinGeckoPrices(){
       [t,tokenPriceList[t],ts,"coingecko"]
       );
   }
+
+  const saberLPoolList = await getSaberLpTokenPrices()
   for (const pool of saberLPoolList){
     await dbcon.promise().query(`INSERT INTO RFDATA.SOURCELPPRICES(
       pool_name,
@@ -102,7 +102,6 @@ export async function getMedianCoingeckoPrices(priceFrequency = 25){
        return parseFloat(price.price);
     });
     medianPrices[token.symbol] = getMedianPrice(parsedPrices);
-    console.log(token.symbol, parsedPrices, medianPrices[token.symbol]);
   }));
 
   return medianPrices;

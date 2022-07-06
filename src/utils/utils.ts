@@ -25,7 +25,7 @@ export const getConnection = async () =>
 
 export const getClusterName = () => {
   const env = requireEnv("SOLANACLUSTER", "devnet")
-  if (env == 'devnet' || env == 'mainnet-beta') {
+  if (env == 'mainnet' || env == 'mainnet-beta') {
     return env;
   } else {
     return 'devnet'

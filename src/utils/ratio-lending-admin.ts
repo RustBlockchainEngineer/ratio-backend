@@ -28,41 +28,6 @@ function getProgramInstance(connection: Connection, wallet: any) {
 
   return program;
 }
-export async function reportPriceOracle(
-  connection: Connection,
-  wallet: any,
-
-  mint: PublicKey,
-  newPrice: number
-) {
-  const program = getProgramInstance(connection, wallet);
-
-  const globalStateKey = getGlobalStatePDA();
-  const oracleKey = getOraclePDA(mint);
-
-  const tx = program.transaction.reportPriceToOracle(
-    // price of token
-    new BN(newPrice * 10 ** USDR_MINT_DECIMALS),
-    {
-      accounts: {
-        authority: wallet.publicKey,
-        globalState: globalStateKey,
-        oracle: oracleKey,
-        mint: mint,
-      },
-    }
-  );
-
-  const txHash = await sendTransaction(connection, wallet, tx);
-  // await connection.confirmTransaction(txHash);
-  if (txHash?.value?.err) {
-    console.error('ERROR ON TX ', txHash.value.err);
-    throw txHash.value.err;
-  }
-  console.log('Updated price of Oracle account  tx = ', txHash);
-
-  return txHash;
-}
 
 export async function reportAllPriceOracle(
   prices: {[key: string]: number}
