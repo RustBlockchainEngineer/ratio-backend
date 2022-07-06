@@ -78,7 +78,6 @@ function getMedianPrice(prices:number[]):number{
 }
 
 export async function getMedianCoingeckoPrices(priceFrequency = +(process.env?.PRICE_SAMPLE_DURATION ?? '120')){
-  console.log('Getting Price array', priceFrequency)
   const tokens = await getAllTokensInSimple();
   let medianPrices: {[k: string]: any} = {};
   await Promise.all(Object.values(tokens).map(async (token : any) =>{
