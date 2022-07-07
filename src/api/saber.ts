@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { getAccount, getMint } from "@solana/spl-token";
-import { tokenPriceList } from "./cacheList";
+import { medianPriceList } from "./cacheList";
 import { PublicKey} from "@solana/web3.js";
 import { getConnection,getClusterName,mapClusterToNetworkName } from "../utils/utils";
 import BigNumber from 'bignumber.js';
@@ -79,106 +79,70 @@ async function fetchSaberTokens() {
 }
 
 const getPoolsTokenSizes = async(pools:any) => {
-  const connection = await getConnection();
   const poolsFormatted = await Promise.all(
     pools.map(async (pool:any) => {
-      pool.tokenASize = (await getAccount(connection,new PublicKey(pool.tokenA))).amount.toString();
-      pool.tokenBSize = (await getAccount(connection,new PublicKey(pool.tokenB))).amount.toString();
-      return pool;
+      return await getPoolTokenSizes(pool);
     })
   );
   return poolsFormatted;
 }
 
-export const getPoolTokenSizes = async(pool:any) => {
+const getPoolTokenSizes = async(pool:any) => {
   const connection = await getConnection();
   pool.tokenASize = (await getAccount(connection,new PublicKey(pool.tokenA))).amount.toString();
   pool.tokenBSize = (await getAccount(connection,new PublicKey(pool.tokenB))).amount.toString();
   return pool;
 }
 
-export const getSaberLpTokenPrice = async (poolName: string) => {
+const getSaberPoolDetail = async (poolInfo: any) => {
+  const tokenPrices = medianPriceList;
+  let lpSupply, fairPrice, virtualPrice;
+  const connection = await getConnection();
+  if(tokenPrices[poolInfo.tokenAName] != undefined && tokenPrices[poolInfo.tokenBName]!= undefined){
+    const tokenAPrice = new BigNumber(tokenPrices[poolInfo.tokenAName]);
+    const tokenBPrice = new BigNumber(tokenPrices[poolInfo.tokenBName]);
+    const tokenASize =  new BigNumber(poolInfo.tokenASize);
+    const tokenBSize =  new BigNumber(poolInfo.tokenBSize);
+
+    const poolTokenInfo = await getMint(connection, new PublicKey(poolInfo.poolTokenMint));
+    lpSupply = new BigNumber(poolTokenInfo.supply.toString());
+
+    const tokenAValue = tokenAPrice.multipliedBy(tokenASize);
+    const tokenBValue = tokenBPrice.multipliedBy(tokenBSize);
+
+    fairPrice = tokenAValue.sqrt().multipliedBy(tokenBValue.sqrt()).multipliedBy(2).dividedBy(lpSupply).toNumber();
+    virtualPrice = tokenAValue.plus(tokenBValue).dividedBy(lpSupply).toNumber();
+  }
+  return {
+    poolName: poolInfo.name,
+    lpInfo: {
+      fairPrice,
+      virtualPrice,
+      supply: lpSupply?.toString(),
+    },
+    tokenASize: poolInfo.tokenASize,
+    tokenBSize: poolInfo.tokenBSize,
+    tokenAPrice:tokenPrices[poolInfo.tokenAName],
+    tokenBPrice:tokenPrices[poolInfo.tokenBName]
+  };
+}
+
+export const getSaberLPTokenPriceByPoolName = async (poolName: string) => {
   const pool = await fetchSaberPoolData(poolName);
-  const tokenPrices = tokenPriceList;
-  let poolPrice;
   if(pool){
     const poolFormatted = await getPoolTokenSizes(pool);
-    if(tokenPrices[poolFormatted.tokenAName] != undefined && tokenPrices[poolFormatted.tokenBName]!= undefined){
-      //@ts-ignore
-      const tokenAPriceSqrt = (new BigNumber(tokenPrices[poolFormatted.tokenAName])).sqrt();
-      //@ts-ignore
-      const tokenBPriceSqrt = (new BigNumber(tokenPrices[poolFormatted.tokenBName])).sqrt();
-      const tokenASizeSqrt =  (new BigNumber(poolFormatted.tokenASize)).sqrt();
-      const tokenBSizeSqrt =  (new BigNumber(poolFormatted.tokenBSize)).sqrt();
-      const totalReserveTokens = (new BigNumber(poolFormatted.tokenASize)).plus(poolFormatted.tokenBSize);
-
-      poolPrice = ( (tokenAPriceSqrt
-                          .multipliedBy(tokenBPriceSqrt)
-                          .multipliedBy(tokenASizeSqrt)
-                          .multipliedBy(tokenBSizeSqrt)
-                        ).multipliedBy(2) ).dividedBy(totalReserveTokens).toString();
-    }
-    return {
-      poolName: poolFormatted.name,
-      lpPrice: poolPrice,
-      tokenASize: poolFormatted.tokenASize,
-      tokenBSize: poolFormatted.tokenBSize,
-      tokenAPrice:tokenPrices[poolFormatted.tokenAName],
-      tokenBPrice:tokenPrices[poolFormatted.tokenBName]
-    };
+    return getSaberPoolDetail(poolFormatted);
   }
 }
-/**
- * 
-  2 * (sqrt(a1) * sqrt(a2) * sqrt(r1) * sqrt(r2)) / (r1 + r2),
-  where a1, a2 are the prices of the assets and r1, r2 are the amount of each token in the pool
- * 
- */
-export const getSaberLpTokenPrices = async() => {
-    const connection = await getConnection();
+
+export const getAllSaberLpTokenPrices = async() => {
     const pools = await fetchSaberTokens();
-    const tokenPrices = tokenPriceList;
     const poolTokenSizes = await getPoolsTokenSizes(pools);
 
     const lpPrices = await Promise.all(
         poolTokenSizes.map(async (pool:any) => {
-          //@ts-ignore
-         if(tokenPrices[pool.tokenAName] != undefined && tokenPrices[pool.tokenBName]!= undefined){
-           //@ts-ignore
-          const tokenAPriceSqrt = (new BigNumber(tokenPrices[pool.tokenAName])).sqrt();
-           //@ts-ignore
-          const tokenBPriceSqrt = (new BigNumber(tokenPrices[pool.tokenBName])).sqrt();
-          const tokenASizeSqrt =  (new BigNumber(pool.tokenASize)).sqrt();
-          const tokenBSizeSqrt =  (new BigNumber(pool.tokenBSize)).sqrt();
-           // const totalReserveTokens = (new BigNumber(pool.tokenASize)).plus(pool.tokenBSize);
-          const poolTokenMintPublicKey = new PublicKey(pool.poolTokenMint);
-          const poolTokenInfo = await getMint(connection,poolTokenMintPublicKey);
-          const poolTokenTotalSupply = (new BigNumber(poolTokenInfo.supply.toString()));
-
-           pool.lpPrice = ( (tokenAPriceSqrt
-                            .multipliedBy(tokenBPriceSqrt)
-                            .multipliedBy(tokenASizeSqrt)
-                            .multipliedBy(tokenBSizeSqrt)
-                          ).multipliedBy(2) ).dividedBy(poolTokenTotalSupply).toString();
-         }
-         return {
-           poolName: pool.name,
-           lpPrice: pool.lpPrice,
-           tokenASize: pool.tokenASize,
-           tokenBSize: pool.tokenBSize,
-           tokenAPrice:tokenPrices[pool.tokenAName],
-           tokenBPrice:tokenPrices[pool.tokenBName]
-         };
+          return getSaberPoolDetail(pool);
        })
      );
     return lpPrices;
-};
-
-
-/**
- * A * sum(x_i) * n**n + D = A * D * n**n + D**(n+1) / (n**n * prod(x_i))
- */
-export const getUsdrPrice = async() => {
-  const poolData = await getSaberLpTokenPrice('USD-USDR');
-  return poolData;
 };

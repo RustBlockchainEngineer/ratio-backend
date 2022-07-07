@@ -1,20 +1,18 @@
 import express, { Request, Response } from 'express';
-import { tokenPriceList } from "../api/cacheList";
-import { getMedianCoingeckoPrices } from '../api/coingecko';
+import { medianPriceList, recentPriceList } from "../api/cacheList";
 let router = express.Router();
 
 router.get('/', async function (req: Request, res: Response) {
-    res.send(JSON.stringify(tokenPriceList));
+    res.send(JSON.stringify(recentPriceList));
 });
 
 router.get('/medianprices',async function(req: Request, res: Response){
-    const result = await getMedianCoingeckoPrices();
-    res.send(JSON.stringify(result));
+    res.send(JSON.stringify(medianPriceList));
 });
 
 router.get('/:id', async function (req: Request, res: Response) {
-    if(tokenPriceList[req.params.id])
-        res.send(JSON.stringify(tokenPriceList[req.params.id]));
+    if(recentPriceList[req.params.id])
+        res.send(JSON.stringify(recentPriceList[req.params.id]));
     else
         res.status(404).send({ error: 'Token not found' });
 });
