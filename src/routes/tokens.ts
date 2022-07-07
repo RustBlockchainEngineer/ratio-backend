@@ -3,7 +3,7 @@ import { getAllTokens, getToken, addToken, deleteToken } from '../api/tokens'
 import { isNotSafe } from '../utils/utils';
 import { authorize } from '../middlewares/auth';
 import { UserRole, pricesSources, MainToken } from '../models/model';
-import { tokenPriceList,cacheList } from "../api/cacheList";
+import { medianPriceList,cacheList } from "../api/cacheList";
 let router = express.Router();
 
 router.get('/', async function (req: Request, res: Response) {
@@ -14,7 +14,7 @@ router.get('/', async function (req: Request, res: Response) {
 })
 
 router.get('/prices', async function (req: Request, res: Response) {
-    res.send(JSON.stringify(tokenPriceList));
+    res.send(JSON.stringify(medianPriceList));
 })
 
 router.get('/main', async function (req: Request, res: Response) {
@@ -39,8 +39,8 @@ router.get('/:id/price', async function (req: Request, res: Response) {
     else
         token_symbol = req.params.id;
         
-    if(tokenPriceList[token_symbol]){
-        res.send(JSON.stringify(tokenPriceList[token_symbol]));
+    if(medianPriceList[token_symbol]){
+        res.send(JSON.stringify(medianPriceList[token_symbol]));
     }
     else
         res.status(404).send({ error: 'Token price not found' });

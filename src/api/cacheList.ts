@@ -3,7 +3,8 @@ import { dbcon } from "../models/db";
 import { saveCoinGeckoPrices } from "./coingecko";
 
 export const cacheList: { [key: string]: string } = {};
-export const tokenPriceList : { [key: string]: number } = {};
+export const recentPriceList : { [key: string]: number } = {};
+export const medianPriceList : { [key: string]: number } = {};
 
 export async function cacheInit() {
     dbcon.query("SELECT address_id,symbol FROM RFDATA.TOKENS", function (err, result) {
