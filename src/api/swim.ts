@@ -19,7 +19,7 @@ const SWIM_POOL_TOKEN_ACCOUNTS = {
 };
 
 export const getSwimUsdPrice = async () => {
-  const connection = new Connection("https://api.metaplex.solana.com");//getConnection();
+  const connection = getConnection();
   let totalPoolPrice = 0;
 
   const medianPrices = await getMedianCoingeckoPrices();
@@ -40,8 +40,8 @@ export const getSwimUsdPrice = async () => {
     lpPrice = totalPoolPrice / preciseSupply;
   }
 
-  console.log("lpPrice =", lpPrice);
+  console.log("swimUsd lpPrice =", lpPrice);
   return lpPrice;
 }
 
-getSwimUsdPrice();
+// getSwimUsdPrice();

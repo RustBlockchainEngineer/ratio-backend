@@ -16,7 +16,7 @@ export const findMissedFields = (keyList: string[], obj: Object): string[] => {
   }
   return missingKeys;
 }
-export const getConnection = async () =>
+export const getConnection = () =>
   new Connection(
     // clusterApiUrl(getClusterName()),
     'https://solana-mainnet.phantom.app',
