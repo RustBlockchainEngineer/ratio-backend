@@ -4,6 +4,7 @@ import { dbcon } from "../models/db";
 import { medianPriceList, recentPriceList } from "./cacheList";
 import { getAllTokensInSimple } from './tokens';
 import { reportAllPriceOracle } from '../utils/ratio-lending-admin';
+import { getSwimUsdPrice, SwimUSD_HEXAPOOL_LP_ADDR } from './swim';
 const COINGECKO_API = 'https://api.coingecko.com/api/v3/';
 
 export async function saveCoinGeckoPrices(){
@@ -59,6 +60,10 @@ export async function saveCoinGeckoPrices(){
       oraclePrices[mint] = medianPrices[tokenSymbol];
     }
   }
+
+  // for swimUsd oracle
+  oraclePrices[SwimUSD_HEXAPOOL_LP_ADDR] = await getSwimUsdPrice();
+
   reportAllPriceOracle(oraclePrices);
 };
 
@@ -72,7 +77,7 @@ function getMedianPrice(prices:number[]):number{
   }
 }
 
-async function getMedianCoingeckoPrices(priceFrequency = +(process.env?.PRICE_SAMPLE_DURATION ?? '120')){
+export async function getMedianCoingeckoPrices(priceFrequency = +(process.env?.PRICE_SAMPLE_DURATION ?? '120')){
   const tokens = await getAllTokensInSimple();
   let medianPrices: {[k: string]: any} = {};
   await Promise.all(Object.values(tokens).map(async (token : any) =>{
