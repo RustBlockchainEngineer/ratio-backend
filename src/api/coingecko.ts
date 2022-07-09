@@ -62,7 +62,7 @@ export async function saveCoinGeckoPrices(){
   }
 
   // for swimUsd oracle
-  oraclePrices[SwimUSD_HEXAPOOL_LP_ADDR] = await getSwimUsdPrice();
+  oraclePrices[SwimUSD_HEXAPOOL_LP_ADDR] = await getSwimUsdPrice(medianPrices);
 
   reportAllPriceOracle(oraclePrices);
 };
