@@ -136,6 +136,7 @@ export async function getToken(address_id: string, callback: (r: Token | undefin
 
 export async function addToken(address_id: string,data: Token) {
     let ts = Date.now();
+    address_id = address_id.trim();
     cacheList["_" + address_id] = data["symbol"];
 
     await dbcon.promise().query(

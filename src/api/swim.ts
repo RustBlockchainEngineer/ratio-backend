@@ -18,11 +18,10 @@ const SWIM_POOL_TOKEN_ACCOUNTS = {
   'BUSD': "DukQAFyxR41nbbq2FBUDMyrtF2CRmWBREjZaTVj4u9As"
 };
 
-export const getSwimUsdPrice = async () => {
+export const getSwimUsdPrice = async (medianPrices: any) => {
   const connection = getConnection();
   let totalPoolPrice = 0;
 
-  const medianPrices = await getMedianCoingeckoPrices();
   await Promise.all(_.map(SWIM_POOL_TOKEN_ACCOUNTS, async (accAddress, tokenName) => {
     let tokenAmount = (await connection.getTokenAccountBalance(new PublicKey(accAddress))).value.uiAmount;
     if (tokenAmount)
@@ -33,12 +32,9 @@ export const getSwimUsdPrice = async () => {
   }));
 
   let lpPrice = 0;
-  const data = (await connection.getAccountInfo(new PublicKey(SwimUSD_HEXAPOOL_LP_ADDR)))?.data;
-  if (data) {
-    const lpMintData = MintLayout.decode(new Uint8Array(data));
-    const preciseSupply = (new BigNumber(lpMintData.supply.toString()).div(10 ** lpMintData.decimals)).toNumber();
-    lpPrice = totalPoolPrice / preciseSupply;
-  }
+  const mintInfo = await getMint(connection, new PublicKey(SwimUSD_HEXAPOOL_LP_ADDR));
+  const preciseSupply = (new BigNumber(mintInfo.supply.toString()).div(10 ** mintInfo.decimals)).toNumber();
+  lpPrice = totalPoolPrice / preciseSupply;
 
   console.log("swimUsd lpPrice =", lpPrice);
   return lpPrice;

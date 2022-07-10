@@ -49,8 +49,9 @@ export async function reportAllPriceOracle(
 
   const oracles = await program.account.oracle.all();
   const onChainOracleKeys = oracles.map((item)=>item.account.mint.toString());
+
   for(let mint in prices) {
-    if (onChainOracleKeys.indexOf(mint) > 0) {
+    if (onChainOracleKeys.indexOf(mint) > -1) {
       const oracleKey = getOraclePDA(mint);
       const ix = program.instruction.reportPriceToOracle(
         new BN(prices[mint] * 10 ** USDR_MINT_DECIMALS),
