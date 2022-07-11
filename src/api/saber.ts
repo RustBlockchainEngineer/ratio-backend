@@ -123,7 +123,8 @@ const getSaberPoolDetail = async (poolInfo: any) => {
     tokenASize: poolInfo.tokenASize,
     tokenBSize: poolInfo.tokenBSize,
     tokenAPrice:tokenPrices[poolInfo.tokenAName],
-    tokenBPrice:tokenPrices[poolInfo.tokenBName]
+    tokenBPrice:tokenPrices[poolInfo.tokenBName],
+    platform: 'Saber'
   };
 }
 

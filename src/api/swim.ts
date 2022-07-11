@@ -36,8 +36,19 @@ export const getSwimUsdPrice = async (medianPrices: any) => {
   const preciseSupply = (new BigNumber(mintInfo.supply.toString()).div(10 ** mintInfo.decimals)).toNumber();
   lpPrice = totalPoolPrice / preciseSupply;
 
-  console.log("swimUsd lpPrice =", lpPrice);
-  return lpPrice;
+  return {
+    poolName: 'swimUSD',
+    lpInfo: {
+      fairPrice: lpPrice,
+      virtualPrice: lpPrice,
+      supply: preciseSupply,
+    },
+    tokenASize: 0,
+    tokenBSize: 0,
+    tokenAPrice:0,
+    tokenBPrice:0,
+    platform: 'Swim'
+  };
 }
 
 // getSwimUsdPrice();
