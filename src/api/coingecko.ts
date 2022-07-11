@@ -5,6 +5,7 @@ import { medianPriceList, recentPriceList } from "./cacheList";
 import { getAllTokensInSimple } from './tokens';
 import { reportAllPriceOracle } from '../utils/ratio-lending-admin';
 import { getSwimUsdPrice, SwimUSD_HEXAPOOL_LP_ADDR } from './swim';
+import { getAllSaberLpTokenPrices } from './saber';
 const COINGECKO_API = 'https://api.coingecko.com/api/v3/';
 
 export async function saveCoinGeckoPrices(){
@@ -34,23 +35,6 @@ export async function saveCoinGeckoPrices(){
       );
   }
 
-  // const saberLPoolList = await getSaberLpTokenPrices()
-  // for (const pool of saberLPoolList){
-  //   await dbcon.promise().query(`INSERT INTO RFDATA.SOURCELPPRICES(
-  //     pool_name,
-  //     lp_price,
-  //     tokenasize,
-  //     tokenbsize,
-  //     tokenaprice,
-  //     tokenbprice,
-  //     source,
-  //     created_on
-  //     )
-  //     VALUES (?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
-  //     [pool["poolName"],pool["lpPrice"],pool["tokenASize"],pool["tokenBSize"],pool["tokenAPrice"],pool["tokenBPrice"],"Saber",ts]
-  //     );
-  // }
-
   const medianPrices = await getMedianCoingeckoPrices();
   const oraclePrices:{[key: string]: number} = {};
   for (const mint in tokens) {
@@ -62,7 +46,26 @@ export async function saveCoinGeckoPrices(){
   }
 
   // for swimUsd oracle
-  oraclePrices[SwimUSD_HEXAPOOL_LP_ADDR] = await getSwimUsdPrice(medianPrices);
+  const swimPoolInfo = await getSwimUsdPrice(medianPrices);
+  oraclePrices[SwimUSD_HEXAPOOL_LP_ADDR] = swimPoolInfo.lpInfo.virtualPrice
+
+  const saberLPoolList = await getAllSaberLpTokenPrices()
+  const poolList = [...saberLPoolList, swimPoolInfo]
+  for (const pool of poolList){
+    await dbcon.promise().query(`INSERT INTO RFDATA.SOURCELPPRICES(
+      pool_name,
+      lp_price,
+      tokenasize,
+      tokenbsize,
+      tokenaprice,
+      tokenbprice,
+      source,
+      created_on
+      )
+      VALUES (?,?,?,?,?,?,?,FROM_UNIXTIME(? * 0.001))`,
+      [pool["poolName"],pool['lpInfo']["virtualPrice"],pool["tokenASize"],pool["tokenBSize"],pool["tokenAPrice"],pool["tokenBPrice"], pool.platform,ts]
+      );
+  }
 
   reportAllPriceOracle(oraclePrices);
 };
