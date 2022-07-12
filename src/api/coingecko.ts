@@ -47,8 +47,8 @@ export async function saveCoinGeckoPrices(){
   }
 
   // for swimUsd oracle
-  // const swimPoolInfo = await getSwimUsdPrice(medianPrices);
-  // oraclePrices[SwimUSD_HEXAPOOL_LP_ADDR] = swimPoolInfo.lpInfo.virtualPrice
+  const swimPoolInfo = await getSwimUsdPrice(medianPrices);
+  oraclePrices[SwimUSD_HEXAPOOL_LP_ADDR] = swimPoolInfo.lpInfo.virtualPrice
 
   const saberLPoolList = await getAllSaberLpTokenPrices()
   const raydiumLPInfoList = await getAllRaydiumLpTokenPrices()
