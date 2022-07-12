@@ -1,5 +1,4 @@
-import { getAccount, getMint } from "@solana/spl-token";
-import { medianPriceList } from "./cacheList";
+import { getMint } from "@solana/spl-token";
 import { PublicKey} from "@solana/web3.js";
 import { getConnection } from "../utils/utils";
 
@@ -11,7 +10,7 @@ import { OpenOrders } from "@project-serum/serum";
 import { struct, seq, publicKey, u128, u64 } from './../utils/marshmallow'
 import BigNumber from "bignumber.js";
 
-export const getAllRaydiumLpTokenPrices = async() => {
+export const getAllRaydiumLpTokenPrices = async(medianPrices: any) => {
     const raydiumPairs = await axios.get(`https://api.raydium.io/v2/main/pairs`);
     const pairJsonInfo: JsonPairItemInfo[] = raydiumPairs.data;
     const filteredInfo = pairJsonInfo.filter(({ name }) => !name.includes('unknown'));
@@ -42,17 +41,17 @@ export const getAllRaydiumLpTokenPrices = async() => {
     
     const poolInfos: any[] = []
     for(let i=0; i<initialPoolInfos.length; i++){
-        const calculatedPoolInfo = await getRaydiumLpPriceInfo(initialPoolInfos[i])
+        const calculatedPoolInfo = await getRaydiumLpPriceInfo(initialPoolInfos[i], medianPrices)
         if(calculatedPoolInfo){
             poolInfos.push(calculatedPoolInfo);
         }
     }
     return poolInfos;
 };
-export const getRaydiumLpPriceInfo = async(poolInfo: any) => {
+export const getRaydiumLpPriceInfo = async(poolInfo: any, medianPrices: any) => {
     const ammId: string = poolInfo.ammId;
     const name: string = poolInfo.poolName;
-    const tokenPrices = medianPriceList;
+    const tokenPrices = medianPrices;
     const tokenAName = name.split('-')[0];
     const tokenBName = name.split('-')[1];
     const tokenAPrice = new BigNumber(tokenPrices[tokenAName]);
