@@ -52,7 +52,7 @@ export async function saveCoinGeckoPrices(){
 
   const saberLPoolList = await getAllSaberLpTokenPrices()
   const raydiumLPInfoList = await getAllRaydiumLpTokenPrices(medianPrices)
-  const poolList = [...saberLPoolList, ...raydiumLPInfoList]
+  const poolList = [...saberLPoolList, swimPoolInfo, ...raydiumLPInfoList]
   for (const pool of poolList){
     await dbcon.promise().query(`INSERT INTO RFDATA.SOURCELPPRICES(
       pool_name,
