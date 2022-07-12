@@ -6,7 +6,7 @@ import { getConnection,getClusterName,mapClusterToNetworkName } from "../utils/u
 import BigNumber from 'bignumber.js';
 import { dbcon } from '../models/db';
 import axios from 'axios';
-import { getAllOracleMints } from '../utils/ratio-lending-admin';
+import { getAllOracleMints, USDR_MINT_DECIMALS } from '../utils/ratio-lending-admin';
 
 export const getAllRaydiumLpTokenPrices = async() => {
     const data = (await axios.get(`https://api.raydium.io/v2/main/pairs`));
@@ -16,13 +16,14 @@ export const getAllRaydiumLpTokenPrices = async() => {
 
     const poolInfos: any[] = []
     filteredInfo.forEach((raydiumItemInfo)=>{
-        if(ratioOracleKeys.includes(raydiumItemInfo.lpMint)){
+        if(ratioOracleKeys.includes(raydiumItemInfo.lpMint) && raydiumItemInfo.lpPrice){
             // raydium lp token is used in the ratio protocol. so that we can report the raydium lp price
+            let lpPrice = Math.round(raydiumItemInfo.lpPrice * 10 ** USDR_MINT_DECIMALS) / 10 ** USDR_MINT_DECIMALS
             poolInfos.push({
                 poolName: raydiumItemInfo.name,
                 lpInfo: {
-                    fairPrice: raydiumItemInfo.lpPrice,
-                    virtualPrice: raydiumItemInfo.lpPrice,
+                    fairPrice: lpPrice,
+                    virtualPrice: lpPrice,
                     supply: 0,
                 },
                 tokenASize: 0,

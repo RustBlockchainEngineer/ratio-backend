@@ -10,7 +10,7 @@ import base58 from 'bs58';
 import NodeWallet from "@project-serum/anchor/dist/cjs/nodewallet";
 import { syncBuiltinESMExports } from 'module';
 
-const USDR_MINT_DECIMALS = 6;
+export const USDR_MINT_DECIMALS = 6;
 export const RATIO_LENDING_PROGRAM_ID = new PublicKey('RFLeGTwFXiXXETdJkZuu9iKgXNkYbywLpTu1TioDsDQ');
 const MAX_IX_COUNT = 11;
 
