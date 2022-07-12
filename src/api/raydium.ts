@@ -24,6 +24,7 @@ export const getAllRaydiumLpTokenPrices = async(medianPrices: any) => {
             // let lpPrice = Math.round(raydiumItemInfo.lpPrice * 10 ** USDR_MINT_DECIMALS) / 10 ** USDR_MINT_DECIMALS
             initialPoolInfos.push({
                 ammId: raydiumItemInfo.ammId,
+                lpMint: raydiumItemInfo.lpMint,
                 poolName: raydiumItemInfo.name,
                 lpInfo: {
                     fairPrice: 0,
@@ -95,6 +96,7 @@ export const getRaydiumLpPriceInfo = async(poolInfo: any, medianPrices: any) => 
 
         return {
             ammId: ammId,
+            lpMint: lpMint.toString(),
             poolName: name,
             lpInfo: {
                 fairPrice: fairPrice.toString(),
