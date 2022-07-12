@@ -16,6 +16,7 @@ let authRouter = require('./routes/auth');
 let rpcAuthRouter = require('./routes/rpc-auth');
 let coingecko = require('./routes/coingecko');
 let saber = require('./routes/saberPoolSizes');
+let raydium = require('./routes/raydium');
 
 const app = express();
 
@@ -45,6 +46,7 @@ app.use('/saberlpprices', saber);;
 app.use('/auth', authRouter);
 app.use('/rpcauth', rpcAuthRouter);
 app.use('/users', users);
+app.use('/raydium', raydium);
 
 // Init the tokens and LPs cache list;
 cacheInit();

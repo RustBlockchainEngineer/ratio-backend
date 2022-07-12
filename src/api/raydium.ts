@@ -1,15 +1,15 @@
 import { getAccount, getMint } from "@solana/spl-token";
 import { medianPriceList } from "./cacheList";
 import { PublicKey} from "@solana/web3.js";
-import { getConnection,getClusterName,mapClusterToNetworkName } from "../utils/utils";
+import { getConnection } from "../utils/utils";
 
-import { publicKey, u128, u64} from '@project-serum/borsh'
 // @ts-ignore
-import { nu64, struct, u8, seq } from 'buffer-layout'
+
 import axios from 'axios';
-import { getAllOracleMints, USDR_MINT_DECIMALS } from '../utils/ratio-lending-admin';
+import { getAllOracleMints } from '../utils/ratio-lending-admin';
 import { OpenOrders } from "@project-serum/serum";
-import { BN } from "@project-serum/anchor";
+import { struct, seq, publicKey, u128, u64 } from './../utils/marshmallow'
+import BigNumber from "bignumber.js";
 
 export const getAllRaydiumLpTokenPrices = async() => {
     const raydiumPairs = await axios.get(`https://api.raydium.io/v2/main/pairs`);
@@ -55,61 +55,64 @@ export const getRaydiumLpPriceInfo = async(poolInfo: any) => {
     const tokenPrices = medianPriceList;
     const tokenAName = name.split('-')[0];
     const tokenBName = name.split('-')[1];
-    const tokenAPrice = new BN(tokenPrices[tokenAName]);
-    const tokenBPrice = new BN(tokenPrices[tokenBName]);
+    const tokenAPrice = new BigNumber(tokenPrices[tokenAName]);
+    const tokenBPrice = new BigNumber(tokenPrices[tokenBName]);
 
     const connection = getConnection();
     const accountData = await connection.getAccountInfo(new PublicKey(ammId))
     if(accountData){
+        
         const parsedAmmData = AMM_INFO_LAYOUT_STABLE.decode(accountData.data)
+        
         const { 
-            poolCoinTokenAccount, 
-            poolPcTokenAccount, 
-            lpMintAddress, 
-            ammOpenOrders, 
-            serumProgramId, 
-            needTakePnlCoin, 
-            needTakePnlPc,
+            baseVault,
+            quoteVault,
+            lpMint,
+            openOrders,
+            marketProgramId,
+            baseNeedTakePnl,
+            quoteNeedTakePnl
         } = parsedAmmData
 
-        let coinAmount = (await connection.getTokenAccountBalance(poolCoinTokenAccount)).value.amount;
-        let pcAmount = (await connection.getTokenAccountBalance(poolPcTokenAccount)).value.amount;
+        let coinAmount = toBigNumber((await connection.getTokenAccountBalance(baseVault)).value.amount);
+        let pcAmount = toBigNumber((await connection.getTokenAccountBalance(quoteVault)).value.amount);
         
-        const mintInfo = await getMint(connection, lpMintAddress);
+        const mintInfo = await getMint(connection, lpMint);
         const lpSupply = mintInfo.supply;
         
-        const ammOpenOrdersData = await connection.getAccountInfo(ammOpenOrders)
-        const OPEN_ORDERS_LAYOUT = OpenOrders.getLayout(serumProgramId)
-        const parsedAmmOpenOrders = OPEN_ORDERS_LAYOUT.decode(ammOpenOrdersData)
+        const ammOpenOrdersData = await connection.getAccountInfo(openOrders)
+        const OPEN_ORDERS_LAYOUT = OpenOrders.getLayout(marketProgramId)
+        const parsedAmmOpenOrders = OPEN_ORDERS_LAYOUT.decode(ammOpenOrdersData?.data)
+        
         const { baseTokenTotal, quoteTokenTotal } = parsedAmmOpenOrders
+        
+        const tokenASize = toBigNumber(coinAmount).plus(toBigNumber(baseTokenTotal)).minus(toBigNumber(baseNeedTakePnl))
+        const tokenBSize = toBigNumber(pcAmount).plus(toBigNumber(quoteTokenTotal)).minus(toBigNumber(quoteNeedTakePnl))
 
-        const tokenASize = toBN(coinAmount).add(toBN(baseTokenTotal)).sub(toBN(needTakePnlCoin))
-        const tokenBSize = toBN(pcAmount).add(toBN(quoteTokenTotal)).sub(toBN(needTakePnlPc))
-
-        const tokenAValue = tokenAPrice.mul(tokenASize);
-        const tokenBValue = tokenBPrice.mul(tokenBSize);
-        const fairPrice = tokenAValue.sqr().mul(tokenBValue.sqr()).mul(new BN(2)).div(toBN(lpSupply)).toNumber();
-        const virtualPrice = tokenAValue.add(tokenBValue).div(toBN(lpSupply)).toNumber();
+        const tokenAValue = tokenAPrice.multipliedBy(tokenASize);
+        const tokenBValue = tokenBPrice.multipliedBy(tokenBSize);
+        const fairPrice = tokenAValue.sqrt().multipliedBy(tokenBValue.sqrt()).multipliedBy(new BigNumber(2)).dividedBy(toBigNumber(lpSupply));
+        const virtualPrice = tokenAValue.plus(tokenBValue).dividedBy(toBigNumber(lpSupply));
 
         return {
             ammId: ammId,
             poolName: name,
             lpInfo: {
-                fairPrice: fairPrice,
-                virtualPrice: virtualPrice,
+                fairPrice: fairPrice.toString(),
+                virtualPrice: virtualPrice.toString(),
                 supply: lpSupply.toString(),
             },
-            tokenASize: tokenASize,
-            tokenBSize: tokenBSize,
-            tokenAPrice:tokenAPrice,
-            tokenBPrice:tokenBPrice,
+            tokenASize: tokenASize.toString(),
+            tokenBSize: tokenBSize.toString(),
+            tokenAPrice:tokenAPrice.toString(),
+            tokenBPrice:tokenBPrice.toString(),
             platform: 'Raydium'
         }
     }
     return null;
 }
-export const toBN = (num: any)=>{
-    return new BN(num.toString())
+export const toBigNumber = (num: any)=>{
+    return new BigNumber(num.toString())
 }
 export type HexAddress = string
 export interface JsonPairItemInfo {
@@ -141,61 +144,63 @@ export interface JsonPairItemInfo {
     volume30dQuote: number
   }
   export const AMM_INFO_LAYOUT_STABLE = struct([
-  u64('accountType'),
-  u64('status'),
-  u64('nonce'),
-  u64('orderNum'),
-  u64('depth'),
-  u64('coinDecimals'),
-  u64('pcDecimals'),
-  u64('state'),
-  u64('resetFlag'),
-  u64('minSize'),
-  u64('volMaxCutRatio'),
-  u64('amountWaveRatio'),
-  u64('coinLotSize'),
-  u64('pcLotSize'),
-  u64('minPriceMultiplier'),
-  u64('maxPriceMultiplier'),
-  u64('systemDecimalsValue'),
-  u64('abortTradeFactor'),
-  u64('priceTickMultiplier'),
-  u64('priceTick'),
-  // Fees
-  u64('minSeparateNumerator'),
-  u64('minSeparateDenominator'),
-  u64('tradeFeeNumerator'),
-  u64('tradeFeeDenominator'),
-  u64('pnlNumerator'),
-  u64('pnlDenominator'),
-  u64('swapFeeNumerator'),
-  u64('swapFeeDenominator'),
-  // OutPutData
-  u64('needTakePnlCoin'),
-  u64('needTakePnlPc'),
-  u64('totalPnlPc'),
-  u64('totalPnlCoin'),
-  u64('poolOpenTime'),
-  u64('punishPcAmount'),
-  u64('punishCoinAmount'),
-  u64('orderbookToInitTime'),
-  u128('swapCoinInAmount'),
-  u128('swapPcOutAmount'),
-  u128('swapPcInAmount'),
-  u128('swapCoinOutAmount'),
-  u64('swapCoin2PcFee'),
-  u64('swapPc2CoinFee'),
-
-  publicKey('poolCoinTokenAccount'),
-  publicKey('poolPcTokenAccount'),
-  publicKey('coinMintAddress'),
-  publicKey('pcMintAddress'),
-  publicKey('lpMintAddress'),
-  publicKey('modelDataAccount'),
-  publicKey('ammOpenOrders'),
-  publicKey('serumMarket'),
-  publicKey('serumProgramId'),
-  publicKey('ammTargetOrders'),
-  publicKey('ammOwner'),
-  seq(u64('padding'), 64, 'padding')
-])
+    u64("accountType"),
+    u64("status"),
+    u64("nonce"),
+    u64("maxOrder"),
+    u64("depth"),
+    u64("baseDecimal"),
+    u64("quoteDecimal"),
+    u64("state"),
+    u64("resetFlag"),
+    u64("minSize"),
+    u64("volMaxCutRatio"),
+    u64("amountWaveRatio"),
+    u64("baseLotSize"),
+    u64("quoteLotSize"),
+    u64("minPriceMultiplier"),
+    u64("maxPriceMultiplier"),
+    u64("systemDecimalsValue"),
+    u64("abortTradeFactor"),
+    u64("priceTickMultiplier"),
+    u64("priceTick"),
+    // Fees
+    u64("minSeparateNumerator"),
+    u64("minSeparateDenominator"),
+    u64("tradeFeeNumerator"),
+    u64("tradeFeeDenominator"),
+    u64("pnlNumerator"),
+    u64("pnlDenominator"),
+    u64("swapFeeNumerator"),
+    u64("swapFeeDenominator"),
+    // OutPutData
+    u64("baseNeedTakePnl"),
+    u64("quoteNeedTakePnl"),
+    u64("quoteTotalPnl"),
+    u64("baseTotalPnl"),
+    u64("poolOpenTime"),
+    u64("punishPcAmount"),
+    u64("punishCoinAmount"),
+    u64("orderbookToInitTime"),
+    u128("swapBaseInAmount"),
+    u128("swapQuoteOutAmount"),
+    u128("swapQuoteInAmount"),
+    u128("swapBaseOutAmount"),
+    u64("swapQuote2BaseFee"),
+    u64("swapBase2QuoteFee"),
+  
+    publicKey("baseVault"),
+    publicKey("quoteVault"),
+    publicKey("baseMint"),
+    publicKey("quoteMint"),
+    publicKey("lpMint"),
+  
+    publicKey("modelDataAccount"),
+    publicKey("openOrders"),
+    publicKey("marketId"),
+    publicKey("marketProgramId"),
+    publicKey("targetOrders"),
+    publicKey("owner"),
+    seq(u64(), 64, "padding"),
+  ]);
+  

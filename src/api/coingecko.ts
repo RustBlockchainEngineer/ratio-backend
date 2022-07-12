@@ -47,12 +47,12 @@ export async function saveCoinGeckoPrices(){
   }
 
   // for swimUsd oracle
-  const swimPoolInfo = await getSwimUsdPrice(medianPrices);
-  oraclePrices[SwimUSD_HEXAPOOL_LP_ADDR] = swimPoolInfo.lpInfo.virtualPrice
+  // const swimPoolInfo = await getSwimUsdPrice(medianPrices);
+  // oraclePrices[SwimUSD_HEXAPOOL_LP_ADDR] = swimPoolInfo.lpInfo.virtualPrice
 
   const saberLPoolList = await getAllSaberLpTokenPrices()
   const raydiumLPInfoList = await getAllRaydiumLpTokenPrices()
-  const poolList = [...saberLPoolList, swimPoolInfo, ...raydiumLPInfoList]
+  const poolList = [...saberLPoolList, ...raydiumLPInfoList]
   for (const pool of poolList){
     await dbcon.promise().query(`INSERT INTO RFDATA.SOURCELPPRICES(
       pool_name,
