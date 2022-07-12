@@ -6,6 +6,7 @@ import { getAllTokensInSimple } from './tokens';
 import { reportAllPriceOracle } from '../utils/ratio-lending-admin';
 import { getSwimUsdPrice, SwimUSD_HEXAPOOL_LP_ADDR } from './swim';
 import { getAllSaberLpTokenPrices } from './saber';
+import { getAllRaydiumLpTokenPrices } from './raydium';
 const COINGECKO_API = 'https://api.coingecko.com/api/v3/';
 
 export async function saveCoinGeckoPrices(){
@@ -50,7 +51,8 @@ export async function saveCoinGeckoPrices(){
   oraclePrices[SwimUSD_HEXAPOOL_LP_ADDR] = swimPoolInfo.lpInfo.virtualPrice
 
   const saberLPoolList = await getAllSaberLpTokenPrices()
-  const poolList = [...saberLPoolList, swimPoolInfo]
+  const raydiumLPInfoList = await getAllRaydiumLpTokenPrices()
+  const poolList = [...saberLPoolList, swimPoolInfo, ...raydiumLPInfoList]
   for (const pool of poolList){
     await dbcon.promise().query(`INSERT INTO RFDATA.SOURCELPPRICES(
       pool_name,

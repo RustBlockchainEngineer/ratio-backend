@@ -28,7 +28,20 @@ function getProgramInstance(connection: Connection, wallet: any) {
 
   return program;
 }
+export async function getAllOracleMints(){
+  if (!process.env.REPORTER_PK) {
+    console.log('env not defined ...');
+    return [];
+  }
+  const connection = getConnection();
+  const reporter_pk = Keypair.fromSecretKey(base58.decode(process.env.REPORTER_PK))
+  const wallet = new NodeWallet(reporter_pk)
 
+  const program = getProgramInstance(connection, wallet);
+  const oracles = await program.account.oracle.all();
+  const onChainOracleKeys = oracles.map((item)=>item.account.mint.toString());
+  return onChainOracleKeys;
+}
 export async function reportAllPriceOracle(
   prices: {[key: string]: number}
 ) {
